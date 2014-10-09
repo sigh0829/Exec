@@ -23,6 +23,7 @@ Run multiple web sites from either Node or Vertx
 <h1>Warning</h1>
 
     	//	Use this software at your own risk.
+    	//	Use Exec at your own risk.
     	//
     	//	Currently this software does very little to protect
     	//	your computer or web site from security threats.
@@ -34,6 +35,7 @@ Run multiple web sites from either Node or Vertx
     	//	this software does not attempt to solve.
     	//
     	//	Use this software at your own risk.
+    	//	Use Exec at your own risk.
     	//
     	//	Anyone can get this code and look for security
     	//	holes and exploit them.  
@@ -55,6 +57,7 @@ Run multiple web sites from either Node or Vertx
     	//			4)  var cookies = document.cookie.split('; '); and HttpOnly
     	//
     	//	Use this software at your own risk.
+    	//	Use Exec at your own risk.
 
 
 =========================
