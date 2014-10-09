@@ -5,7 +5,7 @@ Run multiple web sites from either <a href="http://www.nodejs.org">Node</a> or <
 
 <p>As of October 9, 2014 I consider this pre-beta software.</p>
 
-<i>Warning: before continuing read the warning below.</i>
+<i>Warning: before continuing please read the warning below.</i>
 
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Exec Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)
