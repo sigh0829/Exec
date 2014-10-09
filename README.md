@@ -5,8 +5,6 @@ Exec
 
 <p>As of October 9, 2014 I consider this pre-beta software.</p>
 
-<i>Warning: before continuing please read the warning below.</i>
-
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Exec Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)
 
