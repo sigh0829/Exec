@@ -3,7 +3,7 @@ Exec
 
 Run web sites from either Node or Vertx
 
-<h3>After cloning:</h3>
+<h5>After cloning:</h5>
 <ol>
 <li>Open a console and type "node nodeConfig.js"</li>
 <li>Open a browser to http://127.0.0.1:7777/</li>
