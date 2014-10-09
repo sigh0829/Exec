@@ -3,7 +3,7 @@ Exec
 
 Run multiple web sites from either Node or Vertx
 
-<i>Warning: before continuing read warning below</i>
+<i>Warning: before continuing read the warning below.</i>
 
 [Quick Start](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)
