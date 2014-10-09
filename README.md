@@ -1,7 +1,7 @@
 Exec
 ====
 
-Run multiple web sites from either Node or Vertx
+Run multiple web sites from either <a href="http://www.nodejs.org">Node</a> or Vertx
 
 <i>Warning: before continuing read the warning below.</i>
 
