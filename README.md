@@ -8,19 +8,6 @@ Run multiple web sites from either Node or Vertx
 [Quick Start](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)
 
-<h5>Quick start after cloning:</h5>
-<ol>
-<li>Open a console and type "node nodeConfig.js"</li>
-<li>Open a browser to http://127.0.0.1:7777/</li>
-<li>Open the browser's console to see more information.</li>
-</ol>
-
-<ol>
-<li>Open a console and type "vertx run vertxConfig.js"</li>
-<li>Open a browser to http://127.0.0.1:7779/</li>
-<li>Open the browser'sconsole to see more information.</li>
-</ol>
-
 <h1>Warning</h1>
 
     	//	Use this software at your own risk.
