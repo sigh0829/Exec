@@ -48,6 +48,10 @@ Run multiple web sites from either <a href="http://www.nodejs.org">Node</a> or <
     	//	Use Exec at your own risk.
 
 
+[Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
+[Exec Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)
+
+
 =========================
 See also <a href="http://kevinpas.github.io/">http://kevinpas.github.io/</a> and <a href="http://www.kevinpas.com">http://www.kevinpas.com</a>
 
