@@ -13,7 +13,7 @@ Run web sites from either Node or Vertx
 <ol>
 <li>Open a console and type "vertx run vertxConfig.js"</li>
 <li>Open a browser to http://127.0.0.1:7779/</li>
-<li>Open the browser's  console to see more information.</li>
+<li>Open the browser'sconsole to see more information.</li>
 </ol>
 
 =========================
