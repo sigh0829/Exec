@@ -3,6 +3,7 @@ Exec
 
 Run web sites from either Node or Vertx
 
+ <p style="color:red">This is a paragraph.</p>
 <p style="color:red;">Warning: before continuing read warning below</p>
 
 <h5>After cloning:</h5>
