@@ -3,7 +3,7 @@ Exec
 
 Run web sites from either Node or Vertx
 
-<h5>Warning: before continuing read warning below<h5>
+<i>Warning: before continuing read warning below</i>
 
 <h5>After cloning:</h5>
 <ol>
