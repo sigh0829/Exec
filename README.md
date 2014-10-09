@@ -3,7 +3,7 @@ Exec
 
 Run web sites from either Node or Vertx
 
-<p style="color:red;">
+<p style="color:#ffcc00;">
 <i>Warning: before continuing read warning below"</i>
 </p>
 
