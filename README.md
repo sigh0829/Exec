@@ -5,6 +5,8 @@ Run web sites from either Node or Vertx
 
 <i>Warning: before continuing read warning below</i>
 
+<a href="https://github.com/kevinpas/Exec/wiki">Wiki for Exec</a>
+
 <h5>Quick start after cloning:</h5>
 <ol>
 <li>Open a console and type "node nodeConfig.js"</li>
