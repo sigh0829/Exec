@@ -3,6 +3,8 @@ Exec
 
 Run multiple web sites from either <a href="http://www.nodejs.org">Node</a> or <a href="http://vertx.io/">Vertx</a>
 
+<p>As of October 9, 2014 I consider this pre-beta software.</p>
+
 <i>Warning: before continuing read the warning below.</i>
 
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
