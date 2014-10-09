@@ -1,7 +1,7 @@
 Exec
 ====
 
-Run web sites from either Node or Vertx
+Run multiple web sites from either Node or Vertx
 
 <i>Warning: before continuing read warning below</i>
 
