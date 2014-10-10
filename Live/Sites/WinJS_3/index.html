@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <title>testForm example</title>
+
+    <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/winjs/3.0.0/css/ui-dark.css" media="screen" />-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/winjs/3.0.0/css/ui-light.css" media="screen" />
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/winjs/3.0.0/js/WinJS.js"></script>
+    <!--<script src="http://cdn.socket.io/stable/socket.io.js"></script>-->
+    <!--<script src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>-->
+    <script src="http://cdn.sockjs.org/sockjs-0.3.4.min.js"></script>
+    <script src="./EXEC-INF/SiteApps/SockJsApps/sockJsEcho2_c.js"></script>
+    <script src="./EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_c.js"></script>
+    <!--<script src="./EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_s.js"></script>-->
+
+
+    <!-- http://cdnjs.com/libraries/winjs# -->
+
+    <style>
+        /* Template for the items in the ListViews in this sample */       
+        .smallListIconTextItem
+        {
+            width: 100%;
+            height: 70px;
+            padding: 5px;
+            overflow: hidden;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .smallListIconTextItem img.smallListIconTextItem-Image 
+        {
+            width: 60px;
+            height: 60px;
+            margin: 5px;
+            margin-right:20px;
+        }
+
+        .smallListIconTextItem .smallListIconTextItem-Detail
+        {
+            margin: 5px;
+        }
+
+        .listLayoutTopHeaderTemplateRoot, .gridLayoutLeftHeaderTemplateRoot {
+            font-size: larger;
+            margin-left: 16px;
+        }
+    
+        /* CSS applied to the ListViews in this sample */
+        #listView
+        {
+            height: 280px;
+        }
+
+        
+    </style>
+    
+</head>
+<body>
+
+    <!-- Simple template for the ListView instantiation  -->
+    <div class="smallListIconTextTemplate" data-win-control="WinJS.Binding.Template" style="display: none">
+        <div class="smallListIconTextItem">
+            <img src="#" class="smallListIconTextItem-Image" data-win-bind="src: picture" />
+            <div class="smallListIconTextItem-Detail">
+                <h4 data-win-bind="textContent: title"></h4>
+                <h6 data-win-bind="textContent: text"></h6>
+            </div>
+        </div>
+    </div>
+
+    <!-- The declarative markup necesary for ListView instantiation -->
+    <!-- Call WinJS.UI.processAll() in your initialization code -->
+    <div id="listView"
+         class="win-selectionstylefilled"
+         data-win-control="WinJS.UI.ListView"
+         data-win-options="{
+                itemDataSource: Sample.ListView.data.dataSource,
+                itemTemplate: select('.smallListIconTextTemplate'),
+                selectionMode: 'none',
+                tapBehavior: 'none',
+                swipeBehavior: 'none',
+                layout: { type: WinJS.UI.ListLayout }
+        }">
+    </div>
+
+    <script>
+        var itemArray = [
+                { title: "Marvelous Mint", text: "Gelato", picture: "/PUB-INF/images/vertx.png" },
+                { title: "Succulent Strawberry", text: "Sorbet", picture: "/PUB-INF/images/pdf.png" },
+                { title: "Lavish Lemon Ice", text: "Sorbet", picture: "/PUB-INF/images/chart.png" }
+        ];
+
+        var items = [];
+
+        // Generate 160 items
+        for (var i = 0; i < 20; i++) {
+            itemArray.forEach(function (item) {
+                items.push(item);
+            });
+        }
+
+
+        WinJS.Namespace.define("Sample.ListView", {
+            data: new WinJS.Binding.List(items)
+        });
+        WinJS.UI.processAll();
+
+    </script>
+
+    <!--
+
+    <script>
+
+        // Create SocketIO instance, connect
+        var socket  = new io.Socket ( 'localhost',{ port: 8080 } ) ;
+            socket  .connect        (); 
+
+        // Add a connect listener
+        socket  .on ( 'connect', function()
+        {
+            console.log( 'Client has connected to the server!' );
+        });
+
+        // Add a connect listener
+        socket  .on   ( 'message', function( data )
+        {
+            console.log( 'Received a message from the server!', data );
+        });
+
+        // Add a disconnect listener
+        socket  .on ( 'disconnect',function()
+        {
+            console.log( 'The client has disconnected!' );
+        });
+
+        // Sends a message to the server via sockets
+        function sendMessageToServer    ( message )
+        {
+            socket.send ( message );
+        }
+
+    </script>
+
+    <script>
+        //  http://localhost:7777/
+        var ws = new WebSocket('wss://example.com/socket');
+        
+        //  A hint to the browser:
+        //  http://chimera.labs.oreilly.com/books/1230000000545/ch17.html#_receiving_text_and_binary_data
+        //
+        //  If set to "blob" it is safe to spool the
+        //  incoming data to disk.  If "arraybuffer"
+        //  it is likely more efficient to keep the
+        //  data in memory.
+        //
+        //  If you do not need to modify the data and 
+        //  do not need to slice it into smaller chunks, then ...
+        //
+        //  ws.binaryType = "arraybuffer";
+        //  ws.binaryType = "blob";
+
+        ws.onerror = function (error) {}
+        ws.onclose = function () {}
+
+        ws.onopen = function () {
+            
+            //  Head of line blocking:
+            //  send is async in that it will return immediately.
+            //  But each message is queued by the browser and sent
+            //  in the order that it was queued.
+            //  if (ws.bufferedAmount == 0)
+            ws.send ( "Connection established. Hello server!" );
+
+            /*
+            socket.send("Hello server!");
+            socket.send(JSON.stringify({'msg': 'payload'}));
+
+            //  send binary 
+            var buffer = new ArrayBuffer(128);
+            socket.send(buffer);
+
+            //  send binary
+            var intview = new Uint32Array(buffer);
+            socket.send(intview);
+
+            //  send binary
+            var blob = new Blob([buffer]);
+            socket.send(blob);
+            */
+
+            /*
+                subscribeToApplicationUpdates(function(evt) { 1
+                    if (ws.bufferedAmount == 0) 2
+                      ws.send(evt.data); 3
+                  });
+            */
+        }
+
+        ws.onmessage = function( msg )
+        {
+            //  http://chimera.labs.oreilly.com/books/1230000000545/ch17.html#_receiving_text_and_binary_data
+            //  says that, "if the server sends a 1 MB payload, the application’s 
+            //  onmessage callback will be called only when the entire message is 
+            //  available on the client".
+            if( msg.data instanceof ArrayBuffer )
+            {
+                processArrayBuffer(msg.data);
+            }             
+
+            else if( msg.data instanceof Blob )
+            {
+                processBlob ( msg.data );
+            } 
+            else
+            {
+                processText ( msg.data );
+            }
+        }
+
+        function processArrayBuffer ( buffer )  {
+
+            //  Received the following C-like 
+            //  binary data structure:
+            //  struct someStruct
+            //  {
+            //      char        username[ 16 ];
+            //      unsigned    short id;
+            //      float       scores[ 32 ];
+            //  };
+
+            var usernameView    = new Uint8Array    ( buffer, 0,    16  );  //  start at 0, process 16 elements
+            var idView          = new Uint16Array   ( buffer, 16,   1   );  //  start at 16, process 1 elements
+            var scoresView      = new Float32Array  ( buffer, 18,   32  );  //  start at 18, process 32 elements
+
+            console.log ( "ID: " + idView[ 0 ] + " username: " + usernameView[ 0 ] );
+            for ( var j = 0; j < 32; j++ )
+                console.log( scoresView[ j ] );
+        }
+
+        function processBlob ( buffer )  {
+            
+        }
+
+        function processText ( buffer )  {
+            
+        }
+
+    </script>
+
+    -->
+
+
+</body>
+</html>
+

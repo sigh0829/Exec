@@ -1,0 +1,52 @@
+http://technologyconversations.com/2014/08/12/rest-api-with-json/
+http://technologyconversations.com/2014/08/12/rest-api-with-json/
+http://www.slideshare.net/rmaclean/json-and-rest
+https://wordpress.org/plugins/json-rest-api/
+http://www.informit.com/articles/article.aspx?p=1566460
+http://stackoverflow.com/questions/14166503/api-design-hateoas-json-versioning-and-media-types
+http://atlas.resources.ca.gov/arcgis/SDK/REST/versioning.html
+http://stackoverflow.com/questions/18447117/json-data-storage-with-versioning
+
+
+GET (query, idempotent), PUT (update or create if necessary, idempotent), POST (create), DELETE(, idempotent), 
+http://www.soapui.org/REST-Testing/getting-started.html
+{{
+http://git-scm.com/doc
+https://github.com/bmatzelle/gow , http://www.pixelbeat.org/cmdline.html 
+https://www.youtube.com/watch?v=Cu4C1gbigXY
+ 
+http://curl.haxx.se/docs/
+http://blogs.plexibus.com/2009/01/15/rest-esting-with-curl/
+http://brainflush.wordpress.com/2008/03/18/using-curl-for-testing-web-applications/
+ 
+GET
+curl http://localhost:3000/courses.json
+ 
+POST
+curl -H "Content-Type:application/json"  -d '{"courseCode":"55555","courseName":"SEEEE","courseYr":999}' http://localhost:3000/courses.json
+ 
+PUT in Raills: eg1(with all fields) : 
+curl -H "X-Http-Method-Override: put" -H "Content-Type:application/json"  -d '{"courseCode":"123456","courseName":"AAAAAAAA","courseYr":12345}' http://localhost:3000/courses/5.json
+ 
+eg2(with the field only be edited) :
+curl -H "X-Http-Method-Override: put" -H "Content-Type:application/json"  -d '{"courseYr":999999999}' http://localhost:3000/courses/3.json
+ 
+DELETE in rails with id provided 
+ curl -H "X-Http-Method-Override: delete" -H "Content-Type:application/json"  -d '{"id":4}' http://localhost:3000/courses/5.json
+ 
+ 
+curl -X GET --basic --user username:password \
+     https://www.example.com/mobile/resource
+ 
+curl -X DELETE --basic --user username:password \
+     https://www.example.com/mobile/resource
+ 
+curl -X PUT --basic --user username:password -d 'param1_name=param1_value' \
+     -d 'param2_name=param2_value' https://www.example.com/mobile/resource
+ 
+ 
+POSTing a file and additional parameter
+curl -X POST -F 'param_name=@/filepath/filename' \
+     -F 'extra_param_name=extra_param_value' --basic --user username:password \
+     https://www.example.com/mobile/resource
+}}
