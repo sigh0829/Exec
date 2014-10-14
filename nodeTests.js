@@ -38,6 +38,69 @@ var FileImp				= require( './Imp/FileImp/nodeFile.js'			);
 var fileImp     		= new FileImp();
 var NodeSockJsServer	= require( './Imp/WsImp/SockJsImp/nodeSockJsServer.js'	);
 
+var	anyUtils	= new AnyUtils	();
+var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
+	dirName		= anyUtils.replaceAll			( dirName, "/" );
+
+var	siteType	= 	"Tests/";
+var	site 		=	siteType + "Sites/WinJS_3";
+					//siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
+					//	siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
+	
+var httpImp	= new HttpImp	();
+	httpImp	.execute                
+	({ 
+		"job":		"initCreate", 
+		"console":	console, 
+		"fileImp":	fileImp, 
+		"site":		site,
+		"rest":		[ 
+						{ "appType":"SysApp", 	"name": "myApi" }, 
+						{ "appType":"SysApp", 	"name": "books" }, 
+						{ "appType":"SiteApp",	"name": "books" }, 
+						{ "appType":"SysApp", 	"name": "stripe" }, 
+						{ "appType":"SysApp", 	"name": "testForm" }, 
+						{ "appType":"SysApp", 	"name": "fileImpTests" }
+					],
+		"vt":"krp", "v": "1.0.0"
+	});
+
+var	sockJSController = new NodeSockJsServer ();    
+	sockJSController .execute
+	({
+		"job":		"installCreateInstall", 
+		"console":	console,
+		"fileImp":	fileImp,
+		"httpImp": 	httpImp,
+		"site":		site,
+		"appType":	"SysApp", 	
+		"name": 	"sockJsEcho1_s", 
+		"vt":"krp", "v": "1.0.0"
+	});
+
+var	sockJSController = new NodeSockJsServer ();    
+	sockJSController .execute
+	({
+		"job":		"installCreateInstall", 
+		"console":	console,
+		"fileImp":	fileImp,
+		"httpImp": 	httpImp,
+		"site":		site,
+		"appType":	"SiteApp",	
+		"name": 	"sockJsEcho2_s", 
+		"vt":"krp", "v": "1.0.0"
+	});
+
+
+httpImp  .execute    
+({ 
+	"job":"listen", 
+	"console":console, 
+	"host":"127.0.0.1", 
+	"port":7777, 
+	"vt":"krp", "v": "1.0.0" 
+});
+
 
 /*
 //  This instance will handle the website found
@@ -91,75 +154,6 @@ var httpController  = new HttpController    ();
 //console.log( 'nodeConfig 2 = ' );
 
 
-var	anyUtils	= new AnyUtils	();
-var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
-	dirName		= anyUtils.replaceAll			( dirName, "/" );
 
-
-var	siteType	= 	"Tests/";
-var	site 		=	siteType + "Sites/WinJS_3";
-					//siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
-					//	siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
-
-
-//var	appType	=	"SysApp";
-				//"SiteApp";
-	
-var httpImp	= new HttpImp	();
-	httpImp	.execute                
-	({ 
-		"job":		"initCreate", 
-		"console":	console, 
-		"fileImp":	fileImp, 
-		"site":		site,
-		"rest":		[ 
-						{ "appType":"SysApp", 	"name": "myApi" }, 
-						{ "appType":"SysApp", 	"name": "books" }, 
-						{ "appType":"SiteApp",	"name": "books" }, 
-						{ "appType":"SysApp", 	"name": "stripe" }, 
-						{ "appType":"SysApp", 	"name": "testForm" }, 
-						{ "appType":"SysApp", 	"name": "fileImpTests" }
-					],
-		
-		//"rest":[ { "folderName": dirName + "Apps/Rest/", "name": "myApi" }, { "folderName": "./Apps/Rest\\", "name": "books" }, { "folderName": "./Apps/Rest", "name": "stripe" }, { "folderName": "./Apps/Rest", "name": "testForm" }, { "folderName": "./Apps/Rest", "name": "fileImpTests" } ],
-		//"rest":[ { "folderName": dirName + "Apps/Rest/", "name": "myApi" } ],
-		"vt":"krp", "v": "1.0.0"
-	});
-
-var	sockJSController = new NodeSockJsServer ();    
-	sockJSController .execute
-	({
-		"job":		"installCreateInstall", 
-		"console":	console,
-		"fileImp":	fileImp,
-		"httpImp": 	httpImp,
-		"site":		site,
-		"appType":	"SysApp", 	
-		"name": 	"sockJsEcho1_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
-
-var	sockJSController = new NodeSockJsServer ();    
-	sockJSController .execute
-	({
-		"job":		"installCreateInstall", 
-		"console":	console,
-		"fileImp":	fileImp,
-		"httpImp": 	httpImp,
-		"site":		site,
-		"appType":	"SiteApp",	
-		"name": 	"sockJsEcho2_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
-
-
-httpImp  .execute    
-({ 
-	"job":"listen", 
-	"console":console, 
-	"host":"127.0.0.1", 
-	"port":7777, 
-	"vt":"krp", "v": "1.0.0" 
-});
 
 //console.log( 'nodeConfig 5 = ' );
