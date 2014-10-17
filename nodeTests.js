@@ -60,6 +60,7 @@ var httpImp	= new HttpImp	();
 						{ "appType":"SiteApp",	"name": "books" }, 
 						{ "appType":"SysApp", 	"name": "stripe" }, 
 						{ "appType":"SysApp", 	"name": "testForm" }, 
+						{ "appType":"SiteApp", 	"name": "nodeMongo" }, 
 						{ "appType":"SysApp", 	"name": "fileImpTests" }
 					],
 		"vt":"krp", "v": "1.0.0"
