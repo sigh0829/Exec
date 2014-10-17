@@ -62,55 +62,55 @@ else
 if ( typeof jsGlobal.site_winjs_3 === "undefined" )
 	jsGlobal.site_winjs_3 = {};
 
-if ( typeof jsGlobal.site_winjs_3.mongoecho2 === "undefined" )
-	jsGlobal.site_winjs_3.mongoecho2 = {};
+if ( typeof jsGlobal.site_winjs_3.nodemongoecho2 === "undefined" )
+	jsGlobal.site_winjs_3.nodemongoecho2 = {};
 
 
-//	Class MongoEcho2_c start
+//	Class NodeMongoEcho2_c start
 //
 
 (function( namespace )
 {
-	function MongoEcho2_c ()
+	function NodeMongoEcho2_c ()
 	{
-        //console.log		( 'MongoEcho2_c 1 ' );
+        //console.log		( 'NodeMongoEcho2_c 1 ' );
         
 		this.site		= location.protocol + "//" + location.hostname + ":" + location.port;
-		this.name		= '/mongoEcho2';
-		this.statics	= namespace.MongoEcho2_c;
+		this.name		= '/nodeMongoEcho2';
+		this.statics	= namespace.NodeMongoEcho2_c;
 		
-        //console.log		( 'MongoEcho2_c 2 = ' + this.site );
-        //console.log		( 'MongoEcho2_c 3 = ' + (this.site + name) );
+        //console.log		( 'NodeMongoEcho2_c 2 = ' + this.site );
+        //console.log		( 'NodeMongoEcho2_c 3 = ' + (this.site + name) );
         
 		this.sock 		= new SockJS	( this.site + this.name );
 		this.sock		.onopen			= this.onopen;
 		this.sock		.onmessage		= this.onmessage;
 		this.sock		.onclose		= this.onclose;
         
-		//console.log		( 'MongoEcho2_c 4 = ' + (this.site + this.name) );
+		//console.log		( 'NodeMongoEcho2_c 4 = ' + (this.site + this.name) );
 	};
 	
-	MongoEcho2_c.prototype.onopen	=function ()
+	NodeMongoEcho2_c.prototype.onopen	=function ()
 	{
         console.log('open'); 
-        this.send ( "mongoEcho2: here here here" );
+        this.send ( "nodeMongoEcho2: here here here" );
 	};
 	
-	MongoEcho2_c.prototype.onmessage= function( e )
+	NodeMongoEcho2_c.prototype.onmessage= function( e )
 	{
         console.log('message', e.data); 
 	};
 	
-	MongoEcho2_c.prototype.onclose= function()
+	NodeMongoEcho2_c.prototype.onclose= function()
 	{
-        console.log('close mongoEcho2 at ' + this.site ); 
+        console.log('close nodeMongoEcho2 at ' + this.site ); 
 	};
 	
-	MongoEcho2_c.prototype.send= function( message )
+	NodeMongoEcho2_c.prototype.send= function( message )
 	{
         if ( this.sock.readyState === SockJS.OPEN )
         { 
-            console.log("sending message from mongoEcho2") 
+            console.log("sending message from nodeMongoEcho2") 
             this.sock.send(message); 
         }
         else
@@ -119,20 +119,20 @@ if ( typeof jsGlobal.site_winjs_3.mongoecho2 === "undefined" )
         }
 	};
 	
-	namespace.MongoEcho2_c	= MongoEcho2_c;
+	namespace.NodeMongoEcho2_c	= NodeMongoEcho2_c;
 	
 	//	Static variables:
 	//	{
 			//	There may be many classes in this name space so include 
 			//	the class name where these statics are located.
-			namespace.MongoEcho2_c	.pageLoad		= "pageLoad";
+			namespace.NodeMongoEcho2_c	.pageLoad		= "pageLoad";
 			
-			namespace.MongoEcho2_c	.someFunc		= function ( param1, param2 )
+			namespace.NodeMongoEcho2_c	.someFunc		= function ( param1, param2 )
 			{
 			};
 	//	}
 
-}( jsGlobal.site_winjs_3.mongoecho2 ) );	//	Attach to this namespace
+}( jsGlobal.site_winjs_3.nodemongoecho2 ) );	//	Attach to this namespace
 
 if ( typeof module !== "undefined"  &&  module !== null  &&  typeof module === "object" )
 {
@@ -142,24 +142,24 @@ if ( typeof module !== "undefined"  &&  module !== null  &&  typeof module === "
 	{
 		//console.log ( "site_winjs_3.underscore module.exports = " + module.exports );
 
-		module.exports	= jsGlobal.site_winjs_3.mongoecho2;
-		//module.exports.MongoEcho2_c	= site_winjs_3.underscore.MongoEcho2_c;
-		//console.log ( "site_winj_3.underscore module.exports.MongoEcho2_c = " + module.exports.MongoEcho2_c );
+		module.exports	= jsGlobal.site_winjs_3.nodemongoecho2;
+		//module.exports.NodeMongoEcho2_c	= site_winjs_3.underscore.NodeMongoEcho2_c;
+		//console.log ( "site_winj_3.underscore module.exports.NodeMongoEcho2_c = " + module.exports.NodeMongoEcho2_c );
 
 
-		//module.exports.MongoEcho2_c._	= site_winjs_3.underscore.MongoEcho2_c;
-		//console.log ( "site_winjs_3.underscore module.exports.MongoEcho2_c = " + module.exports.MongoEcho2_c );
+		//module.exports.NodeMongoEcho2_c._	= site_winjs_3.underscore.NodeMongoEcho2_c;
+		//console.log ( "site_winjs_3.underscore module.exports.NodeMongoEcho2_c = " + module.exports.NodeMongoEcho2_c );
 	}
 }
 
 
 //
-//	Class MongoEcho2_c end
+//	Class NodeMongoEcho2_c end
 
 //	Add site_winjs_3 app globals:
 //
 //	When a class is defined in the same file as an assignment 
 //	the assignment must come after the class definition.
-//site_winjs_3.mongoecho2.globalKmisc	= new site_winjs_3.mongoecho2	.MongoEcho2_c ();
+//site_winjs_3.nodemongoecho2.globalKmisc	= new site_winjs_3.nodemongoecho2	.NodeMongoEcho2_c ();
 
-var sockJsEcho2 = new site_winjs_3.mongoecho2	.MongoEcho2_c ();
+var sockJsEcho2 = new site_winjs_3.nodemongoecho2	.NodeMongoEcho2_c ();

@@ -101,7 +101,7 @@ var	sockJSController = new NodeSockJsServer ();
 		"httpImp": 	httpImp,
 		"site":		site,
 		"appType":	"SiteApp",	
-		"name": 	"mongoEcho2_s", 
+		"name": 	"nodeMongoEcho2_s", 
 		"vt":"krp", "v": "1.0.0"
 	});
 

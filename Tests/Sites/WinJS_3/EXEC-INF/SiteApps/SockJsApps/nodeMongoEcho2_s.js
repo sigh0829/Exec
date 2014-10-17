@@ -48,7 +48,7 @@ module.exports = function ()	{
 
             jsonResult  [ params.returnIn ] = params.errorValue;
 
-            //console.log( "mongoEcho2_s, execute, 1 = " );
+            //console.log( "nodeMongoEcho2_s, execute, 1 = " );
 
             if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
             {
@@ -60,11 +60,11 @@ module.exports = function ()	{
             {
                 var	method  = params.method;
                 
-                console.log( "mongoEcho2_s, execute, 2 = " + method );
+                console.log( "nodeMongoEcho2_s, execute, 2 = " + method );
 
                 if ( method === params.methodType.NAME )
                 {
-                 	jsonResult  [ params.returnIn ] = "mongoEcho2";
+                 	jsonResult  [ params.returnIn ] = "nodeMongoEcho2";
                 }
 
                 else if (  method === params.methodType.ReadFromClient )
@@ -73,7 +73,7 @@ module.exports = function ()	{
                 	//	client.  So use it to access the data base
                 	//	or do whatever calculations are required.
                 	luo.data 	= params.data; 
-                	luo.data	+=	", 222222, mongo -->";
+                	luo.data	+=	", 222222, node mongo -->";
                 	//luo.data	+=	", SiteApp";
                     
                 	//jsonResult  [ params.returnIn ]	= params.successValue;
@@ -81,41 +81,41 @@ module.exports = function ()	{
 	                this.dbName     = "mydb";
 	                this.collection = "mycollection";
 
-	                console.log( 'mongoEcho2_s, execute, 3 = ' );
+	                console.log( 'nodeMongoEcho2_s, execute, 3 = ' );
 
 	                var db 	= mongojs( this.dbName, [ this.collection ] );
 	
-	                console.log( 'mongoEcho2_s, execute, 4 = ' );
+	                console.log( 'nodeMongoEcho2_s, execute, 4 = ' );
 	
 	                db	.mycollection.insert( {name: 'node_Ed'} );
 
-	                console.log( 'mongoEcho2_s, execute, 5 = ' );
+	                console.log( 'nodeMongoEcho2_s, execute, 5 = ' );
 
                     var self = this;
 		
 	                db.mycollection.find(function(err, docs) {
 
 		                // docs is an array of all the documents in mycollection
-		                console.log( 'mongoEcho2_s, execute, 5a = ' + docs.length );
+		                console.log( 'nodeMongoEcho2_s, execute, 5a = ' + docs.length );
 
                         luo.data += ", docs.length = " + docs.length;
 
-		                console.log( 'mongoEcho2_s, execute, 5b = ' + luo.data );
+		                console.log( 'nodeMongoEcho2_s, execute, 5b = ' + luo.data );
                     
                 	    //	Since this is echo call write immediately.
                         params.method	= params.methodType.WriteToClient;
                         self.execute ( params );
 
-		                console.log( 'mongoEcho2_s, execute, 5c = ' + luo.data );
+		                console.log( 'nodeMongoEcho2_s, execute, 5c = ' + luo.data );
 	                });
 
-                    console.log( "mongoEcho2_s, execute, 6 = " + luo.data );
+                    console.log( "nodeMongoEcho2_s, execute, 6 = " + luo.data );
                     
                 	//	Since this is echo call write immediately.
                     //params.method	= params.methodType.WriteToClient;
                     jsonResult [ params.returnIn ]	= params.successValue;
 
-                    //console.log( "mongoEcho2_s, execute, 4 = " + luo.data );
+                    //console.log( "nodeMongoEcho2_s, execute, 4 = " + luo.data );
                 }
                     
                 else if ( method === params.methodType.WriteToClient )
@@ -125,7 +125,7 @@ module.exports = function ()	{
                 	//jsonResult  [ params.returnIn ] = luo.data; 
                     //jsonResult  [ params.returnIn ] = successValue;
 
-                    //console.log( "mongoEcho2_s, execute, 5 = " + luo.data );
+                    //console.log( "nodeMongoEcho2_s, execute, 5 = " + luo.data );
                     
                     var result	= params.socketJsImp.execute
                     ({ 
@@ -138,7 +138,7 @@ module.exports = function ()	{
                     	"vt":"krp", 	"v": "1.0.0"
                     }).result;
                 	
-                    //console.log( "mongoEcho2_s, execute, 6 = " + luo.data );
+                    //console.log( "nodeMongoEcho2_s, execute, 6 = " + luo.data );
                     
                     jsonResult  [ params.returnIn ]	= result;
                 }
@@ -147,11 +147,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            console.log( "mongoEcho2_s, execute, catch = " + err );
+            console.log( "nodeMongoEcho2_s, execute, catch = " + err );
             jsonResult  [ params.returnIn ] = params.errorValue;
         }
 
-        //console.log( "mongoEcho2_s, execute, 7 = " + jsonResult[ params.returnIn ] );
+        //console.log( "nodeMongoEcho2_s, execute, 7 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 };
