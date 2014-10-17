@@ -56,7 +56,7 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            console.log( "SiteApps, nodeMongo, execute, 1 = " );
+            //console.log( "SiteApps, nodeMongo, execute, 1 = " );
 
             if ( Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
@@ -112,39 +112,43 @@ module.exports = function ()	{
 		    var	pathname    = httpImp   .execute    ( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
             var split       = pathname  .split      ( '/' );
 
-		    console.log( "nodeMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
+		    //console.log( "nodeMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
 
 		    if ( split[ 2 ] === "id" )
 		    {
-			    console.log( "nodeMongo.GET, 2, id.number = "	+ split[ 3 ] );
+			    //console.log( "nodeMongo.GET, 2, id.number = "	+ split[ 3 ] );
 
                 var message = "id is " + split[ 3 ];
 
 	            this.dbName     = "mydb";
 	            this.collection = "mycollection";
 
-	            console.log( 'nodeMongo.GET, 3 = ' );
+	            //console.log( 'nodeMongo.GET, 3 = ' );
 
 	            var db 	= mongojs( this.dbName, [ this.collection ] );
 	
-	            console.log( 'nodeMongo.GET, 4 = ' );
+	            //console.log( 'nodeMongo.GET, 4 = ' );
 	
 	            db	.mycollection.insert( {name: 'node_Ed'} );
 
-	            console.log( 'nodeMongo.GET, 5 = ' );
+	            //console.log( 'nodeMongo.GET, 5 = ' );
 		
 	            db.mycollection.find(function(err, docs) {
 
 		            // docs is an array of all the documents in mycollection
-		            console.log( 'nodeMongo.GET 5a = ' + docs.length );
+		            //console.log( 'nodeMongo.GET 5a = ' + docs.length );
 
                     message += ", docs.length = " + docs.length;
-		            console.log( 'nodeMongo.GET 5b = ' + message );
-		            console.log( 'nodeMongo.GET 5c = ' + helpers );
-			        helpers.writeHead   ( session, httpStatus.OK.code );
-		            console.log( 'nodeMongo.GET 5c = ' );
-		            httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
-		            console.log( 'nodeMongo.GET 5d = ' );
+		            
+                    //console.log( 'nodeMongo.GET 5b = ' + message );
+			        
+                    helpers.writeHead   ( session, httpStatus.OK.code );
+
+		            //console.log( 'nodeMongo.GET 5c = ' );
+		            
+                    httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+		            
+                    //console.log( 'nodeMongo.GET 5d = ' );
 	            });
 
                 result = httpStatus.OK.code;

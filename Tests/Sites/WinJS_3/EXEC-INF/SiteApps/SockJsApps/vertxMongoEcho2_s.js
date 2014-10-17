@@ -62,7 +62,7 @@ module.exports = function ()	{
             {
                 var	method  = params.method;
                 
-                console.log( "vertxMongoEcho2_s, execute, 2 = " + method );
+                //console.log( "vertxMongoEcho2_s, execute, 2 = " + method );
 
                 if ( method === params.methodType.NAME )
                 {
@@ -80,13 +80,9 @@ module.exports = function ()	{
                     
                 	//jsonResult  [ params.returnIn ]	= params.successValue;
 
-                    this.deploymentID   = "";
-
-                    var address = "DB1-Persistor";
-
 	                this.config =
 	                {
-	                  address: 			address,
+	                  address: 			"DB1-Persistor",
 	                  db_name: 			"mydb",
 	                  "host": 			"127.0.0.1",
 	                  "port": 			27017,
@@ -94,12 +90,12 @@ module.exports = function ()	{
 	                  fake: 			false
 	                }
 
-	                console.log( 'vertxMongoEcho2_s, execute, 3 = ' );
+	                //console.log( 'vertxMongoEcho2_s, execute, 3 = ' );
 
 	                this.collection = "mycollection";
 
-                    console.log( 'vertxMongoEcho2_s, execute 4 = ' + this.config.db_name );
-                    console.log( 'vertxMongoEcho2_s, execute 5 = ' + this.collection );
+                    //console.log( 'vertxMongoEcho2_s, execute 4 = ' + this.config.db_name );
+                    //console.log( 'vertxMongoEcho2_s, execute 5 = ' + this.collection );
 
                     var self = this;
 
@@ -112,11 +108,11 @@ module.exports = function ()	{
 		                    err.printStackTrace();
 	                    else
 	                    {
-		                    console.log( 'deployModule 2 = ' + deployID );
+		                    //console.log( 'deployModule 2 = ' + deployID );
             
-                            self.deploymentID = deployID;
+                            var myDeployID = deployID;
 
-	                        vertx.eventBus	.send( address,
+	                        vertx.eventBus	.send( self.config.address,
 	                        {
 		                        "action": 		'save',
 		                        "collection":	self.collection,
@@ -124,28 +120,31 @@ module.exports = function ()	{
 	                        },
 	                        function( reply )
 	                        {
-		                        console.log( 'vertxMongoEcho2_s, execute 6 = ' );
-		                        console.log( 'vertxMongoEcho2_s, execute 7 = ' + reply );
-		                        console.log( 'vertxMongoEcho2_s, execute 8 = ' + reply.status );
+		                        //console.log( 'vertxMongoEcho2_s, execute 6 = ' );
+		                        //console.log( 'vertxMongoEcho2_s, execute 7 = ' + reply );
+		                        //console.log( 'vertxMongoEcho2_s, execute 8 = ' + reply.status );
 
                                 luo.data    += ", reply.status = " + reply.status;
 
-		                        console.log( 'vertxMongoEcho2_s, execute 9 = ' );
+		                        //console.log( 'vertxMongoEcho2_s, execute 9 = ' );
+
+                                //  This is an echo so send it back out.
                                 params.method	= params.methodType.WriteToClient;
                                 self.execute ( params );
-		                        console.log( 'vertxMongoEcho2_s, execute 10 = ' );
+
+		                        //console.log( 'vertxMongoEcho2_s, execute 10 = ' );
 
 	                            //vassert.assertEquals('ok', reply.status);
 	                            //vertxTests.startTests(script);
 	                        });
 
 
-		                    console.log( 'deployModule 3 = ' );
+		                    //console.log( 'deployModule 3 = ' );
 	                    }
                     });
 
 
-                    console.log( "vertxMongoEcho2_s, execute, 11 = " + luo.data );
+                    //console.log( "vertxMongoEcho2_s, execute, 11 = " + luo.data );
                     
                 	//	Since this is echo call write immediately.
                     //params.method	= params.methodType.WriteToClient;

@@ -81,35 +81,26 @@ module.exports = function ()	{
 	                this.dbName     = "mydb";
 	                this.collection = "mycollection";
 
-	                console.log( 'nodeMongoEcho2_s, execute, 3 = ' );
-
-	                var db 	= mongojs( this.dbName, [ this.collection ] );
-	
-	                console.log( 'nodeMongoEcho2_s, execute, 4 = ' );
-	
-	                db	.mycollection.insert( {name: 'node_Ed'} );
-
-	                console.log( 'nodeMongoEcho2_s, execute, 5 = ' );
+	                var db 	= mongojs               ( this.dbName, [ this.collection ] );
+	                    db	.mycollection.insert    ( {name: 'node_Ed'} );
 
                     var self = this;
 		
-	                db.mycollection.find(function(err, docs) {
+	                db.mycollection.find( function( err, docs ) {
 
 		                // docs is an array of all the documents in mycollection
-		                console.log( 'nodeMongoEcho2_s, execute, 5a = ' + docs.length );
-
                         luo.data += ", docs.length = " + docs.length;
 
-		                console.log( 'nodeMongoEcho2_s, execute, 5b = ' + luo.data );
+		                //console.log( 'nodeMongoEcho2_s, execute, 5b = ' + luo.data );
                     
                 	    //	Since this is echo call write immediately.
                         params.method	= params.methodType.WriteToClient;
                         self.execute ( params );
 
-		                console.log( 'nodeMongoEcho2_s, execute, 5c = ' + luo.data );
+		                //console.log( 'nodeMongoEcho2_s, execute, 5c = ' + luo.data );
 	                });
 
-                    console.log( "nodeMongoEcho2_s, execute, 6 = " + luo.data );
+                    //console.log( "nodeMongoEcho2_s, execute, 6 = " + luo.data );
                     
                 	//	Since this is echo call write immediately.
                     //params.method	= params.methodType.WriteToClient;

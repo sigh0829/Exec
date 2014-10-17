@@ -58,7 +58,7 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            console.log( "SiteApps, vertxMongo, execute, 1 = " );
+            //console.log( "SiteApps, vertxMongo, execute, 1 = " );
 
             if ( Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
@@ -114,21 +114,17 @@ module.exports = function ()	{
 		    var	pathname    = httpImp   .execute    ( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
             var split       = pathname  .split      ( '/' );
 
-		    console.log( "vertxMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
+		    //console.log( "vertxMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
 
 		    if ( split[ 2 ] === "id" )
 		    {
-			    console.log( "vertxMongo.GET, 2, id.number = "	+ split[ 3 ] );
+			    //console.log( "vertxMongo.GET, 2, id.number = "	+ split[ 3 ] );
 
                 var message = "id is " + split[ 3 ];
 
-                this.deploymentID   = "";
-
-                var address = "DB1-Persistor";
-
 	            this.config =
 	            {
-	              address: 			address,
+	              address: 			"DB1-Persistor",
 	              db_name: 			"mydb",
 	              "host": 			"127.0.0.1",
 	              "port": 			27017,
@@ -136,29 +132,29 @@ module.exports = function ()	{
 	              fake: 			false
 	            }
 
-	            console.log( 'vertxMongo.GET, 3 = ' );
+	            //console.log( 'vertxMongo.GET, 3 = ' );
 
 	            this.collection     = "mycollection";
 
-                console.log( 'vertxMongo.prototype.init 1 = ' + this.dbName );
-                console.log( 'vertxMongo.prototype.init 2 = ' + this.collection );
+                //console.log( 'vertxMongo.prototype.init 1 = ' + this.dbName );
+                //console.log( 'vertxMongo.prototype.init 2 = ' + this.collection );
 
                 var self = this;
 
                 //  Deploy the vertx mongo module.
                 container.deployModule  ( 'io.vertx~mod-mongo-persistor~2.1.1', this.config, 1, function( err, deployID )
                 {
-	                console.log( 'deployModule 1 = ' + err );
+	                //console.log( 'deployModule 1 = ' + err );
 
 	                if ( err !== null )
 		                err.printStackTrace();
 	                else
 	                {
-		                console.log( 'deployModule 4 = ' + deployID );
+		                //console.log( 'deployModule 4 = ' + deployID );
             
-                        self.deploymentID = deployID;
+                        var myDeployID = deployID;
 
-	                    vertx.eventBus	.send( address,
+	                    vertx.eventBus	.send( self.config.address,
 	                    {
 		                    "action": 		'save',
 		                    "collection":	self.collection,
@@ -166,23 +162,25 @@ module.exports = function ()	{
 	                    },
 	                    function( reply )
 	                    {
-		                    console.log( 'vertxMongo.prototype.update 9 = ' );
-		                    console.log( 'vertxMongo.prototype.update 10 = ' + reply );
-		                    console.log( 'vertxMongo.prototype.update 11 = ' + reply.status );
+		                    //console.log( 'vertxMongo.prototype.update 9 = ' );
+		                    //console.log( 'vertxMongo.prototype.update 10 = ' + reply );
+		                    //console.log( 'vertxMongo.prototype.update 11 = ' + reply.status );
 
                             message += ", reply.status = " + reply.status;
 
 			                helpers.writeHead   ( session, httpStatus.OK.code );
-		                    console.log( 'vertxMongo.GET 5c = ' );
-		                    httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
-		                    console.log( 'vertxMongo.GET 5d = ' );
+		                    
+                            //console.log( 'vertxMongo.GET 5c = ' );
+		                    
+                            httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+		                    
+                            //console.log( 'vertxMongo.GET 5d = ' );
 
 	                        //vassert.assertEquals('ok', reply.status);
 	                        //vertxTests.startTests(script);
 	                    });
 
-
-		                console.log( 'deployModule 5 = ' );
+		                //console.log( 'deployModule 5 = ' );
 	                }
                 });
 
@@ -190,7 +188,7 @@ module.exports = function ()	{
 
                 //this.remove ( {} );
                 //self.update ( {} );
-                console.log( 'vertxMongo.prototype.init 6 = ' );
+                //console.log( 'vertxMongo.prototype.init 6 = ' );
 
                 result = httpStatus.OK.code;
 		    }
