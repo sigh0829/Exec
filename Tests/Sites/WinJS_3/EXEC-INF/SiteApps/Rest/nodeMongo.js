@@ -29,9 +29,6 @@
 
 var Version	= require( '../../../../../../Libs/Any/execVersion.js' ).Version;
 var mongojs = require( 'mongojs' );
-//var mongojs = require( '../../../../../../mongojs' );
-//var mongojs = require( '../../../../../mongojs' );
-
 
 module.exports = function ()	{
 
@@ -141,7 +138,7 @@ module.exports = function ()	{
 		            // docs is an array of all the documents in mycollection
 		            console.log( 'nodeMongo.GET 5a = ' + docs.length );
 
-                    message = message + ", docs.length = " + docs.length;
+                    message += ", docs.length = " + docs.length;
 		            console.log( 'nodeMongo.GET 5b = ' + message );
 		            console.log( 'nodeMongo.GET 5c = ' + helpers );
 			        helpers.writeHead   ( session, httpStatus.OK.code );

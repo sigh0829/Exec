@@ -92,6 +92,19 @@ var	sockJSController = new NodeSockJsServer ();
 		"vt":"krp", "v": "1.0.0"
 	});
 
+var	sockJSController = new NodeSockJsServer ();    
+	sockJSController .execute
+	({
+		"job":		"installCreateInstall", 
+		"console":	console,
+		"fileImp":	fileImp,
+		"httpImp": 	httpImp,
+		"site":		site,
+		"appType":	"SiteApp",	
+		"name": 	"mongoEcho2_s", 
+		"vt":"krp", "v": "1.0.0"
+	});
+
 
 httpImp  .execute    
 ({ 
