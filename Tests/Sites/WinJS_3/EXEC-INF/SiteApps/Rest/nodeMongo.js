@@ -67,7 +67,7 @@ module.exports = function ()	{
             {
                 //console.log( "nodeMongo, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                = params.v + " is not handled by this implementation";
+                luo .message                    = params.v + " is not handled by this implementation";
             }
         }
 
@@ -94,7 +94,18 @@ module.exports = function ()	{
         //console.log( "nodeMongo, _execute, 1e = " + httpStatus );
         //console.log( "nodeMongo, _execute, 1f = " + console );
 
-        if ( method === methodType.NAME )
+        if ( method === methodType.INIT )
+        {
+            //console.log( "nodeMongo, _execute, INIT, 1 = " );
+
+	        luo.dbName      = "mydb";
+	        luo.collection  = "mycollection";
+	        luo.db 	        = mongojs( luo.dbName, [ luo.collection ] );
+
+            //console.log( "nodeMongo, _execute, INIT, 2 = " );
+        }
+
+        else if ( method === methodType.NAME )
         {
             result = "nodeMongo";
             //console.log( "nodeMongo, _execute, 2 = " + result );
@@ -120,35 +131,17 @@ module.exports = function ()	{
 
                 var message = "id is " + split[ 3 ];
 
-	            this.dbName     = "mydb";
-	            this.collection = "mycollection";
-
-	            //console.log( 'nodeMongo.GET, 3 = ' );
-
-	            var db 	= mongojs( this.dbName, [ this.collection ] );
-	
-	            //console.log( 'nodeMongo.GET, 4 = ' );
-	
-	            db	.mycollection.insert( {name: 'node_Ed'} );
-
-	            //console.log( 'nodeMongo.GET, 5 = ' );
+	            luo.db	.mycollection.insert( {name: 'node_Ed'} );
 		
-	            db.mycollection.find(function(err, docs) {
+	            luo.db.mycollection.find( function( err, docs ) {
 
 		            // docs is an array of all the documents in mycollection
-		            //console.log( 'nodeMongo.GET 5a = ' + docs.length );
-
                     message += ", docs.length = " + docs.length;
 		            
-                    //console.log( 'nodeMongo.GET 5b = ' + message );
-			        
                     helpers.writeHead   ( session, httpStatus.OK.code );
-
-		            //console.log( 'nodeMongo.GET 5c = ' );
-		            
-                    httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
-		            
-                    //console.log( 'nodeMongo.GET 5d = ' );
+                    httpImp.execute     ( { "session": session, "job": "end", 
+                                                "data": { "vt":"krp", "v": "1.0.0", "message": message }, 
+                                                    "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 	            });
 
                 result = httpStatus.OK.code;

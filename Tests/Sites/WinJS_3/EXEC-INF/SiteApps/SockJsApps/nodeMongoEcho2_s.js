@@ -33,6 +33,7 @@ var mongojs = require( 'mongojs' );
 module.exports = function ()	{
 
     var luo 		= {};	//	Local Use Only
+    	luo .self	= this;
     	luo .sock	= null;
     	luo .data	= "";
 	
@@ -60,9 +61,16 @@ module.exports = function ()	{
             {
                 var	method  = params.method;
                 
-                console.log( "nodeMongoEcho2_s, execute, 2 = " + method );
+                //console.log( "nodeMongoEcho2_s, execute, 2 = " + method );
 
-                if ( method === params.methodType.NAME )
+                if ( method === params.methodType.INIT )
+                {
+	                luo.dbName      = "mydb";
+	                luo.collection  = "mycollection";
+	                luo.db 	        = mongojs   ( luo.dbName, [ luo.collection ] );
+                }
+
+                else if ( method === params.methodType.NAME )
                 {
                  	jsonResult  [ params.returnIn ] = "nodeMongoEcho2";
                 }
@@ -78,15 +86,9 @@ module.exports = function ()	{
                     
                 	//jsonResult  [ params.returnIn ]	= params.successValue;
 
-	                this.dbName     = "mydb";
-	                this.collection = "mycollection";
+	                luo.db	.mycollection   .insert ( {name: 'node_Ed'} );
 
-	                var db 	= mongojs               ( this.dbName, [ this.collection ] );
-	                    db	.mycollection.insert    ( {name: 'node_Ed'} );
-
-                    var self = this;
-		
-	                db.mycollection.find( function( err, docs ) {
+	                luo.db  .mycollection   .find   ( function( err, docs ) {
 
 		                // docs is an array of all the documents in mycollection
                         luo.data += ", docs.length = " + docs.length;
@@ -94,8 +96,8 @@ module.exports = function ()	{
 		                //console.log( 'nodeMongoEcho2_s, execute, 5b = ' + luo.data );
                     
                 	    //	Since this is echo call write immediately.
-                        params.method	= params.methodType.WriteToClient;
-                        self.execute ( params );
+                        params.method = params.methodType.WriteToClient;
+                        luo.self.execute ( params );
 
 		                //console.log( 'nodeMongoEcho2_s, execute, 5c = ' + luo.data );
 	                });

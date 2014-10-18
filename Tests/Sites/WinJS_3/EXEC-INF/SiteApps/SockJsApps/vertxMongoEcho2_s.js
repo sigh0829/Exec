@@ -35,6 +35,7 @@ var vertx 		= require("vertx")
 module.exports = function ()	{
 
     var luo 		= {};	//	Local Use Only
+    	luo .self	= this;
     	luo .sock	= null;
     	luo .data	= "";
 	
@@ -64,7 +65,40 @@ module.exports = function ()	{
                 
                 //console.log( "vertxMongoEcho2_s, execute, 2 = " + method );
 
-                if ( method === params.methodType.NAME )
+                if ( method === params.methodType.INIT )
+                {
+	                luo.config =
+	                {
+	                  address: 			"DB1-Persistor",
+	                  db_name: 			"mydb",
+	                  "host": 			"127.0.0.1",
+	                  "port": 			27017,
+	                  "socket_timeout":	5000,  
+	                  fake: 			false
+	                }
+
+	                luo.collection = "mycollection";
+
+                    //console.log( 'vertxMongoEcho2_s, execute, INIT, luo.config.db_name = ' + luo.config.db_name );
+                    //console.log( 'vertxMongoEcho2_s, execute, INIT, luo.collection= ' + luo.collection );
+
+                    //  Deploy the vertx mongo module.
+                    container.deployModule  ( 'io.vertx~mod-mongo-persistor~2.1.1', luo.config, 1, function( err, deployID )
+                    {
+	                    //console.log( 'vertxMongoEcho2_s, execute, INIT, err = ' + err );
+
+	                    if ( err !== null )
+		                    err.printStackTrace();
+	                    else
+	                    {
+                            luo.myDeployID = deployID;
+	                        
+                            //console.log( 'vertxMongoEcho2_s, execute, INIT, deployID = ' + deployID );
+	                    }
+                    });
+                }
+
+                else if ( method === params.methodType.NAME )
                 {
                  	jsonResult  [ params.returnIn ] = "vertxMongoEcho2";
                 }
@@ -80,69 +114,31 @@ module.exports = function ()	{
                     
                 	//jsonResult  [ params.returnIn ]	= params.successValue;
 
-	                this.config =
+	                vertx.eventBus	.send( luo.config.address,
 	                {
-	                  address: 			"DB1-Persistor",
-	                  db_name: 			"mydb",
-	                  "host": 			"127.0.0.1",
-	                  "port": 			27017,
-	                  "socket_timeout":	5000,  
-	                  fake: 			false
-	                }
+		                "action": 		'save',
+		                "collection":	luo.collection,
+		                "document":		{ name:	'vertx_Ed' }
+	                },
+	                function( reply )
+	                {
+		                //console.log( 'vertxMongoEcho2_s, execute, GET 1 = ' );
+		                //console.log( 'vertxMongoEcho2_s, execute, GET 2 = ' + reply );
+		                //console.log( 'vertxMongoEcho2_s, execute, GET 3 = ' + reply.status );
 
-	                //console.log( 'vertxMongoEcho2_s, execute, 3 = ' );
+                        luo.data    += ", reply.status = " + reply.status;
 
-	                this.collection = "mycollection";
+		                //console.log( 'vertxMongoEcho2_s, execute, GET 4 = ' + luo.data );
 
-                    //console.log( 'vertxMongoEcho2_s, execute 4 = ' + this.config.db_name );
-                    //console.log( 'vertxMongoEcho2_s, execute 5 = ' + this.collection );
+                        //  This is an echo so send it back out.
+                        params.method	= params.methodType.WriteToClient;
+                        luo.self.execute ( params );
 
-                    var self = this;
+		                //console.log( 'vertxMongoEcho2_s, execute 10 = ' );
 
-                    //  Deploy the vertx mongo module.
-                    container.deployModule  ( 'io.vertx~mod-mongo-persistor~2.1.1', this.config, 1, function( err, deployID )
-                    {
-	                    console.log( 'deployModule 1 = ' + err );
-
-	                    if ( err !== null )
-		                    err.printStackTrace();
-	                    else
-	                    {
-		                    //console.log( 'deployModule 2 = ' + deployID );
-            
-                            var myDeployID = deployID;
-
-	                        vertx.eventBus	.send( self.config.address,
-	                        {
-		                        "action": 		'save',
-		                        "collection":	self.collection,
-		                        "document":		{ name: 	'vertx_Ed' }
-	                        },
-	                        function( reply )
-	                        {
-		                        //console.log( 'vertxMongoEcho2_s, execute 6 = ' );
-		                        //console.log( 'vertxMongoEcho2_s, execute 7 = ' + reply );
-		                        //console.log( 'vertxMongoEcho2_s, execute 8 = ' + reply.status );
-
-                                luo.data    += ", reply.status = " + reply.status;
-
-		                        //console.log( 'vertxMongoEcho2_s, execute 9 = ' );
-
-                                //  This is an echo so send it back out.
-                                params.method	= params.methodType.WriteToClient;
-                                self.execute ( params );
-
-		                        //console.log( 'vertxMongoEcho2_s, execute 10 = ' );
-
-	                            //vassert.assertEquals('ok', reply.status);
-	                            //vertxTests.startTests(script);
-	                        });
-
-
-		                    //console.log( 'deployModule 3 = ' );
-	                    }
-                    });
-
+	                    //vassert.assertEquals('ok', reply.status);
+	                    //vertxTests.startTests(script);
+	                });
 
                     //console.log( "vertxMongoEcho2_s, execute, 11 = " + luo.data );
                     

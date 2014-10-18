@@ -36,6 +36,7 @@ module.exports = function ()	{
 
     var luo 			= {};	//	Local Use Only
         luo .message    = "";
+        luo .deployID   = null;
 	
 	this.execute = function ( params )	{
 
@@ -96,7 +97,46 @@ module.exports = function ()	{
         //console.log( "vertxMongo, _execute, 1e = " + httpStatus );
         //console.log( "vertxMongo, _execute, 1f = " + console );
 
-        if ( method === methodType.NAME )
+        if ( method === methodType.INIT )
+        {
+            //console.log( "vertxMongo, _execute, INIT 1 = " );
+
+	        luo.config =
+	        {
+	            address: 			"DB1-Persistor",
+	            db_name: 			"mydb",
+	            "host": 			"127.0.0.1",
+	            "port": 			27017,
+	            "socket_timeout":	5000,  
+	            fake: 			    false
+	        }
+
+            //console.log( "vertxMongo, _execute, INIT 2 = " );
+
+	        luo.collection     = "mycollection";
+
+            //console.log( "vertxMongo, _execute, INIT 3, luo.dbName = "  + luo.dbName );
+            //console.log( "vertxMongo, _execute, INIT 4, luo.collection = " + luo.collection );
+
+            //  Deploy the vertx mongo module.
+            container.deployModule  ( 'io.vertx~mod-mongo-persistor~2.1.1', luo.config, 1, function( err, deployID )
+            {
+                //console.log( "vertxMongo, _execute, INIT 4a = " );
+
+	            if ( err !== null )
+		            err.printStackTrace();
+	            else
+	            {
+                    luo.deployID = deployID;
+
+                    //console.log( "vertxMongo, _execute, INIT 4b = " + luo.deployID );
+	            }
+            });
+
+            //console.log( "vertxMongo, _execute, INIT 3 = " );
+        }
+
+        else if ( method === methodType.NAME )
         {
             result = "vertxMongo";
             //console.log( "vertxMongo, _execute, 2 = " + result );
@@ -109,7 +149,7 @@ module.exports = function ()	{
 
         else if (  method === methodType.GET )
         {
-            //  http://localhost:7777/vertxMongo/id/24
+            //  http://localhost:7779/vertxMongo/id/24
 
 		    var	pathname    = httpImp   .execute    ( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
             var split       = pathname  .split      ( '/' );
@@ -122,67 +162,30 @@ module.exports = function ()	{
 
                 var message = "id is " + split[ 3 ];
 
-	            this.config =
+	            vertx.eventBus	.send( luo.config.address,
 	            {
-	              address: 			"DB1-Persistor",
-	              db_name: 			"mydb",
-	              "host": 			"127.0.0.1",
-	              "port": 			27017,
-	              "socket_timeout":	5000,  
-	              fake: 			false
-	            }
+		            "action": 		'save',
+		            "collection":	luo.collection,
+		            "document":		{ name: 'vertx_Ed' }
+	            },
+	            function( reply )
+	            {
+		            //console.log( 'vertxMongo.GET 3 = ' );
+		            //console.log( 'vertxMongo.GET 4 = ' + reply );
+		            //console.log( 'vertxMongo.GET 5 = ' + reply.status );
 
-	            //console.log( 'vertxMongo.GET, 3 = ' );
+                    message += ", reply.status = " + reply.status;
 
-	            this.collection     = "mycollection";
-
-                //console.log( 'vertxMongo.prototype.init 1 = ' + this.dbName );
-                //console.log( 'vertxMongo.prototype.init 2 = ' + this.collection );
-
-                var self = this;
-
-                //  Deploy the vertx mongo module.
-                container.deployModule  ( 'io.vertx~mod-mongo-persistor~2.1.1', this.config, 1, function( err, deployID )
-                {
-	                //console.log( 'deployModule 1 = ' + err );
-
-	                if ( err !== null )
-		                err.printStackTrace();
-	                else
-	                {
-		                //console.log( 'deployModule 4 = ' + deployID );
-            
-                        var myDeployID = deployID;
-
-	                    vertx.eventBus	.send( self.config.address,
-	                    {
-		                    "action": 		'save',
-		                    "collection":	self.collection,
-		                    "document":		{ name: 	'vertx_Ed' }
-	                    },
-	                    function( reply )
-	                    {
-		                    //console.log( 'vertxMongo.prototype.update 9 = ' );
-		                    //console.log( 'vertxMongo.prototype.update 10 = ' + reply );
-		                    //console.log( 'vertxMongo.prototype.update 11 = ' + reply.status );
-
-                            message += ", reply.status = " + reply.status;
-
-			                helpers.writeHead   ( session, httpStatus.OK.code );
+			        helpers.writeHead   ( session, httpStatus.OK.code );
 		                    
-                            //console.log( 'vertxMongo.GET 5c = ' );
+                    //console.log( 'vertxMongo.GET 6 = ' );
 		                    
-                            httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+                    httpImp.execute( { "session": session, "job": "end", 
+                                        "data": { "vt":"krp", "v": "1.0.0", "message": message }, 
+                                        "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 		                    
-                            //console.log( 'vertxMongo.GET 5d = ' );
-
-	                        //vassert.assertEquals('ok', reply.status);
-	                        //vertxTests.startTests(script);
-	                    });
-
-		                //console.log( 'deployModule 5 = ' );
-	                }
-                });
+                    //console.log( 'vertxMongo.GET 7 = ' );
+	            });
 
                 //container   .undeployVerticle  ( this.deploymentID );
 

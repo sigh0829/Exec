@@ -56,6 +56,11 @@ function VertxSockJsServer	()	{
 
 AnyUtils.inherit ( VertxSockJsServer, SockJsServerBase );
 	
+VertxSockJsServer.prototype.interpretorName = function ()	{
+
+	return  "vertx";
+};
+	
 VertxSockJsServer.prototype.writeData = function ( session )	{
 		
 	var	result	= session.errorValue;
