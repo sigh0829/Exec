@@ -60,6 +60,7 @@ var httpImp	= new HttpImp	();
 						{ "appType":"SiteApp",	"name": "books" }, 
 						{ "appType":"SysApp", 	"name": "stripe" }, 
 						{ "appType":"SysApp", 	"name": "testForm" }, 
+						{ "appType":"SiteApp", 	"name": "nodeMongo" }, 
 						{ "appType":"SysApp", 	"name": "fileImpTests" }
 					],
 		"vt":"krp", "v": "1.0.0"
@@ -88,6 +89,19 @@ var	sockJSController = new NodeSockJsServer ();
 		"site":		site,
 		"appType":	"SiteApp",	
 		"name": 	"sockJsEcho2_s", 
+		"vt":"krp", "v": "1.0.0"
+	});
+
+var	sockJSController = new NodeSockJsServer ();    
+	sockJSController .execute
+	({
+		"job":		"installCreateInstall", 
+		"console":	console,
+		"fileImp":	fileImp,
+		"httpImp": 	httpImp,
+		"site":		site,
+		"appType":	"SiteApp",	
+		"name": 	"nodeMongoEcho2_s", 
 		"vt":"krp", "v": "1.0.0"
 	});
 
