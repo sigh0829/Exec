@@ -55,7 +55,7 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            console.log( "SiteApps, books, execute, 1 = " );
+            //console.log( "SiteApps, books, execute, 1 = " );
 
             if ( Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
@@ -72,7 +72,7 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            console.log( "books, execute, 4 = " + err );
+            console.log( "books, execute, catch = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 

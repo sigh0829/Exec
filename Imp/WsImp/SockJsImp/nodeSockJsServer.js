@@ -59,6 +59,11 @@ function NodeSockJsServer	()	{
 
 AnyUtils.inherit ( NodeSockJsServer, SockJsServerBase );
 	
+NodeSockJsServer.prototype.interpretorName = function ()	{
+
+	return  "node";
+};
+	
 NodeSockJsServer.prototype.writeData = function ( session )	{
 	
 	var	result	= session.errorValue;

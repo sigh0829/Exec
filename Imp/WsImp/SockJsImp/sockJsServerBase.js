@@ -50,7 +50,8 @@ function SockJsServerBase ()
     this.appName	= "not defined";    
 
 	this.methodType	        		= {};
-    this.methodType.NAME     		= "NAME"	
+    this.methodType.NAME     		= "NAME";
+    this.methodType.INIT     		= "INIT";
     this.methodType.ReadFromClient	= "ReadFromClient";
     this.methodType.WriteToClient	= "WriteToClient";
 };
@@ -114,6 +115,11 @@ SockJsServerBase.prototype.execute = function ( params )	{
     //this.console.log( "sockJsServerBase, execute, 4 = " + jsonResult[ params.returnIn ] );
     return jsonResult;
 };
+	
+SockJsServerBase.prototype.interpretorName = function ()	{
+
+	return  "";
+};
     
 SockJsServerBase.prototype.installCreateInstall = function ( params )	{
 	
@@ -159,7 +165,8 @@ SockJsServerBase.prototype.init = function ( params )	{
 	    //  Get all of the wsApp api's the caller wants this to handle.
 	    var MyApi   	= require       ( filename );
 	    var myApi   	= new MyApi     ();
-	    this.appName	= myApi.execute ( { "job": "any", "methodType":this.methodType, "method":"NAME", "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	    this.appName	= myApi.execute ( { "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	                      myApi.execute ( { "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 	    this.appHandler	= myApi;
 	
 	    //this.console.log( "sockJsServerBase.init 1 = " + name );

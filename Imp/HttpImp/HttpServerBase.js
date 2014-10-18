@@ -57,6 +57,7 @@ function	HttpServerBase	()
 	this.restHandlers       = {};
 
 	this.methodType	        = {};
+    this.methodType.INIT    = "INIT";
     this.methodType.GET     = "GET";
     this.methodType.PUT 	= "PUT";
     this.methodType.POST 	= "POST";
@@ -193,7 +194,8 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
-		        var name                	= myApi.execute ( { "job": "any", "helpers":self, "httpImp":self, "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":"NAME", "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		        var name                	= myApi.execute ( { "job": "any", "helpers":self, "httpImp":self, "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		                                      myApi.execute ( { "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 
 		    	/*
