@@ -232,13 +232,29 @@ HttpServerBase.prototype.create = function ( params )	{
 
 HttpServerBase.prototype.listen = function ( params )	{
 
-    this.host    = params.host;
-    this.port	= params.port;
-    
-    //this.console.log( "httpController, this.listen, 1 = " + this.host );
-    //this.console.log( "httpController, this.listen, 2 = " + this.port );
+    var result  = true;
 
-	this.server	.listen( this.port, this.host );
+    try
+    {
+        this.host   = params.host;
+        this.port	= params.port;
+    
+        //this.console.log( "HttpServerBase, listen, host = " + this.host );
+        //this.console.log( "HttpServerBase, listen, port = " + this.port );
+
+        if ( typeof this.host !== "undefined" )
+	        this.server	.listen( this.port, this.host );
+        else if ( typeof this.port !== "undefined" )
+	        this.server	.listen( this.port );
+        else
+	        this.server	.listen( 8080 );
+    }
+
+    catch ( err )
+    {
+        result = false;        
+        this.console.log( "HttpServerBase, listen, catch = " + err );
+    }
     
 	return	true;
 }
