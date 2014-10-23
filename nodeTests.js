@@ -110,7 +110,10 @@ httpImp  .execute
 ({ 
 	"job":"listen", 
 	"console":console, 
-	"host":"127.0.0.1", 
+	//"host":"127.0.0.1",       //  Handle loopback address 
+	//"host":"localhost",       //  Handle localhost 
+	//"host":"192.168.1.116",   //  Handle LAN assigned ip
+    //                          //  If nothing then handle every ip address on this port    
 	"port":7777, 
 	"vt":"krp", "v": "1.0.0" 
 });

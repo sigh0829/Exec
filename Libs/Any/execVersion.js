@@ -93,6 +93,16 @@ if ( typeof jsGlobal.exec.any.version === "undefined" )
 		        		namespace.Version.versionPart( version, 1, -1 ) == minor    &&  
 		        		namespace.Version.versionPart( version, 2, -1 ) == change   ;
 		    };
+			
+            /*
+			namespace.Version	.OK	= function ( params )    {
+
+		        //  I don't really know what to do here.
+		        return  namespace.Version.versionPart( params.version, 0, -1 ) >= params.major    &&  
+		        		namespace.Version.versionPart( params.version, 1, -1 ) == params.minor    &&  
+		        		namespace.Version.versionPart( params.version, 2, -1 ) == params.change   ;
+		    };
+            */
 		    
 
 		    //  execute() should handle all previous versions.
