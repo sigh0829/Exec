@@ -32,92 +32,154 @@
 //  The server implementation shouldn't know anything about the website.
 //  It should only process files that it is requested to process.
 var console 			= require( 'vertx/console' );
-
-//var HttpController  	= require( './Imp/HttpImp/httpController2.js' 		);
-var HttpImp         	= require( './Imp/HttpImp/vertxHttpServer.js' );
-
-var FileImp         	= require( './Imp/FileImp/vertxFile.js'	);
-var fileImp     		= new FileImp();
-
-//var SockJSController 	= require( './Imp/WsImp/SockJsImp/sockJsServerBase.js' );
+var Version		        = require( './Libs/Any/execVersion.js' 		    ).Version;
+var HttpImp         	= require( './Imp/HttpImp/vertxHttpServer.js'   );
+var FileImp         	= require( './Imp/FileImp/vertxFile.js'	        );
 var VertxSockJsServer	= require( './Imp/WsImp/SockJsImp/vertxSockJsServer.js'	);
 
+//var   AnyUtils			= require( './Libs/Any/execAnyUtils.js'			).AnyUtils;
+//var	anyUtils	= new AnyUtils	();
+//var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
+//      dirName		= anyUtils.replaceAll			( dirName, "/" );
 
+var fileImp     = new FileImp();
 var	siteType	= 	"Tests/";
 var	site 		=	siteType + "Sites/WinJS_3";
 					//siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
 					//	siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
-
+	
+setupSystem ( this );
+	
 var httpImp	= new HttpImp	();
-	httpImp	.execute                
+var result  = httpImp.execute                
 	({ 
-		"job":		"initCreate", 
-		"console":	console, 
-		"fileImp":	fileImp, 
-		"site":		site,
-		"rest":		[ 
-						{ "appType":"SysApp", 	"name": "myApi" }, 
-						{ "appType":"SysApp", 	"name": "books" }, 
-						{ "appType":"SiteApp",	"name": "books" }, 
-						{ "appType":"SysApp", 	"name": "stripe" }, 
-						{ "appType":"SysApp", 	"name": "testForm" }, 
-						{ "appType":"SiteApp", 	"name": "vertxMongo" }, 
-						{ "appType":"SysApp", 	"name": "fileImpTests" }
-					],
-		"vt":"krp", "v": "1.0.0"
-	});
+		"system":       this, 
+		"job":		    "initCreate", 
+		//"console":	    console, 
+		//"fileImp":	    fileImp, 
+		//"site":		    site,
+        "returnIn":     "result", 
+        "defaultValue": "error",
+		"rest":		    [ 
+						    { "appType":"SysApp", 	"name": "myApi" }, 
+						    { "appType":"SysApp", 	"name": "books" }, 
+						    { "appType":"SiteApp",	"name": "books" }, 
+						    { "appType":"SysApp", 	"name": "stripe" }, 
+						    { "appType":"SysApp", 	"name": "testForm" }, 
+						    { "appType":"SiteApp", 	"name": "vertxMongo" }, 
+						    { "appType":"SysApp", 	"name": "fileImpTests" }
+					    ],
+		"vt":"krp2",    "v": "2.0.0"
 
+	}).result;
 
-var	sockJSController = new VertxSockJsServer ();    
-	sockJSController .execute
-	({
-		"job":		"installCreateInstall", 
-		"console":	console,
-		"fileImp":	fileImp,
-		"httpImp": 	httpImp,
-		"site":		site,
-		"appType":	"SysApp", 	
-		"name": 	"sockJsEcho1_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
+console.log ( "result = " + result );
 
-var	sockJSController = new VertxSockJsServer ();    
-	sockJSController .execute
-	({
-		"job":		"installCreateInstall", 
-		"console":	console,
-		"fileImp":	fileImp,
-		"httpImp": 	httpImp,
-		"site":		site,
-		"appType":	"SiteApp",	
-		"name": 	"sockJsEcho2_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
+//if ( result !== "error" )
+//{
+    var	sockJSController = new VertxSockJsServer ();    
+	    sockJSController .execute
+	    ({
+		    "job":		"installCreateInstall", 
+		    "console":	console,
+		    "fileImp":	fileImp,
+		    "httpImp": 	httpImp,
+		    "site":		site,
+		    "appType":	"SysApp", 	
+		    "name": 	"sockJsEcho1_s", 
+		    "vt":"krp", "v": "1.0.0"
+	    });
 
-var	sockJSController = new VertxSockJsServer ();    
-	sockJSController .execute
-	({
-		"job":		"installCreateInstall", 
-		"console":	console,
-		"fileImp":	fileImp,
-		"httpImp": 	httpImp,
-		"site":		site,
-		"appType":	"SiteApp",	
-		"name": 	"vertxMongoEcho2_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
+    var	sockJSController = new VertxSockJsServer ();    
+	    sockJSController .execute
+	    ({
+		    "job":		"installCreateInstall", 
+		    "console":	console,
+		    "fileImp":	fileImp,
+		    "httpImp": 	httpImp,
+		    "site":		site,
+		    "appType":	"SiteApp",	
+		    "name": 	"sockJsEcho2_s", 
+		    "vt":"krp", "v": "1.0.0"
+	    });
 
-httpImp  .execute    
-({ 
-	"job":"listen", 
-	"console":console, 
-	//"host":"127.0.0.1",       //  Handle loopback address 
-	//"host":"localhost",       //  Handle localhost 
-	//"host":"192.168.1.116",   //  Handle LAN assigned ip
-    //                          //  If nothing then handle every ip address on this port    
-	"port":7779, 
-	"vt":"krp", "v": "1.0.0" 
-});
+    var	sockJSController = new VertxSockJsServer ();    
+	    sockJSController .execute
+	    ({
+		    "job":		"installCreateInstall", 
+		    "console":	console,
+		    "fileImp":	fileImp,
+		    "httpImp": 	httpImp,
+		    "site":		site,
+		    "appType":	"SiteApp",	
+		    "name": 	"vertxMongoEcho2_s", 
+		    "vt":"krp", "v": "1.0.0"
+	    });
+
+    httpImp  .execute    
+    ({ 
+	    "job":"listen", 
+	    "console":console, 
+	    //"host":"127.0.0.1",       //  Handle loopback address 
+	    //"host":"localhost",       //  Handle localhost 
+	    //"host":"192.168.1.116",   //  Handle LAN assigned ip
+        //                          //  If nothing then handle every ip address on this port    
+	    "port":7779, 
+	    "vt":"krp", "v": "1.0.0" 
+    });
+//}
+
+function setupSystem    ( system )  {
+    
+    system.execute = function ( params )	{
+
+        var jsonResult  = {};
+
+        try
+        {
+            //console.log( "vertxTest.js, execute, 1" );
+
+            //  All execute functions are told by the caller
+            //  where to put the return value.  This is the name
+            //  of the property in the json object where the caller
+            //  will look for the result.  For example if the user
+            //  wants the result in a property called "pathname" they
+            //  would set up execute() like this:
+            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var pathname    = result.pathname;
+            //  if ( pathname === "myERROR" ) {}
+            jsonResult  [ params.returnIn ] = params.defaultValue;
+
+            if ( typeof params.get !== "undefined" )
+            {
+                switch ( params.get )
+                {
+                    default:            break;
+
+		            case "console":	    jsonResult  [ params.returnIn ] = console;  break;
+		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;  break;
+		            case "site":		jsonResult  [ params.returnIn ] = site;     break;
+		            case "Version":		jsonResult  [ params.returnIn ] = Version;  break;
+                }
+            }
+        }
+
+        catch ( err )
+        {
+            console.log( "vertxTest.js, execute, catch, err = " + err );
+
+            //  This might have caused the exception.
+            if ( typeof params.returnIn === "undefined" )
+                params.returnIn = {};
+    
+            jsonResult  [ params.returnIn ] = params.defaultValue;
+        }
+
+        //console.log( "vertxTest.js, execute, return, jsonResult[ params.returnIn ] = " + jsonResult[ params.returnIn ] );
+        return jsonResult;
+    }
+
+}
 
 //console.log( 'vertxConfig 1 = ' );
 

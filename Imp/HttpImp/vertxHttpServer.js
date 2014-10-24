@@ -46,7 +46,7 @@ vertx.createHttpServer().requestHandler(function(req) {
 
 //var console			= require( 'vertx/console' );
 var vertx 			= require( 'vertx' )
-var Version			= require( '../../Libs/Any/execVersion.js' 	).Version;
+//var Version			= require( '../../Libs/Any/execVersion.js' 	).Version;
 var AnyUtils		= require( '../../Libs/Any/execAnyUtils.js'	).AnyUtils;
 var HttpServerBase	= require( './HttpServerBase.js' );
 
@@ -64,8 +64,8 @@ VertxHttpServer.prototype.execute = function ( params )	{
 
     try
     {
-    	if ( this.console === null )
-    		this.console = params.console;
+    	//if ( this.console === null )
+    		//this.console = params.console;
     	
         //  Vertx doesn't provide a built in console.
         //  So, it needs to be passed in from vertxConfig.js 
@@ -76,17 +76,17 @@ VertxHttpServer.prototype.execute = function ( params )	{
 
         //this.console.log( "vertxHttpServer, execute, 1 = " );
 
-        if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
-        {
-            jsonResult  [ params.returnIn ] = params.defaultValue;
-            params      .session.message	= params.v + " is not handled by this implementation";
-        }
+        if ( this.getSystemInfo( params ) === false )
+            jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
             //this.console.log( "vertxHttpServer, execute, 2 = " );
             
             switch ( params.job )
 	        {
+                //  These two calls are necessary because, in the vertx world, you can only
+                //  call vertx.createSockJSServer() once per http server.  See vertxSockJsServer.js
+                //  where these are used.
 		        case "getSockJsServer": jsonResult[ params.returnIn ] = this.getSockJsServer	(); 			break;
 		        case "setSockJsServer":	jsonResult[ params.returnIn ] = this.setSockJsServer	( params ); 	break;
 		
