@@ -27,17 +27,22 @@
 //  http://technologyconversations.com/2014/08/12/rest-api-with-json/
 //  http://localhost:7777/jsEcho/id/24
 
-var Version	    = require( '../../../../../../Libs/Any/execVersion.js' ).Version;
-var console 	= require( 'vertx/console' );
+//var Version	    = require( '../../../../../../Libs/Any/execVersion.js' ).Version;
+//var console 	= require( 'vertx/console' );
 var container	= require("vertx/container");
 var vertx 		= require("vertx")
 
 module.exports = function ()	{
 
-    var luo 		= {};	//	Local Use Only
-    	luo .self	= this;
-    	luo .sock	= null;
-    	luo .data	= "";
+    var luo 		    = {};	//	Local Use Only
+    	luo .self	    = this;
+    	luo .sock	    = null;
+    	luo .data	    = "";
+    	luo .system     = null;
+        luo .console    = null;
+        luo .fileImp    = null;
+        luo .httpImp    = null;
+        luo .Version    = null;
 	
 	this.execute = function ( params )	{
 
@@ -45,17 +50,27 @@ module.exports = function ()	{
 
         try
         {
-            //  Vertx doesn't provide a built in console.
-            //  So, it needs to be passed in from vertxConfig.js 
-            console     = params.console;
+            if (    luo.system === null                     &&  
+                    typeof params.system !== "undefined"    &&  
+                    params.system !== null                  &&  
+                    typeof params.system.execute === "function"
+               )
+            {
+    	        luo.system     = params.system;
+
+                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+            }
 
             jsonResult  [ params.returnIn ] = params.errorValue;
 
-            //console.log( "vertxMongoEcho2_s, execute, 1 = " );
+            //luo.console .log( "vertxMongoEcho2_s, execute, 1 = " );
 
-            if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
+            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === false )
             {
-                //console.log( "jsEcho, execute, 3 = " );
+                //luo.console .log( "jsEcho, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.errorValue;
                 luo .message                	= params.v + " is not handled by this implementation";
             }
@@ -63,7 +78,7 @@ module.exports = function ()	{
             {
                 var	method  = params.method;
                 
-                //console.log( "vertxMongoEcho2_s, execute, 2 = " + method );
+                //luo.console .log( "vertxMongoEcho2_s, execute, 2 = " + method );
 
                 if ( method === params.methodType.INIT )
                 {
@@ -79,13 +94,13 @@ module.exports = function ()	{
 
 	                luo.collection = "mycollection";
 
-                    //console.log( 'vertxMongoEcho2_s, execute, INIT, luo.config.db_name = ' + luo.config.db_name );
-                    //console.log( 'vertxMongoEcho2_s, execute, INIT, luo.collection= ' + luo.collection );
+                    //luo.console .log( 'vertxMongoEcho2_s, execute, INIT, luo.config.db_name = ' + luo.config.db_name );
+                    //luo.console .log( 'vertxMongoEcho2_s, execute, INIT, luo.collection= ' + luo.collection );
 
                     //  Deploy the vertx mongo module.
                     container.deployModule  ( 'io.vertx~mod-mongo-persistor~2.1.1', luo.config, 1, function( err, deployID )
                     {
-	                    //console.log( 'vertxMongoEcho2_s, execute, INIT, err = ' + err );
+	                    //luo.console .log( 'vertxMongoEcho2_s, execute, INIT, err = ' + err );
 
 	                    if ( err !== null )
 		                    err.printStackTrace();
@@ -93,7 +108,7 @@ module.exports = function ()	{
 	                    {
                             luo.myDeployID = deployID;
 	                        
-                            //console.log( 'vertxMongoEcho2_s, execute, INIT, deployID = ' + deployID );
+                            //luo.console .log( 'vertxMongoEcho2_s, execute, INIT, deployID = ' + deployID );
 	                    }
                     });
                 }
@@ -122,31 +137,31 @@ module.exports = function ()	{
 	                },
 	                function( reply )
 	                {
-		                //console.log( 'vertxMongoEcho2_s, execute, GET 1 = ' );
-		                //console.log( 'vertxMongoEcho2_s, execute, GET 2 = ' + reply );
-		                //console.log( 'vertxMongoEcho2_s, execute, GET 3 = ' + reply.status );
+		                //luo.console .log( 'vertxMongoEcho2_s, execute, GET 1 = ' );
+		                //luo.console .log( 'vertxMongoEcho2_s, execute, GET 2 = ' + reply );
+		                //luo.console .log( 'vertxMongoEcho2_s, execute, GET 3 = ' + reply.status );
 
                         luo.data    += ", reply.status = " + reply.status;
 
-		                //console.log( 'vertxMongoEcho2_s, execute, GET 4 = ' + luo.data );
+		                //luo.console .log( 'vertxMongoEcho2_s, execute, GET 4 = ' + luo.data );
 
                         //  This is an echo so send it back out.
                         params.method	= params.methodType.WriteToClient;
                         luo.self.execute ( params );
 
-		                //console.log( 'vertxMongoEcho2_s, execute 10 = ' );
+		                //luo.console .log( 'vertxMongoEcho2_s, execute 10 = ' );
 
 	                    //vassert.assertEquals('ok', reply.status);
 	                    //vertxTests.startTests(script);
 	                });
 
-                    //console.log( "vertxMongoEcho2_s, execute, 11 = " + luo.data );
+                    //luo.console .log( "vertxMongoEcho2_s, execute, 11 = " + luo.data );
                     
                 	//	Since this is echo call write immediately.
                     //params.method	= params.methodType.WriteToClient;
                     jsonResult [ params.returnIn ]	= params.successValue;
 
-                    //console.log( "vertxMongoEcho2_s, execute, 4 = " + luo.data );
+                    //luo.console .log( "vertxMongoEcho2_s, execute, 4 = " + luo.data );
                 }
                     
                 else if ( method === params.methodType.WriteToClient )
@@ -156,7 +171,7 @@ module.exports = function ()	{
                 	//jsonResult  [ params.returnIn ] = luo.data; 
                     //jsonResult  [ params.returnIn ] = successValue;
 
-                    //console.log( "vertxMongoEcho2_s, execute, 5 = " + luo.data );
+                    //luo.console .log( "vertxMongoEcho2_s, execute, 5 = " + luo.data );
                     
                     var result	= params.socketJsImp.execute
                     ({ 
@@ -169,7 +184,7 @@ module.exports = function ()	{
                     	"vt":"krp", 	"v": "1.0.0"
                     }).result;
                 	
-                    //console.log( "vertxMongoEcho2_s, execute, 6 = " + luo.data );
+                    //luo.console .log( "vertxMongoEcho2_s, execute, 6 = " + luo.data );
                     
                     jsonResult  [ params.returnIn ]	= result;
                 }
@@ -178,11 +193,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            console.log( "vertxMongoEcho2_s, execute, catch = " + err );
+            luo.console .log( "vertxMongoEcho2_s, execute, catch = " + err );
             jsonResult  [ params.returnIn ] = params.errorValue;
         }
 
-        //console.log( "vertxMongoEcho2_s, execute, 7 = " + jsonResult[ params.returnIn ] );
+        //luo.console .log( "vertxMongoEcho2_s, execute, 7 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 };

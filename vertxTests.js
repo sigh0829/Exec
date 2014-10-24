@@ -55,9 +55,6 @@ var result  = httpImp.execute
 	({ 
 		"system":       this, 
 		"job":		    "initCreate", 
-		//"console":	    console, 
-		//"fileImp":	    fileImp, 
-		//"site":		    site,
         "returnIn":     "result", 
         "defaultValue": "error",
 		"rest":		    [ 
@@ -80,46 +77,48 @@ console.log ( "result = " + result );
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
+		    "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "console":	console,
-		    "fileImp":	fileImp,
-		    "httpImp": 	httpImp,
-		    "site":		site,
+		    //"console":	console,
+		    //"fileImp":	fileImp,
+		    //"httpImp": 	httpImp,
+		    //"site":		site,
 		    "appType":	"SysApp", 	
 		    "name": 	"sockJsEcho1_s", 
-		    "vt":"krp", "v": "1.0.0"
+		    "vt":"krp2", "v": "2.0.0"
 	    });
 
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
+		    "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "console":	console,
-		    "fileImp":	fileImp,
-		    "httpImp": 	httpImp,
-		    "site":		site,
+		    //"console":	console,
+		    //"fileImp":	fileImp,
+		    //"httpImp": 	httpImp,
+		    //"site":		site,
 		    "appType":	"SiteApp",	
 		    "name": 	"sockJsEcho2_s", 
-		    "vt":"krp", "v": "1.0.0"
+		    "vt":"krp2", "v": "2.0.0"
 	    });
 
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
+		    "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "console":	console,
-		    "fileImp":	fileImp,
-		    "httpImp": 	httpImp,
-		    "site":		site,
+		    //"console":	console,
+		    //"fileImp":	fileImp,
+		    //"httpImp": 	httpImp,
+		    //"site":		site,
 		    "appType":	"SiteApp",	
 		    "name": 	"vertxMongoEcho2_s", 
-		    "vt":"krp", "v": "1.0.0"
+		    "vt":"krp2", "v": "2.0.0"
 	    });
 
     httpImp  .execute    
     ({ 
 	    "job":"listen", 
-	    "console":console, 
 	    //"host":"127.0.0.1",       //  Handle loopback address 
 	    //"host":"localhost",       //  Handle localhost 
 	    //"host":"192.168.1.116",   //  Handle LAN assigned ip
@@ -158,6 +157,7 @@ function setupSystem    ( system )  {
 
 		            case "console":	    jsonResult  [ params.returnIn ] = console;  break;
 		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;  break;
+		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;  break;
 		            case "site":		jsonResult  [ params.returnIn ] = site;     break;
 		            case "Version":		jsonResult  [ params.returnIn ] = Version;  break;
                 }
@@ -190,9 +190,9 @@ function setupSystem    ( system )  {
 //in the folder "Sites/ForTesting" on port 7777
 //var httpImp         = new HttpImp 	        ();
 //var httpController  = new HttpController    ();
-//  httpController  .execute                ( { "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"127.0.0.1", "port":7778, "site":"Sites/ForTesting", "vt":"krp", "v": "1.0.0",
+//  httpController  .execute                ( { "system":this, "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"127.0.0.1", "port":7778, "site":"Sites/ForTesting", "vt":"krp", "v": "1.0.0",
   //                                          "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" } ] } );
-//httpController  .execute                ( { "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
+//httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
 
 
 /*
@@ -200,9 +200,9 @@ function setupSystem    ( system )  {
 //in the folder "Sites/ForTesting" on port 7777
 var httpImp         = new HttpImp 	        ();
 var httpController  = new HttpController    ();
-httpController  .execute                ( { "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"127.0.0.1", "port":7778, "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
+httpController  .execute                ( { "system":this, "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"127.0.0.1", "port":7778, "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
                                             "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" }, { "name": "fileImpTests" } ] } );
-httpController  .execute                ( { "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
+httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
 */
 
 //This instance will handle the website found
@@ -211,6 +211,7 @@ httpController  .execute                ( { "job":"start", "console":console, "v
 var httpImp = new HttpImp	();
 httpImp	.execute                
 ({ 
+    "system":this, 
 	"job":"initCreate", 
 	"console":console, 
 	"fileImp": fileImp, 
@@ -232,9 +233,9 @@ httpImp	.execute
 //  in the folder "Sites/TestForm" on port 7778
 var httpImp         = new HttpImp 	        ();
 var httpController  = new HttpController    ();
-    httpController  .execute                ( { "job":"init", "console":console, "httpImp": httpImp, "port":8080, "host":"0.0.0.0", "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
+    httpController  .execute                ( { "system":this, "job":"init", "console":console, "httpImp": httpImp, "port":8080, "host":"0.0.0.0", "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
                                                 "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" } ] } );
-    httpController  .execute                ( { "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
+    httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
 */
 
 //console.log( 'vertxConfig 2 = ' );

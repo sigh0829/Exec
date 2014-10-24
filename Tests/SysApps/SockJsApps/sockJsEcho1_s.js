@@ -27,13 +27,18 @@
 //  http://technologyconversations.com/2014/08/12/rest-api-with-json/
 //  http://localhost:7777/jsEcho/id/24
 
-var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
+//var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 
 module.exports = function ()	{
 
-    var luo 		= {};	//	Local Use Only
-    	luo .sock	= null;
-    	luo .data	= "";
+    var luo 		    = {};	//	Local Use Only
+    	luo .sock	    = null;
+    	luo .data	    = "";
+    	luo .system     = null;
+        luo .console    = null;
+        luo .fileImp    = null;
+        luo .httpImp    = null;
+        luo .Version    = null;
 	
 	this.execute = function ( params )	{
 
@@ -41,17 +46,26 @@ module.exports = function ()	{
 
         try
         {
-            //  Vertx doesn't provide a built in console.
-            //  So, it needs to be passed in from vertxConfig.js 
-            console     = params.console;
+            if (    luo.system === null                     &&  
+                    typeof params.system !== "undefined"    &&  
+                    params.system !== null                  &&  
+                    typeof params.system.execute === "function"
+               )
+            {
+    	        luo.system     = params.system;
 
+                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+            }
             jsonResult  [ params.returnIn ] = params.errorValue;
 
-            //console.log( "sockJsEcho1, execute, 1 = " );
+            //luo.console .log( "sockJsEcho1, execute, 1 = " );
 
-            if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
+            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === false )
             {
-                //console.log( "sockJsEcho1, execute, 2 = " );
+                //luo.console .log( "sockJsEcho1, execute, 2 = " );
                 jsonResult  [ params.returnIn ] = params.errorValue;
                 luo .message                	= params.v + " is not handled by this implementation";
             }
@@ -59,7 +73,7 @@ module.exports = function ()	{
             {
                 var	method  = params.method;
                 
-                //console.log( "sockJsEcho1, execute, 3 = " + method );
+                //luo.console .log( "sockJsEcho1, execute, 3 = " + method );
 
                 if ( method === params.methodType.NAME )
                 {
@@ -77,13 +91,13 @@ module.exports = function ()	{
                     
                 	//jsonResult  [ params.returnIn ]	= params.successValue;
 
-                    //console.log( "sockJsEcho1, execute, 4 = " + luo.data );
+                    //luo.console .log( "sockJsEcho1, execute, 4 = " + luo.data );
                     
                 	//	Since this is echo call write immediately.
                     params.method	= params.methodType.WriteToClient;
                     jsonResult [ params.returnIn ]	= this.execute ( params );
 
-                    //console.log( "sockJsEcho1, execute, 5 = " + luo.data );
+                    //luo.console .log( "sockJsEcho1, execute, 5 = " + luo.data );
                 }
                     
                 else if ( method === params.methodType.WriteToClient )
@@ -93,7 +107,7 @@ module.exports = function ()	{
                 	//jsonResult  [ params.returnIn ] = luo.data; 
                     //jsonResult  [ params.returnIn ] = successValue;
 
-                    //console.log( "sockJsEcho1, execute, 6 = " + luo.data );
+                    //luo.console .log( "sockJsEcho1, execute, 6 = " + luo.data );
                     
                     var result	= params.socketJsImp.execute
                     ({ 
@@ -106,7 +120,7 @@ module.exports = function ()	{
                     	"vt":"krp", 	"v": "1.0.0"
                     }).result;
                 	
-                    //console.log( "sockJsEcho1, execute, 7 = " + luo.data );
+                    //luo.console .log( "sockJsEcho1, execute, 7 = " + luo.data );
                     
                     jsonResult  [ params.returnIn ]	= result;
                 }
@@ -115,11 +129,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            console.log( "sockJsEcho1, execute, catch = " + err );
+            luo.console .log( "sockJsEcho1, execute, catch = " + err );
             jsonResult  [ params.returnIn ] = params.errorValue;
         }
 
-        //console.log( "sockJsEcho1, execute, 8 = " + jsonResult[ params.returnIn ] );
+        //luo.console .log( "sockJsEcho1, execute, 8 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 };

@@ -34,6 +34,11 @@ module.exports = function ()	{
 
     var luo 			= {};	//	Local Use Only
         luo .message    = "";
+    	luo .system     = null;
+        luo .console    = null;
+        luo .fileImp    = null;
+        luo .httpImp    = null;
+        luo .Version    = null;
 	
 	this.execute = function ( params )	{
 
@@ -41,9 +46,19 @@ module.exports = function ()	{
 
         try
         {
-            //  Vertx doesn't provide a built in console.
-            //  So, it needs to be passed in from vertxConfig.js 
-            console     = params.console;
+            if (    luo.system === null                     &&  
+                    typeof params.system !== "undefined"    &&  
+                    params.system !== null                  &&  
+                    typeof params.system.execute === "function"
+               )
+            {
+    	        luo.system     = params.system;
+
+                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+            }
 
             //  All execute functions are told by the caller
             //  where to put the return value.  This is the name
@@ -51,21 +66,21 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = luo.httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //console.log( "SiteApps, nodeMongo, execute, 1 = " );
+            //luo.console .log( "SiteApps, nodeMongo, execute, 1 = " );
 
-            if ( Version.versionOK( params.v, 1, 0, 0 ) === true )
+            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
-                //console.log( "nodeMongo, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.helpers, params.httpImp, params.session, params.methodType, params.method, params.httpStatus, params.console );
+                //luo.console .log( "nodeMongo, execute, 2 = " );
+                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
             }
             else
             {
-                //console.log( "nodeMongo, execute, 3 = " );
+                //luo.console .log( "nodeMongo, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
                 luo .message                    = params.v + " is not handled by this implementation";
             }
@@ -73,42 +88,42 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            console.log( "nodeMongo, execute, 4 = " + err );
+            luo.console .log( "nodeMongo, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //luo.console .log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
-    luo._execute = function ( helpers, httpImp, session, methodType, method, httpStatus, console )  {
+    luo._execute = function ( session, methodType, method, httpStatus )  {
 
         var result = false; //
 
         method  = method.toString ();
             
-        //console.log( "nodeMongo, _execute, 1a = " + httpImp );
-        //console.log( "nodeMongo, _execute, 1b = " + session );
-        //console.log( "nodeMongo, _execute, 1c = " + methodType );
-        //console.log( "nodeMongo, _execute, 1d = " + method );
-        //console.log( "nodeMongo, _execute, 1e = " + httpStatus );
-        //console.log( "nodeMongo, _execute, 1f = " + console );
+        //luo.console .log( "nodeMongo, _execute, 1a = " + luo.httpImp );
+        //luo.console .log( "nodeMongo, _execute, 1b = " + session );
+        //luo.console .log( "nodeMongo, _execute, 1c = " + methodType );
+        //luo.console .log( "nodeMongo, _execute, 1d = " + method );
+        //luo.console .log( "nodeMongo, _execute, 1e = " + httpStatus );
+        //luo.console .log( "nodeMongo, _execute, 1f = " + luo.console  );
 
         if ( method === methodType.INIT )
         {
-            //console.log( "nodeMongo, _execute, INIT, 1 = " );
+            //luo.console .log( "nodeMongo, _execute, INIT, 1 = " );
 
 	        luo.dbName      = "mydb";
 	        luo.collection  = "mycollection";
 	        luo.db 	        = mongojs( luo.dbName, [ luo.collection ] );
 
-            //console.log( "nodeMongo, _execute, INIT, 2 = " );
+            //luo.console .log( "nodeMongo, _execute, INIT, 2 = " );
         }
 
         else if ( method === methodType.NAME )
         {
             result = "nodeMongo";
-            //console.log( "nodeMongo, _execute, 2 = " + result );
+            //luo.console .log( "nodeMongo, _execute, 2 = " + result );
         }
 
         else if ( method === methodType.DELETE )
@@ -120,14 +135,14 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/nodeMongo/id/24
 
-		    var	pathname    = httpImp   .execute    ( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
-            var split       = pathname  .split      ( '/' );
+		    var	pathname    = luo.httpImp   .execute    ( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
+            var split       = pathname      .split      ( '/' );
 
-		    //console.log( "nodeMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
+		    //luo.console .log( "nodeMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
 
 		    if ( split[ 2 ] === "id" )
 		    {
-			    //console.log( "nodeMongo.GET, 2, id.number = "	+ split[ 3 ] );
+			    //luo.console .log( "nodeMongo.GET, 2, id.number = "	+ split[ 3 ] );
 
                 var message = "id is " + split[ 3 ];
 
@@ -139,7 +154,7 @@ module.exports = function ()	{
                     message += ", docs.length = " + docs.length;
 		            
                     helpers.writeHead   ( session, httpStatus.OK.code );
-                    httpImp.execute     ( { "session": session, "job": "end", 
+                    luo.httpImp.execute ( { "session": session, "job": "end", 
                                                 "data": { "vt":"krp", "v": "1.0.0", "message": message }, 
                                                     "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 	            });
@@ -158,7 +173,7 @@ module.exports = function ()	{
             //  Update
         }
 
-        //console.log( "nodeMongo, _execute, return = " + result );
+        //luo.console .log( "nodeMongo, _execute, return = " + result );
 
         return  result
     }

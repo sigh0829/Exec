@@ -31,7 +31,6 @@
 //	http://www.hacksparrow.com/how-to-write-node-js-modules.html
 //	http://wiki.commonjs.org/wiki/Modules/1.1
 
-//var Version		= require( '../../Libs/Any/execVersion.js' 			).Version;
 var ServerUtils	= require( '../../Libs/Server/execServerUtils.js'	).ServerUtils;
 var MimeTypes	= require( '../../Libs/Server/execMimeTypes.js'		).MimeTypes;
 var AnyUtils	= require( '../../Libs/Any/execAnyUtils.js'			).AnyUtils;
@@ -39,6 +38,7 @@ var AnyUtils	= require( '../../Libs/Any/execAnyUtils.js'			).AnyUtils;
 //class HttpServerBase start
 function	HttpServerBase	()
 {
+    this.system     = null;
 	this.console	= null;
 	this.server		= null;
     this.Version    = null;
@@ -68,55 +68,6 @@ function	HttpServerBase	()
     this.methodType.TRACE 	= "TRACE";
     this.methodType.PATCH	= "PATCH";
 };
-
-HttpServerBase.prototype.getSystemInfo = function ( params )
-{
-    var result  = false;
-
-    try
-    {
-        if ( typeof params.system !== "undefined"  &&  params.system !== null  &&  typeof params.system.execute === "function" )
-        {
-    	    this.system     = params.system;
-
-            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
-            this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
-            this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
-            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
-        }
-    	
-        //  For version 1 sytle "params" need to check params.console.
-        //
-        //  Vertx doesn't provide a built in console.
-        //  So, it needs to be passed in from vertxConfig.js 
-        //if ( this.console === null )
-    	  //  this.console = params.console;
-    	
-        //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
-
-        if ( this.Version === null )
-            result = false;
-
-        else if ( params.vt === "krp" )
-            result = this.Version.versionOK( params.v, 1, 0, 0 );
-
-        else
-            result = this.Version.OK( params, {"EQ":2}, {"EQ":0}, {"EQ":0} );
-
-        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
-    }
-
-    catch ( err )
-    {
-        result = false;
-    }
-
-    return  result;
-}
 
 HttpServerBase.prototype.execute = function ( params )
 {
@@ -187,6 +138,59 @@ HttpServerBase.prototype.execute = function ( params )
     return jsonResult;
 };
 
+HttpServerBase.prototype.getSystemInfo = function ( params )
+{
+    var result  = false;
+
+    try
+    {
+        if (    this.system === null                    &&  
+                typeof params.system !== "undefined"    &&  
+                params.system !== null                  &&  
+                typeof params.system.execute === "function"
+           )
+        {
+    	    this.system     = params.system;
+
+            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+            this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+            this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
+            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+        }
+    	
+        //  For version 1 sytle "params" need to check params.console.
+        //
+        //  Vertx doesn't provide a built in console.
+        //  So, it needs to be passed in from vertxConfig.js 
+        //if ( this.console === null )
+    	  //  this.console = params.console;
+    	
+        //  This must come after console is defined for vertx systems.
+        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
+
+        if ( this.Version === null )
+            result = false;
+
+        else if ( params.vt === "krp" )
+            result = this.Version.versionOK( params.v, 1, 0, 0 );
+
+        else
+            result = this.Version.OK( params, {"EQ":2}, {"EQ":0}, {"EQ":0} );
+
+        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
+    }
+
+    catch ( err )
+    {
+        result = false;
+    }
+
+    return  result;
+}
+
 HttpServerBase.prototype.getVersionErrorMessage = function ( params )	{
 	
     if ( typeof params.session === "undefined" )
@@ -209,27 +213,18 @@ HttpServerBase.prototype.init = function ( params )	{
 	
 	try
 	{
-	    //this.site = params.site;
-	    
-	    //if ( typeof params.fileImp !== "undefined" )
-	    //{
-	    	//this.fileImp = params.fileImp;
-	    	
-	    	//	Read in any config data here.
-	    	this.readMimeTypes ( params );
-	    //}
+	    //	Read in any config data here.
+	    this.readMimeTypes ();
 	    
 	    //	If no rest apps are requested this is undefined.
 	    if ( typeof params.rest !== "undefined" )
 	    {
-		    var	self 		= this;
-		    //var	site		= params.site;
+		    var	self = this;
 		    
-		    //  Get all of the rest api's the caller wants
-		    //  this to handle.
+		    //  Get all of the rest api's the caller wants this to handle.
 		    params.rest.forEach ( function addNumber( value )
 		    {
-		    	//self.console.log( "HttpServerBase.prototype.init 1 = " + site );
+		    	//self.console.log( "HttpServerBase.prototype.init 1 = " + self.site );
 		    	
 		    	//	Assume value.appType === "SysApp"
 		    	var	filename = '../../Tests/SysApps/Rest/' + value.name + '.js';
@@ -240,11 +235,12 @@ HttpServerBase.prototype.init = function ( params )	{
 		    		filename = '../../' + self.site + '/EXEC-INF/SiteApps/Rest/' + value.name + '.js';
 		    	
 		    	//self.console.log( "HttpServerBase.prototype.init 2 = " + ServerUtils.httpStatus );
+		    	//self.console.log( "HttpServerBase.prototype.init 2a = " + filename );
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
-		        var name                	= myApi.execute ( { "job": "any", "helpers":self, "httpImp":self, "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-		                                      myApi.execute ( { "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "helpers":self, "httpImp":self, "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 		    	
 		    	//self.console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
@@ -310,19 +306,19 @@ HttpServerBase.prototype.listen = function ( params )	{
 	return	true;
 }
 
-HttpServerBase.prototype.readMimeTypes = function ( params )	{
+HttpServerBase.prototype.readMimeTypes = function ()	{
 	
 	//	Read web site user defined mime types.
-	var	mimeTypesFile	= "./" + params.site + "/EXEC-INF/" + "mimeTypes.json";
-	var	exists 			= this.fileImp  .execute	( { "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "console":this.console, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+	var	mimeTypesFile	= "./" + this.site + "/EXEC-INF/" + "mimeTypes.json";
+	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "console":this.console, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
 	
 	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
 	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
-	//this.console.log( "fileImpTests, testFileImp, site = " + params.site );
+	//this.console.log( "fileImpTests, testFileImp, site = " + this.site );
 	
 	if ( exists === true )
 	{
-		var	result	= this.fileImp  .execute	( { "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0", "console":this.console  } ).result;
+		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0", "console":this.console  } ).result;
 
 		if ( result.contents != "" )
 		{
@@ -583,6 +579,7 @@ HttpServerBase.prototype.POST 		= function ( session )	{
             //this.console.log( "this.POST, 2 = " + apiAnyCase );
             statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
             { 
+                "system":       this.system, 
                 "job":          "any", 
                 "helpers":      this, 
                 "httpImp":      this, 
@@ -651,6 +648,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
             //this.console.log( "this.GET, 2 = " + apiAnyCase );
             statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
             { 
+                "system":       this.system, 
                 "job":          "any", 
                 "helpers":      this, 
                 "httpImp":      this,

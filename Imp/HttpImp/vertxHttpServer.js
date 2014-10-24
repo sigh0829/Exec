@@ -44,9 +44,7 @@ vertx.createHttpServer().requestHandler(function(req) {
 //	vertx version
 //	vertx run vertxServer.js
 
-//var console			= require( 'vertx/console' );
 var vertx 			= require( 'vertx' )
-//var Version			= require( '../../Libs/Any/execVersion.js' 	).Version;
 var AnyUtils		= require( '../../Libs/Any/execAnyUtils.js'	).AnyUtils;
 var HttpServerBase	= require( './HttpServerBase.js' );
 
@@ -64,17 +62,7 @@ VertxHttpServer.prototype.execute = function ( params )	{
 
     try
     {
-    	//if ( this.console === null )
-    		//this.console = params.console;
-    	
-        //  Vertx doesn't provide a built in console.
-        //  So, it needs to be passed in from vertxConfig.js 
-        //this.console	= params.console;
-        //this.console.log( "VertxHttpServer, execute, 1 = " );
-
         jsonResult  [ params.returnIn ] = params.defaultValue;
-
-        //this.console.log( "vertxHttpServer, execute, 1 = " );
 
         if ( this.getSystemInfo( params ) === false )
             jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
