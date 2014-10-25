@@ -81,7 +81,7 @@ HttpServerBase.prototype.execute = function ( params )
         //  will look for the result.  For example if the user
         //  wants the result in a property called "pathname" they
         //  would set up execute() like this:
-        //  var	result      = this.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+        //  var	result      = this.execute( { "system":this.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
         //  var pathname    = result.pathname;
         //  if ( pathname === "myERROR" ) {}
         jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -239,8 +239,8 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
-		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "helpers":self, "httpImp":self, "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "console":self.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 		    	
 		    	//self.console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
@@ -310,7 +310,7 @@ HttpServerBase.prototype.readMimeTypes = function ()	{
 	
 	//	Read web site user defined mime types.
 	var	mimeTypesFile	= "./" + this.site + "/EXEC-INF/" + "mimeTypes.json";
-	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "console":this.console, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
 	
 	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
 	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
@@ -318,7 +318,7 @@ HttpServerBase.prototype.readMimeTypes = function ()	{
 	
 	if ( exists === true )
 	{
-		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0", "console":this.console  } ).result;
+		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
 
 		if ( result.contents != "" )
 		{
@@ -581,13 +581,10 @@ HttpServerBase.prototype.POST 		= function ( session )	{
             { 
                 "system":       this.system, 
                 "job":          "any", 
-                "helpers":      this, 
-                "httpImp":      this, 
                 "session":      session, 
                 "methodType":   this.methodType, 
                 "method":       "POST", 
                 "httpStatus":   ServerUtils.httpStatus, 
-                "console":      this.console, 
                 "returnIn":     "statusCode", 
                 "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
                 "vt":"krp", 	"v": "1.0.0" 
@@ -650,14 +647,10 @@ HttpServerBase.prototype.GET     = function ( session )	{
             { 
                 "system":       this.system, 
                 "job":          "any", 
-                "helpers":      this, 
-                "httpImp":      this,
-                "fileImp":		this.fileImp,
                 "session":      session, 
                 "methodType":   this.methodType, 
                 "method":       "GET", 
                 "httpStatus":   ServerUtils.httpStatus, 
-                "console":      this.console, 
                 "returnIn":     "statusCode", 
                 "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
                 "vt":"krp", 	"v": "1.0.0" 

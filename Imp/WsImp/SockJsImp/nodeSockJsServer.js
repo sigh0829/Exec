@@ -100,7 +100,7 @@ NodeSockJsServer.prototype.create = function ( params )	{
 	{
 		//this.console.log( "nodeSockJsServer.create 1 = " );
 		
-		this.httpServer	= this.httpImp .execute ( { "job": "getServer",  
+		this.httpServer	= this.httpImp .execute ( { "system":this.system, "job": "getServer",  
 														"returnIn": "server", "defaultValue": null, 
 															"vt":"krp", "v": "1.0.0" } ).server;
 	

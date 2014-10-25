@@ -97,16 +97,14 @@ VertxSockJsServer.prototype.create = function ( params )	{
 	{
 		//this.console.log( "vertxSockJsServer.create 1 = " + this.sjsServer );
 		
-		this.sjsServer = this.httpImp .execute ( { "job": "getSockJsServer",  
-															"console":this.console,
+		this.sjsServer = this.httpImp .execute ( { "system":this.system, "job": "getSockJsServer",  
 															"returnIn": "sockJsServer", "defaultValue": null, 
 																"vt":"krp", "v": "1.0.0" } ).sockJsServer;
 		//this.console.log( "vertxSockJsServer.create 1a = " + this.sjsServer );
 		
 		if ( this.sjsServer === null )
 		{
-			var	httpServer	= this.httpImp .execute ( { "job": "getServer",
-															"console":this.console,
+			var	httpServer	= this.httpImp .execute ( { "system":this.system, "job": "getServer",
 															"returnIn": "server", "defaultValue": null, 
 																"vt":"krp", "v": "1.0.0" } ).server;
 		
@@ -121,8 +119,7 @@ VertxSockJsServer.prototype.create = function ( params )	{
 
 			//this.console.log		( "vertxSockJsServer.create 3 = " + this.sjsServer );
 			
-			this.httpImp .execute ( { "job": "setSockJsServer",
-											"console":this.console,
+			this.httpImp .execute ( { "system":this.system, "job": "setSockJsServer",
 											"sockJsServer": this.sjsServer,
 												"returnIn": "void", "defaultValue": null, 
 													"vt":"krp", "v": "1.0.0" } );

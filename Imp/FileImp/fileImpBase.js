@@ -37,11 +37,14 @@
 //	onError, onLoadEnd
 
 //var	fs 		= require( "fs"		);
-var Version	= require( '../../Libs/Any/execVersion.js' ).Version;
+//var Version	= require( '../../Libs/Any/execVersion.js' ).Version;
 
 function FileImpBase	()
 {
-	//HttpServerBase.call	( this );
+    this.system     = null;
+	this.console	= null;
+	this.server		= null;
+    this.Version    = null;
 };
 
 //AnyUtils.inherit ( NodeHttpServer, HttpServerBase );
@@ -52,52 +55,46 @@ FileImpBase.prototype.execute = function ( params )	{
 
     try
     {
-        //  Vertx doesn't provide a built in console.
-        //  So, it needs to be passed in from vertxConfig.js 
-        console	= params.console;
-        
         //  All execute functions are told by the caller
         //  where to put the return value.  This is the name
         //  of the property in the json object where the caller
         //  will look for the result.  For example if the user
         //  wants the result in a property called "pathname" they
         //  would set up execute() like this:
-        //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+        //  var	result      = httpImp.execute( { "system":this.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
         //  var pathname	= result.pathname;
         //  if ( pathname === "myERROR" ) {}
         result  [ params.returnIn ] = params.defaultValue;
 
-        //console.log( "FileImpBase.prototype, execute, 1 = " );
+        //  Must call getSystemInfo() first
+        //  this.console.log( "FileImpBase.prototype, execute, 1 = " );
 
-        if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
-        {
-            result	[ params.returnIn ] = params.defaultValue;
-            params	.session.message	= params.v + " is not handled by this implementation";
-        }
+        if ( this.getSystemInfo( params ) === false )
+            jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
-            //console.log( "FileImpBase.prototype, execute, 2 = " );
+            //this.console.log( "FileImpBase.prototype, execute, 2 = " );
 
 	        //  These are the functions that vertxHttpServer provides to switch.js
 	        switch ( params.job )
 	        {
-                case "getInfo":     	result[ params.returnIn ] = this.getInfo    		( params ); 		break;
+                case "getInfo":     	result[ params.returnIn ] = this.getInfo    	( params ); 		break;
                 case "readFileList":    result[ params.returnIn ] = this.readFileList	( params ); 		break;
 
-                case "readTextFile":	result[ params.returnIn ] = this.readFile   		( params, 'utf8' ); break;
+                case "readTextFile":	result[ params.returnIn ] = this.readFile   	( params, 'utf8' ); break;
                 case "writeTextFile":   result[ params.returnIn ] = this.writeFile   	( params, 'utf8' );	break;
 		
                 case "readBinaryFile":  result[ params.returnIn ] = this.readFile    	( params, null ); 	break;
                 case "writeBinaryFile":	result[ params.returnIn ] = this.writeFile		( params, null ); 	break;
 
                 case "createFolder":    result[ params.returnIn ] = this.createFolder	( params ); 		break;
-                case "deleteFile":      result[ params.returnIn ] = this.deleteFile      ( params ); 		break;
+                case "deleteFile":      result[ params.returnIn ] = this.deleteFile     ( params ); 		break;
                 case "deleteFolder":    result[ params.returnIn ] = this.deleteFolder	( params ); 		break;
 
                 default:
                 {
                     result	[ params.returnIn ] = params.defaultValue;
-                    console .log ( "FileImpBase.prototype, execute, default = " + params.job );
+                    this.console .log ( "FileImpBase.prototype, execute, default = " + params.job );
                     break;
                 }
 	        }
@@ -106,31 +103,84 @@ FileImpBase.prototype.execute = function ( params )	{
 
     catch ( err )
     {
-        console.log( "FileImpBase.prototype, execute, 3 = " + err );
+        this.console.log( "FileImpBase.prototype, execute, 3 = " + err );
         result  [ params.returnIn ] = params.defaultValue;
     }
 
-    //console.log( "FileImpBase.prototype, execute, 4 = " + result[ params.returnIn ] );
+    //this.console.log( "FileImpBase.prototype, execute, 4 = " + result[ params.returnIn ] );
     return result;
+}
+
+FileImpBase.prototype.getSystemInfo = function ( params )
+{
+    var result  = false;
+
+    try
+    {
+        if (    this.system === null                    &&  
+                typeof params.system !== "undefined"    &&  
+                params.system !== null                  &&  
+                typeof params.system.execute === "function"
+           )
+        {
+    	    this.system     = params.system;
+
+            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+            this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+            this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
+            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+        }
+    	
+        //  This must come after console is defined for vertx systems.
+        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
+
+        if ( this.Version === null )
+            result = false;
+
+        else if ( params.vt === "krp" )
+            result = this.Version.versionOK( params.v, 1, 0, 0 );
+
+        else
+            result = this.Version.OK( params, {"EQ":1}, {"EQ":0}, {"EQ":0} );
+
+        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
+    }
+
+    catch ( err )
+    {
+        result = false;
+    }
+
+    return  result;
+}
+
+FileImpBase.prototype.getVersionErrorMessage = function ( params )	{
+	
+    params.message	= params.v + " is not handled by this implementation";
+	
+	return params.defaultValue;
 }
 
 FileImpBase.prototype.getInfo = function ( params )	{
 	
-	console.log( 'FileImpBase.prototype, getInfo, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, getInfo, not implemented ' );
 	
 	return params.defaultValue;
 }
 
 FileImpBase.prototype.readFile = function ( params, options )	{
 	
-	console.log( 'FileImpBase.prototype, readFile, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, readFile, not implemented ' );
 	
 	return params.defaultValue;
 }
 
 FileImpBase.prototype.writeFile = function ( params, options )	{
 	
-	console.log( 'FileImpBase.prototype, writeFile, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, writeFile, not implemented ' );
 	
 	var	result		= {};
     	result.code = 400;
@@ -140,14 +190,14 @@ FileImpBase.prototype.writeFile = function ( params, options )	{
 
 FileImpBase.prototype.readFileList = function ( params )	{
 	
-	console.log( 'FileImpBase.prototype, readFileList, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, readFileList, not implemented ' );
 	
 	return params.defaultValue;
 }
 
 FileImpBase.prototype.createFolder = function ( params )	{
 	
-	console.log( 'FileImpBase.prototype, createFolder, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, createFolder, not implemented ' );
 	
 	var	result		= {};
         result.code = 400;
@@ -157,7 +207,7 @@ FileImpBase.prototype.createFolder = function ( params )	{
 
 FileImpBase.prototype.deleteFile = function ( params )	{
 	
-	console.log( 'FileImpBase.prototype, deleteFile, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, deleteFile, not implemented ' );
 	
 	var	result		= {};
         result.code = 400;
@@ -167,7 +217,7 @@ FileImpBase.prototype.deleteFile = function ( params )	{
 
 FileImpBase.prototype.deleteFolder = function ( params )	{
 	
-	console.log( 'FileImpBase.prototype, deleteFolder, not implemented ' );
+	this.console.log( 'FileImpBase.prototype, deleteFolder, not implemented ' );
 	
 	var	result		= {};
 		result.code = 400;

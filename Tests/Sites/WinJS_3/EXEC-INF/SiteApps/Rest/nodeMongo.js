@@ -135,7 +135,7 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/nodeMongo/id/24
 
-		    var	pathname    = luo.httpImp   .execute    ( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
+		    var	pathname    = luo.httpImp   .execute    ( { "system":luo.system, "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
             var split       = pathname      .split      ( '/' );
 
 		    //luo.console .log( "nodeMongo.GET, 1, split[ 1 ] = "	+ split[ 1 ] );
@@ -154,7 +154,7 @@ module.exports = function ()	{
                     message += ", docs.length = " + docs.length;
 		            
                     helpers.writeHead   ( session, httpStatus.OK.code );
-                    luo.httpImp.execute ( { "session": session, "job": "end", 
+                    luo.httpImp.execute ( { "system":luo.system, "session": session, "job": "end", 
                                                 "data": { "vt":"krp", "v": "1.0.0", "message": message }, 
                                                     "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 	            });

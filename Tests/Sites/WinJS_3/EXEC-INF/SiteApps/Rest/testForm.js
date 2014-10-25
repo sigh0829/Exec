@@ -83,7 +83,7 @@ module.exports = function ()	{
             {
                 //luo.console .log( "testForm, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                = params.v + " is not handled by this implementation";
+                luo .message                    = params.v + " is not handled by this implementation";
             }
         }
 
@@ -126,7 +126,7 @@ module.exports = function ()	{
             //  http://localhost:7777/testForm?name=fred&age=33
 
             /*
-		    var parsedQuery	= httpImp.execute( { "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
 			    luo.console .log( "testForm.GET, parsedQuery = "	+ parsedQuery );
@@ -137,7 +137,7 @@ module.exports = function ()	{
 
                 //  Use parsedQuery
 			    httpImp.writeHead   ( session, httpStatus.OK.code );
-		        httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 
                 result = httpStatus.OK.code;
 		    }

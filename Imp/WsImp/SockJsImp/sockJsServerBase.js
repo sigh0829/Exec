@@ -214,8 +214,8 @@ SockJsServerBase.prototype.init = function ( params )	{
 	    //  Get all of the wsApp api's the caller wants this to handle.
 	    var MyApi   	= require       ( filename );
 	    var myApi   	= new MyApi     ();
-	    this.appName	= myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-	                      myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	    this.appName	= myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	                      myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 	    this.appHandler	= myApi;
 	
 	    //this.console.log( "sockJsServerBase.init 1 = " + name );
@@ -245,7 +245,7 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 		
 	//	Read web site user defined mime types.
 	var	mimeTypesFile	= "./" + this.site + "/exec.config/" + "mimeTypes.json";
-	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "console":this.console, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
 	
 	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
 	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
@@ -253,7 +253,7 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 	
 	if ( exists === true )
 	{
-		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0", "console":this.console  } ).result;
+		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
 
 		if ( result.contents != "" )
 		{
@@ -360,14 +360,11 @@ SockJsServerBase.prototype.WriteToClient	= function ( session )	{
     { 
         "system":       this.system, 
         "job":          "any", 
-        "helpers":      this, 
         "socketJsImp":  this,
-        "fileImp":		this.fileImp,
         "session":      session, 
         "methodType":   this.methodType, 
         "method":       "WriteToClient", 
         "data":   		session.data, 
-        "console":      this.console, 
         "returnIn":     "statusCode", 
         "successValue": ServerUtils.httpStatus.OK.code, 
         "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 
@@ -397,14 +394,11 @@ SockJsServerBase.prototype.ReadFromClient     = function ( session )	{
         { 
             "system":       this.system, 
             "job":          "any", 
-            "helpers":      this, 
             "socketJsImp":  this,
-            "fileImp":		this.fileImp,
             "session":      session, 
             "methodType":   this.methodType, 
             "method":       "ReadFromClient", 
             "data":   		session.data, 
-            "console":      this.console, 
             "returnIn":     "statusCode", 
             "successValue": ServerUtils.httpStatus.OK.code, 
             "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 

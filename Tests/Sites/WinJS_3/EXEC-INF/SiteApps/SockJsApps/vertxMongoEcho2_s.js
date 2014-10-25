@@ -175,6 +175,7 @@ module.exports = function ()	{
                     
                     var result	= params.socketJsImp.execute
                     ({ 
+                        "system":       luo.system, 
                     	"session": 		params.session, 
                     	"job": 			"writeData", 
                     	"data":			luo.data, 
