@@ -42,7 +42,7 @@ var	siteType	= 	"Tests/";
 var	site 		=	siteType + "Sites/WinJS_3";
 					//siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
 					//	siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
-
+    
 setupSystem ( this );
 	
 var httpImp	= new HttpImp	();
@@ -62,11 +62,11 @@ var result  = httpImp.execute
 						    { "appType":"SysApp", 	"name": "fileImpTests" }
 					    ],
 
-		 "vt":"krp2",    "v": "2.0.0"
+        "vt":"krp2",    "v": "2.0.0"
 
 	}).result;
 
-console.log ( "result = " + result );
+//console.log ( "result = " + result );
 
 if ( result !== "error" )
 {
@@ -99,7 +99,6 @@ if ( result !== "error" )
 		    "name": 	"nodeMongoEcho2_s", 
 		    "vt":"krp2", "v": "2.0.0"
 	    });
-
 
     httpImp  .execute    
     ({ 

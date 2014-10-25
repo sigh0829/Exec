@@ -33,68 +33,80 @@
 //  The server implementation shouldn't know anything about the website.  
 //  It should only process files that it is requested to process.
 var AnyUtils			= require( './Libs/Any/execAnyUtils.js'			).AnyUtils;
+var Version	            = require( './Libs/Any/execVersion.js'          ).Version;
 var HttpImp         	= require( './Imp/HttpImp/nodeHttpServer.js'	);
 var FileImp				= require( './Imp/FileImp/nodeFile.js'			);
-var fileImp     		= new FileImp();
 var NodeSockJsServer	= require( './Imp/WsImp/SockJsImp/nodeSockJsServer.js'	);
 
 var	anyUtils	= new AnyUtils	();
 var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
 	dirName		= anyUtils.replaceAll			( dirName, "/" );
 
+var fileImp     = new FileImp();
 var	siteType	= 	"Live/";
 var	site 		=	siteType + "Sites/WinJS_3";
 					//siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
 					//	siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
 
+setupSystem ( this );
+	
 var httpImp	= new HttpImp	();
-	httpImp	.execute                
+var result  = httpImp.execute                
 	({ 
-        "system":   this, 
-		"job":		"initCreate", 
-		"rest":		[ 
-						{ "appType":"SysApp", 	"name": "myApi" }, 
-						{ "appType":"SiteApp",	"name": "books" }, 
-						{ "appType":"SysApp", 	"name": "books" }, 
-						{ "appType":"SysApp", 	"name": "stripe" }, 
-						{ "appType":"SysApp", 	"name": "testForm" }, 
-						{ "appType":"SysApp", 	"name": "fileImpTests" }
-					],
-		"vt":"krp", "v": "1.0.0"
-	});
+        "system":       this, 
+		"job":		    "initCreate", 
+        "returnIn":     "result", 
+        "defaultValue": "error",
+		"rest":		    [ 
+						    { "appType":"SysApp", 	"name": "myApi" }, 
+						    { "appType":"SiteApp",	"name": "books" }, 
+						    { "appType":"SysApp", 	"name": "books" }, 
+						    { "appType":"SysApp", 	"name": "stripe" }, 
+						    { "appType":"SysApp", 	"name": "testForm" }, 
+						    { "appType":"SysApp", 	"name": "fileImpTests" }
+					    ],
 
-var	sockJSController = new NodeSockJsServer ();    
-	sockJSController .execute
-	({
-        "system":   this, 
-		"job":		"installCreateInstall", 
-		"appType":	"SysApp", 	
-		"name": 	"sockJsEcho1_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
+        "vt":"krp",     "v": "1.0.0"
 
-var	sockJSController = new NodeSockJsServer ();    
-	sockJSController .execute
-	({
-        "system":   this, 
-		"job":		"installCreateInstall", 
-		"appType":	"SiteApp",	
-		"name": 	"sockJsEcho2_s", 
-		"vt":"krp", "v": "1.0.0"
-	});
+	}).result;
 
-httpImp  .execute    
-({ 
-    "system":   this, 
-	"job":      "listen", 
-	//"console":console, 
-	//"host":"127.0.0.1",       //  Handle loopback address 
-	//"host":"localhost",       //  Handle localhost 
-	//"host":"192.168.1.116",   //  Handle LAN assigned ip
-    //                          //  If nothing then handle every ip address on this port    
-	"port":     7777, 
-	"vt":"krp", "v": "1.0.0" 
-});
+//console.log ( "result = " + result );
+
+if ( result !== "error" )
+{
+    var	sockJSController = new NodeSockJsServer ();    
+	    sockJSController .execute
+	    ({
+            "system":   this, 
+		    "job":		"installCreateInstall", 
+		    "appType":	"SysApp", 	
+		    "name": 	"sockJsEcho1_s", 
+		    "vt":"krp", "v": "1.0.0"
+	    });
+
+    var	sockJSController = new NodeSockJsServer ();    
+	    sockJSController .execute
+	    ({
+            "system":   this, 
+		    "job":		"installCreateInstall", 
+		    "appType":	"SiteApp",	
+		    "name": 	"sockJsEcho2_s", 
+		    "vt":"krp", "v": "1.0.0"
+	    });
+
+    httpImp  .execute    
+    ({ 
+        "system":   this, 
+	    "job":      "listen", 
+	    //"host":   "127.0.0.1",       //  Handle loopback address 
+	    //"host":   "localhost",       //  Handle localhost 
+	    //"host":   "192.168.1.116",   //  Handle LAN assigned ip
+        //                          //  If nothing then handle every ip address on this port    
+	    "port":     7777, 
+	    "vt":"krp", "v": "1.0.0" 
+    });
+}
+
 function setupSystem    ( system )  {
     
     system.execute = function ( params )	{
@@ -145,7 +157,6 @@ function setupSystem    ( system )  {
         //console.log( "nodeLive.js, execute, return, jsonResult[ params.returnIn ] = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
-
 }
 
 /*

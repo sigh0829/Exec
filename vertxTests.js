@@ -66,14 +66,15 @@ var result  = httpImp.execute
 						    { "appType":"SiteApp", 	"name": "vertxMongo" }, 
 						    { "appType":"SysApp", 	"name": "fileImpTests" }
 					    ],
-		"vt":"krp2",    "v": "2.0.0"
+
+        "vt":"krp2",    "v": "2.0.0"
 
 	}).result;
 
-console.log ( "result = " + result );
+//console.log ( "result = " + result );
 
-//if ( result !== "error" )
-//{
+if ( result !== "error" )
+{
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
@@ -108,14 +109,14 @@ console.log ( "result = " + result );
     ({ 
         "system":   this, 
 	    "job":      "listen", 
-	    //"host":"127.0.0.1",       //  Handle loopback address 
-	    //"host":"localhost",       //  Handle localhost 
-	    //"host":"192.168.1.116",   //  Handle LAN assigned ip
+	    //"host":   "127.0.0.1",       //  Handle loopback address 
+	    //"host":   "localhost",       //  Handle localhost 
+	    //"host":   "192.168.1.116",   //  Handle LAN assigned ip
         //                          //  If nothing then handle every ip address on this port    
 	    "port":     7779, 
 	    "vt":"krp", "v": "1.0.0" 
     });
-//}
+}
 
 function setupSystem    ( system )  {
     
