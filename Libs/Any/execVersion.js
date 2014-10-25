@@ -89,21 +89,67 @@ if ( typeof jsGlobal.exec.any.version === "undefined" )
 			namespace.Version	.versionOK	= function ( version, major, minor, change )    {
 
 		        //  I don't really know what to do here.
-		        return  namespace.Version.versionPart( version, 0, -1 ) >= major    &&  
+		        return  namespace.Version.versionPart( version, 0, -1 ) == major    &&  
 		        		namespace.Version.versionPart( version, 1, -1 ) == minor    &&  
 		        		namespace.Version.versionPart( version, 2, -1 ) == change   ;
 		    };
 			
-            /*
-			namespace.Version	.OK	= function ( params )    {
+			namespace.Version	.OK	= function ( params, major, minor, change )    {
+
+                var result  = false;
+
+                try
+                {
+                    //console.log( "Version, OK, 1 = " );
+                    //console.log( "Version, OK, 2 = " + params.vt );
+
+                    //  result = this.Version.OK( params, {"LE":2}, {"EQ":0}, {"EQ":0} );
+                    if ( params.vt === "krp2" )
+                    {
+		                var majorValue  = namespace.Version.versionPart( params.v, 0, -1 );
+		                var minorValue  = namespace.Version.versionPart( params.v, 1, -1 );
+		                var changeValue = namespace.Version.versionPart( params.v, 2, -1 );
+
+                        result =            namespace.Version	.testCondition	( major,    majorValue  );
+                        result = result &&  namespace.Version	.testCondition	( minor,    minorValue  );
+                        result = result &&  namespace.Version	.testCondition	( change,   changeValue );
+
+                        //console.log( "Version, OK, 3 result = " + result );
+                    }
+                }
+
+                catch ( err )
+                {
+                    result = false;                    
+                    console.log( "Version, OK, catch, err = " + err );
+                }
 
 		        //  I don't really know what to do here.
-		        return  namespace.Version.versionPart( params.version, 0, -1 ) >= params.major    &&  
-		        		namespace.Version.versionPart( params.version, 1, -1 ) == params.minor    &&  
-		        		namespace.Version.versionPart( params.version, 2, -1 ) == params.change   ;
+		        return  result;
 		    };
-            */
-		    
+			
+			namespace.Version	.testCondition	= function ( condition, value )    {
+
+                var result  = false;
+
+                try
+                {
+                    if      ( typeof condition.LT !== "undefined" ) result  = value < condition.LT;
+                    else if ( typeof condition.LE !== "undefined" ) result  = value <= condition.LE;
+                    else if ( typeof condition.EQ !== "undefined" ) result  = value == condition.EQ;
+                    else if ( typeof condition.GE !== "undefined" ) result  = value >= condition.GE;
+                    else if ( typeof condition.GT !== "undefined" ) result  = value > condition.GT;
+                }
+
+                catch ( err )
+                {
+                    result = false;                    
+                    console.log( "Version, testCondition, catch, err = " + err );
+                }
+
+		        //  I don't really know what to do here.
+		        return  result;
+		    };
 
 		    //  execute() should handle all previous versions.
 		    //  Since this is version 1 there is only one version to handle.

@@ -28,17 +28,23 @@
 //	http://vertx.io/core_manual_js.html#request-method
 //	http://nodejs.org/api/fs.html#fs_fs_readfile_filename_options_callback
 
-var Version		= require( '../../../Libs/Any/execVersion.js' 			).Version;
+//var Version		= require( '../../../Libs/Any/execVersion.js' 			).Version;
 var ServerUtils	= require( '../../../Libs/Server/execServerUtils.js'	).ServerUtils;
 var MimeTypes	= require( '../../../Libs/Server/execMimeTypes.js'		).MimeTypes;
 var AnyUtils	= require( '../../../Libs/Any/execAnyUtils.js'			).AnyUtils;
 
 function SockJsServerBase ()
 {
+    this.system     = null;
+	this.console	= null;
+	this.server		= null;
+    this.Version    = null;
+    this.httpImp    = null;
+	
 	//	https://github.com/winjs/winjs
 	//	https://github.com/mozbrick/brick , http://brick.readme.io/
 	//	https://www.polymer-project.org/
-	//	this.site	= "Sites/ForTesting";
+	this.site	    = "Sites/ForTesting";
 	
 	this.console	= null;
 	this.sock		= null;
@@ -65,22 +71,12 @@ SockJsServerBase.prototype.execute = function ( params )	{
 
     try
     {
-        //  Vertx doesn't provide a built in console.
-        //  So, it needs to be passed in from vertxConfig.js
-    	if ( this.console === null )
-    		this.console = params.console;
-
         //this.console.log( "sockJsServerBase, execute, 1 = " );
     	
         jsonResult  [ params.returnIn ] = params.defaultValue;
 
-        //  execute() should handle all previous versions.
-        //  Since this is version 1 there is only one version to handle.
-        if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
-        {
-            jsonResult  [ params.returnIn ] = params.defaultValue;
-            params      .session.message	= params.v + " is not handled by this implementation";
-        }
+        if ( this.getSystemInfo( params ) === false )
+            jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
             //this.console.log( "sockJsServerBase, execute, 2 = " );
@@ -115,6 +111,70 @@ SockJsServerBase.prototype.execute = function ( params )	{
     //this.console.log( "sockJsServerBase, execute, 4 = " + jsonResult[ params.returnIn ] );
     return jsonResult;
 };
+
+SockJsServerBase.prototype.getSystemInfo = function ( params )
+{
+    var result  = false;
+
+    try
+    {
+        if (    this.system === null                    &&  
+                typeof params.system !== "undefined"    &&  
+                params.system !== null                  &&  
+                typeof params.system.execute === "function"
+           )
+        {
+    	    this.system     = params.system;
+
+            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+            this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+            this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
+            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+            this.httpImp    = this.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+        }
+    	
+        //  For version 1 sytle "params" need to check params.console.
+        //
+        //  Vertx doesn't provide a built in console.
+        //  So, it needs to be passed in from vertxConfig.js 
+        //if ( this.console === null )
+    	  //  this.console = params.console;
+    	
+        //  This must come after console is defined for vertx systems.
+        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
+        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
+
+        if ( this.Version === null )
+            result = false;
+
+        else if ( params.vt === "krp" )
+            result = this.Version.versionOK( params.v, 1, 0, 0 );
+
+        else
+            result = this.Version.OK( params, {"EQ":2}, {"EQ":0}, {"EQ":0} );
+
+        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
+    }
+
+    catch ( err )
+    {
+        result = false;
+    }
+
+    return  result;
+}
+
+SockJsServerBase.prototype.getVersionErrorMessage = function ( params )	{
+	
+    if ( typeof params.session === "undefined" )
+        params.session = {};
+
+    params.session.message	= params.v + " is not handled by this implementation";
+	
+	return params.defaultValue;
+}
 	
 SockJsServerBase.prototype.interpretorName = function ()	{
 
@@ -142,31 +202,20 @@ SockJsServerBase.prototype.init = function ( params )	{
 	
 	try
 	{
-		
-	    /*
-	    if ( typeof params.fileImp !== "undefined" )
-	    {
-	    	this.fileImp = params.fileImp;
-	    	
-	    	//	Read in any config data here.
-	    	this.readMimeTypes ( params );
-	    }
-	    */
-	
 		var	filename = '../../../Tests/SysApps/SockJsApps/' + params.name + ".js";
-    	if ( this.anyUtils.strStartsWith ( params.site, "Live/" ) === true )
+    	if ( this.anyUtils.strStartsWith ( this.site, "Live/" ) === true )
     		filename = '../../../Live/SysApps/SockJsApps/' + params.name + ".js";
     		
 		if ( params.appType === "SiteApp" )
-			filename = '../../../' + params.site + '/EXEC-INF/SiteApps/SockJsApps/' + params.name + ".js";
+			filename = '../../../' + this.site + '/EXEC-INF/SiteApps/SockJsApps/' + params.name + ".js";
 		
 		//this.console.log( "SockJsServerBase.prototype.init 1 = " + filename );
 	
 	    //  Get all of the wsApp api's the caller wants this to handle.
 	    var MyApi   	= require       ( filename );
 	    var myApi   	= new MyApi     ();
-	    this.appName	= myApi.execute ( { "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-	                      myApi.execute ( { "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "console":this.console, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	    this.appName	= myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	                      myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 	    this.appHandler	= myApi;
 	
 	    //this.console.log( "sockJsServerBase.init 1 = " + name );
@@ -195,16 +244,16 @@ SockJsServerBase.prototype.install = function ( params )	{
 SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 		
 	//	Read web site user defined mime types.
-	var	mimeTypesFile	= "./" + params.site + "/exec.config/" + "mimeTypes.json";
-	var	exists 			= this.fileImp  .execute	( { "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "console":this.console, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+	var	mimeTypesFile	= "./" + this.site + "/exec.config/" + "mimeTypes.json";
+	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
 	
 	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
 	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
-	//this.console.log( "fileImpTests, testFileImp, site = " + params.site );
+	//this.console.log( "fileImpTests, testFileImp, site = " + this.site );
 	
 	if ( exists === true )
 	{
-		var	result	= this.fileImp  .execute	( { "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0", "console":this.console  } ).result;
+		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
 
 		if ( result.contents != "" )
 		{
@@ -309,15 +358,13 @@ SockJsServerBase.prototype.WriteToClient	= function ( session )	{
     
     var statusCode = this.appHandler.execute   ( 
     { 
+        "system":       this.system, 
         "job":          "any", 
-        "helpers":      this, 
         "socketJsImp":  this,
-        "fileImp":		this.fileImp,
         "session":      session, 
         "methodType":   this.methodType, 
         "method":       "WriteToClient", 
         "data":   		session.data, 
-        "console":      this.console, 
         "returnIn":     "statusCode", 
         "successValue": ServerUtils.httpStatus.OK.code, 
         "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 
@@ -345,15 +392,13 @@ SockJsServerBase.prototype.ReadFromClient     = function ( session )	{
 
         var statusCode = this.appHandler.execute   ( 
         { 
+            "system":       this.system, 
             "job":          "any", 
-            "helpers":      this, 
             "socketJsImp":  this,
-            "fileImp":		this.fileImp,
             "session":      session, 
             "methodType":   this.methodType, 
             "method":       "ReadFromClient", 
             "data":   		session.data, 
-            "console":      this.console, 
             "returnIn":     "statusCode", 
             "successValue": ServerUtils.httpStatus.OK.code, 
             "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 

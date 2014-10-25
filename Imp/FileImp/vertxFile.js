@@ -38,8 +38,6 @@
 
 //var	fs 		= require( "fs"	);
 var vertx 		= require( 'vertx' )
-var console		= require( 'vertx/console' );
-var Version		= require( '../../Libs/Any/execVersion.js' 			).Version;
 var ServerUtils	= require( '../../Libs/Server/execServerUtils.js'	).ServerUtils;
 var AnyUtils	= require( '../../Libs/Any/execAnyUtils.js'			).AnyUtils;
 var FileImpBase	= require( './FileImpBase.js' );
@@ -57,23 +55,23 @@ VertxFile.prototype.getInfo = function ( params )	{
 	
 	try
 	{
-        //console.log( "vertxFile, getInfo, 1 = " + params.get );
+        //this.console.log( "vertxFile, getInfo, 1 = " + params.get );
 
 		if ( params.get === "exists" )
 		{
-            //console.log( "vertxFile, getInfo, 2 = " + params.pathname );
+            //this.console.log( "vertxFile, getInfo, 2 = " + params.pathname );
 			
             result	= vertx.fileSystem.existsSync( params.pathname );
 
             /*vertx.fileSystem.exists('some-file.txt', function(err, res) {
                 if (!err) {
                     result = (res ? true : false);
-                    console.log('File ' + (res ? 'exists' : 'does not exist'));
+                    this.console.log('File ' + (res ? 'exists' : 'does not exist'));
                 }
             });
             */
 			
-            //console.log( "vertxFile, getInfo, 3 = " + result );
+            //this.console.log( "vertxFile, getInfo, 3 = " + result );
 		}
 
 		else if ( params.get === "stats" )
@@ -90,7 +88,7 @@ VertxFile.prototype.getInfo = function ( params )	{
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, getInfo, catch err = ' + err );
+		this.console.log( 'vertxFile, getInfo, catch err = ' + err );
 	}
 	
 	return result;
@@ -119,13 +117,13 @@ VertxFile.prototype.readFile = function ( params, options )	{
         	if ( options === 'utf8' )
         		result.contents	= "" + result.contents;
         	
-			//console.log( 'vertxFile, readFile, result.contents = ' + result.contents );
+			//this.console.log( 'vertxFile, readFile, result.contents = ' + result.contents );
         }
 	}
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, readFile, catch err = ' + err );
+		this.console.log( 'vertxFile, readFile, catch err = ' + err );
 	}
 	
 	return result;
@@ -155,7 +153,7 @@ VertxFile.prototype.writeFile = function ( params, options )	{
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, writeFile, catch err = ' + err );
+		this.console.log( 'vertxFile, writeFile, catch err = ' + err );
 		result = params.defaultValue;
 	}
 	
@@ -179,7 +177,7 @@ VertxFile.prototype.readFileList = function ( params )	{
         	for ( var i = 0; i < res.length; i++ )
         	{
     			//	Change stuff like C:\ to C:/
-        		res[ i ]= anyUtils.replaceAll			( res[ i ], "/" );
+        		res[ i ]    = anyUtils.replaceAll		( res[ i ], "/" );
                 
         		var	name	= ServerUtils.getFileName	( res[ i ], false );
                 var ext		= ServerUtils.getFileExt	( res[ i ] );
@@ -198,7 +196,7 @@ VertxFile.prototype.readFileList = function ( params )	{
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, readFileList, catch err = ' + err );
+		this.console.log( 'vertxFile, readFileList, catch err = ' + err );
 	}
 	
 	return result;
@@ -213,7 +211,7 @@ VertxFile.prototype.createFolder = function ( params )	{
 		/*
 		vertx.fileSystem.mkDir('a/b/c', true, function(err, res) {
 			   if (!err) {
-			     console.log('Directory created ok');
+			     this.console.log('Directory created ok');
 			   }
 			});
 		*/
@@ -225,7 +223,7 @@ VertxFile.prototype.createFolder = function ( params )	{
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, createFolder, catch err = ' + err );
+		this.console.log( 'vertxFile, createFolder, catch err = ' + err );
 		result	= params.defaultValue;
 	}
 	
@@ -244,7 +242,7 @@ VertxFile.prototype.deleteFile = function ( params )	{
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, deleteFile, catch err = ' + err );
+		this.console.log( 'vertxFile, deleteFile, catch err = ' + err );
 		result	= params.defaultValue;
 	}
 	
@@ -274,7 +272,7 @@ VertxFile.prototype.deleteFolder = function ( params )	{
 	
 	catch ( err )
 	{
-		console.log( 'vertxFile, deleteFolder, catch err = ' + err );
+		this.console.log( 'vertxFile, deleteFolder, catch err = ' + err );
 		result	= params.defaultValue;
 	}
 	

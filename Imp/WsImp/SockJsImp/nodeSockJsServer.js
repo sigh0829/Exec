@@ -48,7 +48,6 @@
 
 var http 			= require( 'http' 	);
 var sockjs 			= require( 'sockjs'	);
-var Version			= require( '../../../Libs/Any/execVersion.js' 			).Version;
 var AnyUtils		= require( '../../../Libs/Any/execAnyUtils.js'			).AnyUtils;
 var ServerUtils		= require( '../../../Libs/Server/execServerUtils.js'	).ServerUtils;
 var SockJsServerBase= require( './SockJsServerBase.js' );
@@ -101,7 +100,7 @@ NodeSockJsServer.prototype.create = function ( params )	{
 	{
 		//this.console.log( "nodeSockJsServer.create 1 = " );
 		
-		this.httpServer	= params.httpImp .execute ( { "job": "getServer",  
+		this.httpServer	= this.httpImp .execute ( { "system":this.system, "job": "getServer",  
 														"returnIn": "server", "defaultValue": null, 
 															"vt":"krp", "v": "1.0.0" } ).server;
 	

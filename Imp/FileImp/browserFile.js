@@ -41,12 +41,7 @@ vertx.createHttpServer().requestHandler(function(req) {
 }).listen(8080, 'foo.com')
 */
 
-//	vertx version
-//	vertx run vertxServer.js
-
-var console	= require( 'vertx/console' );
 var vertx 	= require( 'vertx' )
-var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 
 module.exports = function ()	{
 
@@ -58,6 +53,8 @@ module.exports = function ()	{
 
         try
         {
+            throw "this file needs a lot of work, do not trust anything in here.";
+
             //  All execute functions are told by the caller
             //  where to put the return value.  This is the name
             //  of the property in the json object where the caller
@@ -69,7 +66,7 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //console.log( "nodeHttpServer, execute, 1 = " );
+            //this.console.log( "nodeHttpServer, execute, 1 = " );
 
             //  execute() should handle all previous versions.
             //  Since this is version 1 there is only one version to handle.
@@ -80,7 +77,7 @@ module.exports = function ()	{
             }
             else
             {
-                //console.log( "nodeHttpServer, execute, 2 = " );
+                //this.console.log( "nodeHttpServer, execute, 2 = " );
 
 		        //  These are the functions that vertxHttpServer provides to switch.js
                 switch ( params.job )
@@ -103,7 +100,7 @@ module.exports = function ()	{
 			        default:
                     {
                         jsonResult  [ params.returnIn ] = params.defaultValue;
-                        console     .log ( "nodeHttpServer, execute, default = " + params.job );
+                        this.console     .log ( "nodeHttpServer, execute, default = " + params.job );
                         break;
                     }
 		        }
@@ -112,11 +109,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            console.log( "nodeHttpServer, execute, 3 = " + err );
+            this.console.log( "nodeHttpServer, execute, 3 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //this.console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 	
@@ -126,19 +123,19 @@ module.exports = function ()	{
 		{
 			//	http://stackoverflow.com/questions/21237769/vertx-simple-web-server-doesnt-find-the-html-file
 			
-			//console.log( 'sendfile, 1 = ' + pathname );
+			//this.console.log( 'sendfile, 1 = ' + pathname );
 			
 			if ( typeof successCallback === "function" )
 				successCallback	();
 			
 			session.response.sendFile( pathname );   
 
-			//console.log( 'sendfile, 2 = ' + pathname );
+			//this.console.log( 'sendfile, 2 = ' + pathname );
 		}
 		
 		catch ( err )
 		{
-			console.log( 'vertxHttpServer, sendfile, catch err = ' + err + ', pathname = ' + pathname );
+			this.console.log( 'vertxHttpServer, sendfile, catch err = ' + err + ', pathname = ' + pathname );
 		}
 	}
 
@@ -198,10 +195,10 @@ module.exports = function ()	{
 		
 	luo.createServer = function ( host, port, callBack )	{
 		
-		//console.log( "http.createServer 1" );
-		//console.log( "http.createServer 2, params = " 		+ params );
-		//console.log( "http.createServer 3, params.port = " 	+ params.port );
-		//console.log( "http.createServer 4, params.host = " 	+ params.host );
+		//this.console.log( "http.createServer 1" );
+		//this.console.log( "http.createServer 2, params = " 		+ params );
+		//this.console.log( "http.createServer 3, params.port = " 	+ params.port );
+		//this.console.log( "http.createServer 4, params.host = " 	+ params.host );
 		
 		var self			= this;
 			self.callBack	= callBack;
@@ -218,16 +215,16 @@ module.exports = function ()	{
 					session.request		= req;
 					session.response	= req.response;
 				
-				//console.log( "http.createServer 7" );
+				//self.console.log( "http.createServer 7" );
 				
 				self.callBack ( session );
 				
-				//console.log( "http.createServer 8" );
+				//self.console.log( "http.createServer 8" );
 			}
 			
 			catch ( err )
 			{
-				console.log( 'vertxHttpServer, createHttpServer, catch err = ' + err );
+				this.console.log( 'vertxHttpServer, createHttpServer, catch err = ' + err );
 				
 				var	session				= {};
 					session.boolResult	= false;
@@ -236,14 +233,14 @@ module.exports = function ()	{
 					//session.url		= url;
 					session.message		= err;
 			
-				//console.log( "http.createServer 10" );
+				//self.console.log( "http.createServer 10" );
 				
 				self.callBack ( session );
 				
-				//console.log( "http.createServer 11" );
+				//self.console.log( "http.createServer 11" );
 			}
 
-			//console.log( " " );
+			//self.console.log( " " );
 
 		}).listen( port, host );
 		//}).listen( 7778, 'localhost' );
@@ -255,7 +252,7 @@ module.exports = function ()	{
 };
 
 
-//console.log('Server running at http://127.0.0.1:7777/');
+//this.console.log('Server running at http://127.0.0.1:7777/');
 
 
 /*
@@ -273,7 +270,7 @@ vertx.createHttpServer().requestHandler(function(req) {
 }).listen( 7778, 'localhost');
 */
 
-//console.log('Server running at http://127.0.0.1:7778/');
+//this.console.log('Server running at http://127.0.0.1:7778/');
 
 
 //	http://stackoverflow.com/questions/21237769/vertx-simple-web-server-doesnt-find-the-html-file

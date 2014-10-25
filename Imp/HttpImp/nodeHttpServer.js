@@ -34,7 +34,6 @@
 var	http			= require( 'http'	);
 var url 			= require( 'url'	);
 var	fs 				= require( "fs"		);
-var Version			= require( '../../Libs/Any/execVersion.js' 	).Version;
 var AnyUtils		= require( '../../Libs/Any/execAnyUtils.js'	).AnyUtils;
 var HttpServerBase	= require( './HttpServerBase.js' );
 

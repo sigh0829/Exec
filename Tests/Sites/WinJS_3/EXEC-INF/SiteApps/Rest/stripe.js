@@ -31,7 +31,7 @@
 //  http://localhost:7777/stripe  is different than
 //  http://localhost:7777/stripe
 
-var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
+//var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 //var stripe = require('stripe')('sk_MY_SECRET_KEY');
 
 module.exports = function ()	{
@@ -39,6 +39,11 @@ module.exports = function ()	{
     var luo 			= {};	//	Local Use Only
         luo .message    = "";
         luo .body       = "";
+    	luo .system     = null;
+        luo .console    = null;
+        luo .fileImp    = null;
+        luo .httpImp    = null;
+        luo .Version    = null;
 	
 	this.execute = function ( params )	{
 
@@ -46,9 +51,19 @@ module.exports = function ()	{
 
         try
         {
-            //  Vertx doesn't provide a built in console.
-            //  So, it needs to be passed in from vertxConfig.js 
-            console     = params.console;
+            if (    luo.system === null                     &&  
+                    typeof params.system !== "undefined"    &&  
+                    params.system !== null                  &&  
+                    typeof params.system.execute === "function"
+               )
+            {
+    	        luo.system     = params.system;
+
+                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+            }
 
             //  All execute functions are told by the caller
             //  where to put the return value.  This is the name
@@ -61,32 +76,32 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //console.log( "stripe, execute, 1 = " );
+            //luo.console .log( "stripe, execute, 1 = " );
 
-            if ( Version.versionOK( params.v, 1, 0, 0 ) === true )
+            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
-                //console.log( "stripe, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.helpers, params.httpImp, params.session, params.methodType, params.method, params.httpStatus, params.console );
+                //luo.console .log( "stripe, execute, 2 = " );
+                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
             }
             else
             {
-                //console.log( "stripe, execute, 3 = " );
+                //luo.console .log( "stripe, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                = params.v + " is not handled by this implementation";
+                luo .message                    = params.v + " is not handled by this implementation";
             }
         }
 
         catch ( err )
         {
-            console.log( "stripe, execute, 4 = " + err );
+            luo.console .log( "stripe, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //luo.console .log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
-    luo._execute = function ( helpers, httpImp, session, methodType, method, httpStatus, console )  {
+    luo._execute = function ( session, methodType, method, httpStatus )  {
 
         //  Nothing in here has been tested with a stripe.com account.
         //  Most of this code comes from this post:
@@ -96,17 +111,17 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
-        //console.log( "stripe, _execute, 1a = " + httpImp );
-        //console.log( "stripe, _execute, 1b = " + session );
-        //console.log( "stripe, _execute, 1c = " + methodType );
-        //console.log( "stripe, _execute, 1d = " + method );
-        //console.log( "stripe, _execute, 1e = " + httpStatus );
-        //console.log( "stripe, _execute, 1f = " + console );
+        //luo.console .log( "stripe, _execute, 1a = " + httpImp );
+        //luo.console .log( "stripe, _execute, 1b = " + session );
+        //luo.console .log( "stripe, _execute, 1c = " + methodType );
+        //luo.console .log( "stripe, _execute, 1d = " + method );
+        //luo.console .log( "stripe, _execute, 1e = " + httpStatus );
+        //luo.console .log( "stripe, _execute, 1f = " + luo.console  );
 
         if ( method === methodType.NAME )
         {
             result = "stripe";
-            //console.log( "stripe.POST, _execute, return = " + result );
+            //luo.console .log( "stripe.POST, _execute, return = " + result );
         }
 
         else if ( method === methodType.DELETE )
@@ -119,18 +134,18 @@ module.exports = function ()	{
             //  http://localhost:7777/stripe?name=fred&age=33
 
             /*
-		    var parsedQuery	= httpImp.execute( { "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
-			    console.log( "stripe.GET, parsedQuery = "	+ parsedQuery );
-			    console.log( "stripe.GET, query.name = "	    + parsedQuery.name );
-			    console.log( "stripe.GET, query.age = " 	    + parsedQuery.age );
+			    luo.console .log( "stripe.GET, parsedQuery = "	+ parsedQuery );
+			    luo.console .log( "stripe.GET, query.name = "	    + parsedQuery.name );
+			    luo.console .log( "stripe.GET, query.age = " 	    + parsedQuery.age );
 
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
                 //  Use parsedQuery
-			    helpers.writeHead   ( session, httpStatus.OK.code );
-		        httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+			    httpImp.writeHead   ( session, httpStatus.OK.code );
+		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 
                 result = httpStatus.OK.code;
 		    }
@@ -139,15 +154,15 @@ module.exports = function ()	{
             
         else if ( method === methodType.POST )
         {
-            //console.log( "stripe.POST, _execute, 1 = " );
+            //luo.console .log( "stripe.POST, _execute, 1 = " );
 
             session.request.on ( 'data', function ( data ) {
 
-                //console.log( "stripe.POST, _execute, 2 = " + data );
+                //luo.console .log( "stripe.POST, _execute, 2 = " + data );
 
                 luo.body += data;
                 
-                //console.log( "stripe.POST, _execute, 3 = " + luo.body );
+                //luo.console .log( "stripe.POST, _execute, 3 = " + luo.body );
 
                 // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
                 if ( luo.body.length > 1e6)
@@ -156,7 +171,7 @@ module.exports = function ()	{
                     session.request.connection.destroy();
                 }
                 
-                //console.log( "stripe.POST, _execute, 4 = " + luo.body );
+                //luo.console .log( "stripe.POST, _execute, 4 = " + luo.body );
             });
 
             session.request.on('end', function () {
@@ -165,11 +180,11 @@ module.exports = function ()	{
                 //var first   = both[ 0 ].split ( "=" );
                 //var second  = both[ 1 ].split ( "=" );
                 
-                //console.log( "stripe.POST, _execute, 5a = " + luo.body );
-                //console.log( "stripe.POST, _execute, 5b = " + first[ 0 ] );
-                //console.log( "stripe.POST, _execute, 5c = " + first[ 1 ] );
-                //console.log( "stripe.POST, _execute, 5d = " + second[ 0 ] );
-                //console.log( "stripe.POST, _execute, 5e = " + second[ 1 ] );
+                //luo.console .log( "stripe.POST, _execute, 5a = " + luo.body );
+                //luo.console .log( "stripe.POST, _execute, 5b = " + first[ 0 ] );
+                //luo.console .log( "stripe.POST, _execute, 5c = " + first[ 1 ] );
+                //luo.console .log( "stripe.POST, _execute, 5d = " + second[ 0 ] );
+                //luo.console .log( "stripe.POST, _execute, 5e = " + second[ 1 ] );
 
                 //  http://nairteashop.org/getting-started-with-stripe-part-2/
                 var stripeToken = luo.body.stripeToken;
@@ -199,17 +214,17 @@ module.exports = function ()	{
                 //var POST = qs.parse( luo.body );
 
                 // use POST
-                //console.log( "stripe.POST, _execute, 6 = " + POST );
+                //luo.console .log( "stripe.POST, _execute, 6 = " + POST );
             });
         }
 
         else if ( method === methodType.PUT )
         {
             //  Update
-            //console.log( "stripe.PUT, _execute, return = " + result );
+            //luo.console .log( "stripe.PUT, _execute, return = " + result );
         }
 
-        //console.log( "stripe.POST, _execute, return = " + result );
+        //luo.console .log( "stripe.POST, _execute, return = " + result );
 
         return  result
     }

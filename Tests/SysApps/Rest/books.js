@@ -27,12 +27,15 @@
 //  http://technologyconversations.com/2014/08/12/rest-api-with-json/
 //  http://localhost:7777/books/id/24
 
-var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
-
 module.exports = function ()	{
 
     var luo 			= {};	//	Local Use Only
         luo .message    = "";
+    	luo .system     = null;
+        luo .console    = null;
+        luo .fileImp    = null;
+        luo .httpImp    = null;
+        luo .Version    = null;
 	
 	this.execute = function ( params )	{
 
@@ -40,9 +43,19 @@ module.exports = function ()	{
 
         try
         {
-            //  Vertx doesn't provide a built in console.
-            //  So, it needs to be passed in from vertxConfig.js 
-            console     = params.console;
+            if (    luo.system === null                     &&  
+                    typeof params.system !== "undefined"    &&  
+                    params.system !== null                  &&  
+                    typeof params.system.execute === "function"
+               )
+            {
+    	        luo.system     = params.system;
+
+                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
+                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
+                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
+                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+            }
 
             //  All execute functions are told by the caller
             //  where to put the return value.  This is the name
@@ -55,48 +68,47 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //console.log( "SysApps, books, execute, 1 = " );
+            //luo.console.log( "books, execute, 1 = " );
 
-            if ( Version.versionOK( params.v, 1, 0, 0 ) === true )
+            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
-                //console.log( "books, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.helpers, params.httpImp, params.session, params.methodType, params.method, params.httpStatus, params.console );
+                //luo.console.log( "books, execute, 2 = " );
+                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
             }
             else
             {
-                //console.log( "books, execute, 3 = " );
+                //luo.console.log( "books, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                = params.v + " is not handled by this implementation";
+                luo .message                    = params.v + " is not handled by this implementation";
             }
         }
 
         catch ( err )
         {
-            console.log( "books, execute, catch = " + err );
+            luo.console.log( "books, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //luo.console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
-    luo._execute = function ( helpers, httpImp, session, methodType, method, httpStatus, console )  {
+    luo._execute = function ( session, methodType, method, httpStatus )  {
 
         var result = false; //
 
         method  = method.toString ();
             
-        //console.log( "books, _execute, 1a = " + httpImp );
-        //console.log( "books, _execute, 1b = " + session );
-        //console.log( "books, _execute, 1c = " + methodType );
-        //console.log( "books, _execute, 1d = " + method );
-        //console.log( "books, _execute, 1e = " + httpStatus );
-        //console.log( "books, _execute, 1f = " + console );
+        //luo.console.log( "books, _execute, 1b = " + session );
+        //luo.console.log( "books, _execute, 1c = " + methodType );
+        //luo.console.log( "books, _execute, 1d = " + method );
+        //luo.console.log( "books, _execute, 1e = " + httpStatus );
+        //luo.console.log( "books, _execute, 1f = " + luo.console );
 
         if ( method === methodType.NAME )
         {
             result = "books";
-            //console.log( "books, _execute, 2 = " + result );
+            //luo.console.log( "books, _execute, 2 = " + result );
         }
 
         else if ( method === methodType.DELETE )
@@ -108,20 +120,20 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/books/id/24
 
-		    var	pathname    = httpImp.execute( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
+		    var	pathname    = luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
             var split       = pathname  .split  ( '/' );
 
-		    //console.log( "books.GET, split[ 1 ] = "	+ split[ 1 ] );
+		    //luo.console.log( "books.GET, split[ 1 ] = "	+ split[ 1 ] );
 
 		    if ( split[ 2 ] === "id" )
 		    {
-			    //console.log( "books.GET, id.number = "	+ split[ 3 ] );
+			    //luo.console.log( "books.GET, id.number = "	+ split[ 3 ] );
 
                 var message = "id is " + split[ 3 ];
 
                 //  Use parsedQuery
-			    helpers.writeHead   ( session, httpStatus.OK.code );
-		        httpImp.execute( { "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+			    luo.httpImp .writeHead  ( session, httpStatus.OK.code );
+		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 
                 result = httpStatus.OK.code;
 		    }
@@ -137,7 +149,7 @@ module.exports = function ()	{
             //  Update
         }
 
-        //console.log( "books, _execute, return = " + result );
+        //luo.console.log( "books, _execute, return = " + result );
 
         return  result
     }
