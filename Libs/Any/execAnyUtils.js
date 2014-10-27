@@ -381,8 +381,8 @@ if ( typeof jsGlobal.exec.any.utils === "undefined" )
 			namespace.AnyUtils	.systemMessage	= "systemMessage";
 			namespace.AnyUtils	.userDefined	= "userDefined";
 			
-			namespace.AnyUtils	.inherit		= function ( Child, Parent )
-			{
+			namespace.AnyUtils	.inherit		= function ( Child, Parent )    {
+
 				//	http://stackoverflow.com/questions/6519095/problem-extending-class-with-javascript-object-prototype
 				//
 				//	This method works none of the following do.
@@ -409,6 +409,124 @@ if ( typeof jsGlobal.exec.any.utils === "undefined" )
 				//		The opposite is true too:  If you load ChildClass last then its 
 				//		setSrc() will always be called.)
 			};
+
+			//namespace.AnyUtils	.Utf8ArrayToStr = function( buf ) {
+              //  return String.fromCharCode.apply(null, new Uint8Array(buf));
+            //}
+
+
+            /*
+            namespace.AnyUtils	.bufferToArrayBuffer = function  ( buffer ) {
+
+                //  http://www.pressinganswer.com/1783006/convert-a-binary-nodejs-buffer-to-javascript-arraybuffer
+                var ab      = new ArrayBuffer   ( buffer.length );
+                var view    = new Uint8Array    ( ab );
+                for ( var i = 0; i < buffer.length; ++i )
+                    view[ i ] = buffer[ i ];
+
+                return ab;
+            }
+            */
+
+            namespace.AnyUtils	.arrayBufferToBuffer = function ( ab ) {
+
+                //  http://www.pressinganswer.com/1783006/convert-a-binary-nodejs-buffer-to-javascript-arraybuffer
+                var buffer  = new Buffer        ( ab.byteLength );
+                var view    = new Uint8Array    ( ab );
+
+                for ( var i = 0; i < buffer.length; ++i )
+                    buffer[ i ] = view[ i ];
+
+                return buffer;
+            }
+
+            /*
+            //  http://stackoverflow.com/questions/6965107/converting-between-strings-and-arraybuffers
+            namespace.AnyUtils	.ab2str = function (buf) {
+              return String.fromCharCode.apply(null, new Uint16Array(buf));
+            }
+            */
+
+            //  http://stackoverflow.com/questions/6965107/converting-between-strings-and-arraybuffers
+            namespace.AnyUtils	.str2Uint8Array = function ( buf, start, size, str ) {
+
+              var bufView = new Uint8Array  ( buf, start, size );
+              for ( var i=0, strLen=str.length; i<strLen; i++ )
+                bufView[ i ] = str.charCodeAt( i );
+
+              return buf;
+            }
+
+            /*
+            namespace.AnyUtils	.str2ab = function (str) {
+              var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+              var bufView = new Uint16Array(buf);
+              for (var i=0, strLen=str.length; i<strLen; i++) {
+                bufView[i] = str.charCodeAt(i);
+              }
+              return buf;
+            }
+            */
+
+			
+			namespace.AnyUtils	.Utf8ArrayToStr = function( array ) {
+
+                //  http://stackoverflow.com/questions/8936984/uint8array-to-string-in-javascript
+                //  http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+
+                //  utf.js - UTF-8 <=> UTF-16 convertion
+                //
+                //  Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>
+                //  Version: 1.0
+                //  LastModified: Dec 25 1999
+                //  This library is free.  You can redistribute it and/or modify it.
+
+                var out = "";
+                var len = array.length;
+                var i = 0;
+
+                while ( i < len )
+                {
+                    var c = array[ i++ ];
+
+                    switch( c >> 4 )
+                    { 
+                        case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+                        {
+                            // 0xxxxxxx
+                            out += String.fromCharCode( c );
+                            break;
+                        }
+
+                        case 12: case 13:
+                        {
+                            // 110x xxxx   10xx xxxx
+                            var char2 = array[ i++ ];
+                            out += String.fromCharCode( ((c & 0x1F) << 6) | (char2 & 0x3F) );
+                            break;
+                        }
+                          
+                        case 14:
+                        {
+                            // 1110 xxxx  10xx xxxx  10xx xxxx
+                            var char2 = array[ i++ ];
+                            var char3 = array[ i++ ];
+                            out += String.fromCharCode( (( c & 0x0F )       << 12 ) |
+                                                        (( char2 & 0x3F )   << 6)   |
+                                                        (( char3 & 0x3F )   << 0)   );
+                            break;
+                        }
+
+                        default:
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                return out;
+            }
+
 	//	}
 
 }( jsGlobal.exec.any.utils ) );	//	Attach to this namespace
