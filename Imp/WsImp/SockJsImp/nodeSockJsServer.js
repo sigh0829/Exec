@@ -135,38 +135,11 @@ NodeSockJsServer.prototype.install = function ( params )	{
 			//self.console.log( "nodeSockJsServer.install 1a = " + sock.write );
 			
 	    	self.sock = sock;
+            self.requestHandler ( self.sock, "ConnectionOpened", "" );
 	    	
-			sock.on( 'data', function( data ) {
-				
-    			var	session	= {};
- 				
-	    		try
-	    		{
- 					session.sock		= self.sock;
-    				session.data		= data;
-     				session.method 		= "ReadFromClient";
-    				session.boolResult	= true;
-	    			
-	    			//self.console.log( "nodeSockJsServer.install 2 = " + data );
-	    			
-	    			self.requestHandler ( session );
-	    			
-	    			//self.console.log( "nodeSockJsServer.install 3" );
-	    		}
-	    		
-	    		catch ( err )
-	    		{
-	    			self.console.log( 'nodeSockJsServer, install, catch 1 err = ' + err );
-	    			
-    				session.boolResult	= false;
-    				session.message		= err;
-	    		
-	    			//self.console.log( "nodeSockJsServer.install 10" );
-	    			
-	    			self.requestHandler ( session );
-	    			
-	    			//self.console.log( "nodeSockJsServer.install 11" );
-	    		}
+			sock.on( 'data', function( data )
+            {
+                self.requestHandler ( self.sock, "ReadFromClient", data );
 	        });
 			
 			sock.on ( 'close', function() {} );

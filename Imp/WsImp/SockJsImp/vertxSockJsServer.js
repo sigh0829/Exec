@@ -138,7 +138,7 @@ VertxSockJsServer.prototype.create = function ( params )	{
 	
 	return	result
 };
-	
+
 VertxSockJsServer.prototype.install = function ( params )	{
 		
 	var result	= ServerUtils.httpStatus.InternalServerError.code;
@@ -153,41 +153,15 @@ VertxSockJsServer.prototype.install = function ( params )	{
  		{
 			//self.console.log( "vertxSockJsServer.install 1a = " + sock );
 			//self.console.log( "vertxSockJsServer.install 1a = " + sock.write );
-	    	
+
 	    	self.sock = sock;
+
+            self.requestHandler ( self.sock, "ConnectionOpened", "" );
 	    	
- 			sock.dataHandler( function( data )
+            sock.dataHandler( function( data )
 	    	{
-    			var	session	= {};
-     				
-	    		try
-	    		{
- 					session.sock		= self.sock;
-    				session.data		= data;
-     				session.method 		= "ReadFromClient";
-    				session.boolResult	= true;
-	    			
-	    			//self.console.log( "vertxSockJsServer.install 2 = " + data );
-	    			
-	    			self.requestHandler ( session );
-	    			
-	    			//self.console.log( "vertxSockJsServer.install 2" );
-	    		}
-	    		
-	    		catch ( err )
-	    		{
-	    			self.console.log( 'vertxSockJsServer, install, catch 1 err = ' + err );
-	    			
-    				session.boolResult	= false;
-    				session.message		= err;
-	    		
-	    			//self.console.log( "vertxSockJsServer.install 10" );
-	    			
-	    			self.requestHandler ( session );
-	    			
-	    			//self.console.log( "vertxSockJsServer.install 11" );
-	    		}
-	       }) 
+                self.requestHandler ( self.sock, "ReadFromClient", data );
+	        }) 
 	     });
 
 	    result	= ServerUtils.httpStatus.OK.code;

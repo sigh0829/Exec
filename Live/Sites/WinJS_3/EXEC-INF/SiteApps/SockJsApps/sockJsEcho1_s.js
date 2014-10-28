@@ -68,7 +68,7 @@ module.exports = function ()	{
             {
                 //luo.console .log( "jsEcho, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.errorValue;
-                luo .message                	= params.v + " is not handled by this implementation";
+                //luo .message                	= params.v + " is not handled by this implementation";
             }
             else
             {
