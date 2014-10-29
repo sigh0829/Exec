@@ -85,9 +85,9 @@ if ( typeof jsGlobal.site_winjs_3.sockjsecho1 === "undefined" )
         //console.log		( 'SockJsEcho1_c 3 = ' + (this.site + name) );
         
 		this.sock 		= new SockJS	( this.site + this.name );
-		this.sock		.onopen			= this.onopen;
-		this.sock		.onmessage		= this.onmessage;
-		this.sock		.onclose		= this.onclose;
+		this.sock		.onopen			= jsGlobal.exec.any.utils.AnyUtils  .useThis( this, "onopen"      );
+		this.sock		.onclose		= jsGlobal.exec.any.utils.AnyUtils  .useThis( this, "onclose"     );
+        this.sock		.onmessage		= jsGlobal.exec.any.utils.AnyUtils  .useThis( this, "onmessage"   );
         
 		//console.log		( 'SockJsEcho1_c 4 = ' + (this.site + this.name) );
 	};
