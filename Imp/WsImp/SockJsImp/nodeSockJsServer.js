@@ -63,25 +63,14 @@ NodeSockJsServer.prototype.interpretorName = function ()	{
 	return  "node";
 };
 	
-NodeSockJsServer.prototype.writeData = function ( session )	{
+NodeSockJsServer.prototype.writeData = function ( params )	{
 	
-	var	result	= session.errorValue;
+	var	result	= params.errorValue;
 		
 	try
 	{
-		//this.console.log( "nodeSockJsServer.params.session. 1 = " + params.session.sock.write );
-		//this.console.log( 'nodeSockJsServer, writeData, 1 = ' + params.data );
-		
-		//	http://vertx.io/core_manual_js.html#buffers
-		//	In vertx 2.1.2, write is throwing an exception if you pass in
-		//	a non-buffered string.
-		//var buff = new vertx.Buffer( params.data, 'UTF-8' );			
-		//params.session.sock.write( buff );
-		
-		this.sock.write( session.data );
-		//params.session.sock.write ( params.data );
-		
-    	result	= session.successValue; 
+		this.sock   .write( params.data );
+    	result	    = params.successValue; 
 	}
 	
 	catch ( err )

@@ -59,26 +59,39 @@ VertxSockJsServer.prototype.interpretorName = function ()	{
 	return  "vertx";
 };
 	
-VertxSockJsServer.prototype.writeData = function ( session )	{
+VertxSockJsServer.prototype.writeData = function ( params )	{
 		
-	var	result	= session.errorValue;
+	var	result	= params.errorValue;
 	
 	try
 	{
-		//this.console.log( "vertxSockJsServer.params.session. 1 = " + params.session.sock.write );
 		//this.console.log( 'vertxSockJsServer, writeData, 1 = ' + params.data );
+		//this.console.log( 'vertxSockJsServer, writeData, 2 = ' + params.session.charset );
 		
 		//	http://vertx.io/core_manual_js.html#buffers
 		//	In vertx 2.1.2, write is throwing an exception if you pass in
 		//	a non-buffered string.
-		var buff = new vertx.Buffer( session.data, 'UTF-8' );			
+
+		var buff = null;
+
+        if ( typeof params.session.charset === "undefined" )
+        {
+		    //this.console.log( 'vertxSockJsServer, writeData, 3 = ' + params.session.charset );
+		    buff = new vertx.Buffer( params.data, 'UTF-8' );
+        }
+        else
+        {
+		    this.console.log( 'vertxSockJsServer, writeData, 4 = ' + params.session.charset );
+		    buff = new vertx.Buffer( params.data );
+		    //buff = params.data;
+        }
 		
-		//this.console.log( 'vertxSockJsServer, writeData, 2 = ' + buff );
+		//this.console.log( 'vertxSockJsServer, writeData, 3 = ' + buff );
 		
 		this.sock.write( buff );
 		//params.session.sock.write( buff );
 		
-    	result	= session.successValue; 
+    	result	= params.successValue; 
 	}
 	
 	catch ( err )
