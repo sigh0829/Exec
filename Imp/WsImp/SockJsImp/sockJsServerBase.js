@@ -286,105 +286,38 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 	}
 };
 
-SockJsServerBase.prototype.isSafe = function ( session )   {
-    	
-	var	result = true;
-
-    try
-    {
-    }
-
-    catch ( err )
-    {
-    	this.console.log( 'SockJsServerBase.isSafe, catch err = ' + err );
-    }
-	
-    return	result;
-};
-
-SockJsServerBase.prototype._requestHandler = function ( session )   {
+SockJsServerBase.prototype.requestHandler = function ( sock, method, data )   {
 
     try
     {
     	//this.console.log( ' ' );
-    	//this.console.log( 'SockJsServerBase.prototype._requestHandler 1' );
+    	//this.console.log( 'SockJsServerBase.prototype.requestHandler 1' );
     	
-        //  Check to see if everything is ok.
-		if ( this.isOK( session ) === false )
-			this.console.log( "sockJsServerBase, this._requestHandler, isOK = false with: " + this.getErrorMessage( session ) );
-	
-	    //  Check to see that the incoming url is not going to cause
-        //  any security problems.
-        else 
-        {
-        	//	This code is not safe.  Even though it may return
-        	//	true it is not safe.  Read the comments within isSafe().
-        	if ( this.isSafe( session ) === true )
-            {
-		        //	Get the http method: GET, POST, PUT, DELETE, ...
-		        var	method = this.getRequestMethod   ( session );
-		        //this.console.log( 'sockJsServerBase, this._requestHandler method = ' + method );
-			
-		        //	Call the function that handles the GET, POST, PUT, DELETE, ...
-		        //if ( method in this.methods )
-		        	//this.methods[ method ]( session );
-		        
-		        switch ( method )
-		        {
-	        		//case this.methodType.NAME: break;
-	        		case this.methodType.ConnectionOpened:	this.ConnectionOpened	( session );	break;
-	        		case this.methodType.ReadFromClient:	this.ReadFromClient	    ( session );	break;
-	        		case this.methodType.WriteToClient:		this.WriteToClient	    ( session );	break;
+        var	session	            = {};
+ 		    session.sock		= sock;
+    	    session.data		= data;
+     	    session.method 		= method;
+    	    session.boolResult  = true;
+
+		    switch ( method )
+		    {
+	        	//case this.methodType.NAME: break;
+	        	case this.methodType.ConnectionOpened:	this.ConnectionOpened	( session );	break;
+	        	case this.methodType.ReadFromClient:	this.ReadFromClient	    ( session );	break;
+	        	case this.methodType.WriteToClient:		this.WriteToClient	    ( session );	break;
 	        		
-	        		default:	break;
-		        }
-		
-		        //this.console.log( 'sockJsServerBase, this._requestHandler 2' );
-            }
-        }
+	        	default:	break;
+		    }
     }
 
     catch ( err )
     {
-    	this.console.log( 'sockJsServerBase, this._requestHandler, catch err = ' + err );
+    	this.console.log( 'sockJsServerBase, this.requestHandler, catch err = ' + err );
     }
 
-    //this.console.log( "this._requestHandler, 3" );
+    //this.console.log( "this.requestHandler, 3" );
     //this.console.log( ' ' );
 };
-	
-SockJsServerBase.prototype.requestHandler = function ( sock, method, data )	{
-
-    var	session	= {};
-     				
-	try
-	{
- 		session.sock		    = sock;
-    	session.data		    = data;
-     	session.method 		    = method;
-    	session.boolResult	    = true;
-	    	
-	    //this.console.log( "SockJsServerBase.requestHandler, 1" );
-	    			
-	    this._requestHandler    ( session );
-	    			
-	    //this.console.log( "SockJsServerBase.requestHandler, 2" );
-	}
-	    		
-	catch ( err )
-	{
-	    //this.console.log( 'SockJsServerBase.requestHandler, catch, err = ' + err );
-	    			
-    	session.boolResult	    = false;
-    	session.message		    = err;
-	    		
-	    //this.console.log( "SockJsServerBase.requestHandler, catch, 1" );
-	    			
-	    this._requestHandler    ( session );
-	    			
-	    //this.console.log( "SockJsServerBase.requestHandler, catch, 2" );
-	}
-}
 
 SockJsServerBase.prototype.WriteToClient	= function ( session )	{
     	
@@ -498,11 +431,6 @@ SockJsServerBase.prototype.ReadFromClient     = function ( session )	{
     //this.console.log( ' ' );
 };
 
-SockJsServerBase.prototype.getRequestMethod = function ( session )	{
-
-	return	session.method;
-};
-
 SockJsServerBase.prototype.getErrorMessage = function ( session )	{
 		
 	return	session.message;
@@ -511,11 +439,6 @@ SockJsServerBase.prototype.getErrorMessage = function ( session )	{
 SockJsServerBase.prototype.getappName = function ()	{
 		
 	return	this.appName;
-};
-
-SockJsServerBase.prototype.isOK = function ( session )	{
-		
-	return session.boolResult;
 };
 
 module.exports = SockJsServerBase;
