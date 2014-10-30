@@ -107,6 +107,10 @@ if ( typeof jsGlobal.exec.server.mime === "undefined" )
 		return this.mimeTypes;
     }
 	
+	MimeTypes.prototype.getMimeType = function ( name )	{
+		return  this.mimeTypes[ name ];
+    }
+	
 	MimeTypes.prototype.addMimeType = function ( name, mimeType )	{
 //	not tested
 		this.mimeTypes[ name ] = mimeType;

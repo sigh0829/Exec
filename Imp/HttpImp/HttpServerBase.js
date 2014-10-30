@@ -693,10 +693,12 @@ HttpServerBase.prototype.GET     = function ( session )	{
 	        {
                 //this.console.log( "this.GET, 6 = " + ext );
 
+                var contentType = this.mimeTypes.getMimeType ( ext );
+
                 //  sendFile() will process the file asynchronously so
                 //  the result must be assumed to be true.
             	var self		= this;
-		        var success     = function()				{ self.writeHead ( session, ServerUtils.httpStatus.OK.code );	};
+		        var success     = function()				{ self.writeHead ( session, ServerUtils.httpStatus.OK.code, contentType );	};
 		        var failure     = function( code, message )	{ self.writeHead ( session, code, self.mimeTypes.getMimeTypes().html, message );	};
 		        this.sendFile	( session, pathname, success, failure );
 
