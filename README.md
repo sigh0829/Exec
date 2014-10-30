@@ -7,7 +7,7 @@ Exec
 
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Exec Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)<br>
-[Exec Tutorials Wiki](https://github.com/kevinpas/Exec-Tutorials/wiki)
+[Exec Tutorials](https://github.com/kevinpas/Exec-Tutorials/wiki)
 
 
 <h1>Warning</h1>
@@ -52,7 +52,7 @@ Exec
 
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Exec Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)<br>
-[Exec Tutorials Wiki](https://github.com/kevinpas/Exec-Tutorials/wiki)
+[Exec Tutorials](https://github.com/kevinpas/Exec-Tutorials/wiki)
 
 
 =========================
