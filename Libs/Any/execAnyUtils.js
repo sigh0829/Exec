@@ -467,7 +467,6 @@ if ( typeof jsGlobal.exec.any.utils === "undefined" )
               return buf;
             }
             */
-
 			
 			namespace.AnyUtils	.Utf8ArrayToStr = function( array ) {
 
@@ -527,6 +526,32 @@ if ( typeof jsGlobal.exec.any.utils === "undefined" )
                 return out;
             }
 
+            namespace.AnyUtils	.useThis   =function ( sourceObject, sourceHandler )
+            {
+                //  useThis() allows the use of "this" inside of an event handler:
+                //
+                //  this.sock 		        = new SockJS	( this.site + this.name );
+                //  this.sock.onmessage		= this.useThis( this, "onmessage"   );
+                //
+	            //  MyClass.prototype.onmessage = function( e )
+	            //  {
+                //      this.send   ( e.data );
+	            //  };
+                //
+	            //  MyClass.prototype.send  = function( data )
+	            //  {
+                //      if ( this.sock.readyState === SockJS.OPEN )
+                //          this.sock.send ( message );
+	            //  };
+
+	            var	f = function( s ){ return sourceObject[ sourceHandler ]( s ); };
+
+			        //	Allows a "remove event handler" to take this handler
+                    //  out of a list:
+			        //  f.handler	= sourceHandler;
+
+	            return	f;
+            };
 	//	}
 
 }( jsGlobal.exec.any.utils ) );	//	Attach to this namespace

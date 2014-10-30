@@ -44,7 +44,8 @@ var	site 		= siteType + "Sites/WinJS_3";
 				  //siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
 				  //siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
 
-setupSystem ( this );
+setupSystem     ( this );
+moveLibraries   ( this );
 	
 var httpImp	= new HttpImp	();
 var result  = httpImp.execute                
@@ -154,6 +155,35 @@ function setupSystem    ( system )  {
         return jsonResult;
     }
 }
+
+function moveLibraries  ( system )  {
+    
+    //  Move the libraries that the browser needs to
+    //  a location that is available to the browser.
+    //  Somewhere with in the website "site".
+
+    var	fromPathName    = "./Libs/Any/execAnyUtils.js";
+    var	toFolder        = "./" + site + "/PUB-INF/libs/";
+    var	toPathName      = "./" + site + "/PUB-INF/libs/" + "execAnyUtils.js";
+
+    //  If necessary create the folder
+    var	exists = fileImp  .execute	( { "system":system, "job":"getInfo", "get":"exists", "pathname":toFolder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+    if ( exists === false )
+        fileImp  .execute	( { "system":system, "job":"createFolder", "pathname":toFolder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+
+
+    //  Read the libray then write it to the new location.
+    var fromContent = fileImp.execute	( { "system":system, "job":"readTextFile", 
+                                                "pathname":fromPathName, "async":false, 
+                                                    "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, 
+                                                        "vt":"krp", "v": "1.0.0"  } ).result.contents;
+
+        fileImp  .execute	( { "system":system, "job":"writeTextFile", 
+                                "pathname":toPathName, "async":false, 
+                                    "data":fromContent, "returnIn": "result", "defaultValue": { "code":400 }, 
+                                        "vt":"krp", "v": "1.0.0"  } ).result;
+}
+
 
 //console.log( 'vertxConfig 1 = ' );
 
