@@ -35,6 +35,7 @@ var console 			= require( 'vertx/console' );
 var Version		        = require( './Libs/Any/execVersion.js' 		    ).Version;
 var HttpImp         	= require( './Imp/HttpImp/vertxHttpServer.js'   );
 var FileImp         	= require( './Imp/FileImp/vertxFile.js'	        );
+var	ServerUtils         = require( './Libs/Server/execServerUtils.js'   ).ServerUtils;
 var VertxSockJsServer	= require( './Imp/WsImp/SockJsImp/vertxSockJsServer.js'	);
 
 //var   AnyUtils			= require( './Libs/Any/execAnyUtils.js'			).AnyUtils;
@@ -177,43 +178,12 @@ function moveLibraries  ( system )  {
     //  a location that is available to the browser.
     //  Somewhere with in the website "site".
 
-    var filename        = "execAnyUtils.js";
-    var	fromPathName    = "./Libs/Any/" + filename;
-    var	toFolder        = "./" + site + "/PUB-INF/libs/";
-    var	toPathName      = toFolder + filename;
-    moveFile            ( system, toFolder, fromPathName, toPathName );
-
-    filename            = "WinJS.min.js";
-    fromPathName        = "./Libs/third/js/" + filename;
-    toFolder            = "./" + site + "/PUB-INF/libs/";
-    toPathName          = toFolder + filename;
-    moveFile            ( system, toFolder, fromPathName, toPathName );
-}
-
-function moveFile ( system, toFolder, fromPathName, toPathName )  {
-
-    try
-    {
-        var	exists = fileImp  .execute	( { "system":system, "job":"getInfo", "get":"exists", "pathname":toFolder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-        if ( exists === false )
-            fileImp  .execute	( { "system":system, "job":"createFolder", "pathname":toFolder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
-
-
-        //  Read the libray then write it to the new location.
-        var fromContent = fileImp.execute	( { "system":system, "job":"readTextFile", 
-                                                    "pathname":fromPathName, "async":false, 
-                                                        "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, 
-                                                            "vt":"krp", "v": "1.0.0"  } ).result.contents;
-
-            fileImp  .execute	( { "system":system, "job":"writeTextFile", 
-                                    "pathname":toPathName, "async":false, 
-                                        "data":fromContent, "returnIn": "result", "defaultValue": { "code":400 }, 
-                                            "vt":"krp", "v": "1.0.0"  } ).result;
-    }
-    catch ( err )
-    {
-        
-    }
+    var filename            =   "execAnyUtils.js";
+    var	fromPathName            = "./Libs/Any/" + filename;
+    var	toFolder                = "./" + site + "/PUB-INF/libs/";
+    var	toPathName              = toFolder + filename;
+    ServerUtils.createFolder    ( system, console, fileImp, toFolder )
+    ServerUtils.moveFile        ( system, console, fileImp, toFolder, fromPathName, toPathName );
 }
 
 //console.log( 'vertxConfig 1 = ' );
