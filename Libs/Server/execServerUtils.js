@@ -374,6 +374,42 @@ var	MimeTypes = require( './execMimeTypes.js' ).MimeTypes;
 			    //	Some files from the browser can have extensions like: "JPG".
 			    return ext.toLowerCase();
 		    }
+
+
+            namespace.ServerUtils.createFolder = function ( system, console, fileImp, toFolder )  {
+
+                try
+                {
+                    var	exists = fileImp  .execute	( { "system":system, "job":"getInfo", "get":"exists", "pathname":toFolder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+                    if ( exists === false )
+                        fileImp  .execute	( { "system":system, "job":"createFolder", "pathname":toFolder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+                }
+                catch ( err )
+                {
+                    console.log ( "function createFolder, catch, err = " + err );
+                }
+            }
+
+            namespace.ServerUtils.moveFile = function ( system, console, fileImp, toFolder, fromPathName, toPathName )  {
+
+                try
+                {
+                    //  Read the libray then write it to the new location.
+                    var fromContent = fileImp.execute	( { "system":system, "job":"readTextFile", 
+                                                                "pathname":fromPathName, "async":false, 
+                                                                    "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, 
+                                                                        "vt":"krp", "v": "1.0.0"  } ).result.contents;
+
+                        fileImp  .execute	( { "system":system, "job":"writeTextFile", 
+                                                "pathname":toPathName, "async":false, 
+                                                    "data":fromContent, "returnIn": "result", "defaultValue": { "code":400 }, 
+                                                        "vt":"krp", "v": "1.0.0"  } ).result;
+                }
+                catch ( err )
+                {
+                    console.log ( "function moveFile, catch, err = " + err );
+                }
+            }
 	
 			//	There may be many classes in this name space so include 
 			//	the class name where these statics are located.
