@@ -120,7 +120,7 @@ VertxHttpServer.prototype.statusCode = function ( params )	{
 	params.session.response.statusCode	= params.data.statusCode;
 };
 
-VertxHttpServer.prototype.sendFile = function ( session, pathname, successCallback, errorCallback )	{
+VertxHttpServer.prototype.sendFile = function ( session, params, successCallback, errorCallback )	{
 		
 	try
 	{
@@ -130,12 +130,21 @@ VertxHttpServer.prototype.sendFile = function ( session, pathname, successCallba
 		
 		if ( typeof successCallback === "function" )
 			successCallback	();
-		
-		//this.console.log( 'sendfile, 2 = ' + pathname );
-		
-		session.response.sendFile( pathname );   
 
-		//this.console.log( 'sendfile, 3 = ' + pathname );
+        if ( typeof params.message !== "undefined"  &&  params.message === true )
+        {
+    	    this.execute( { "session": session, "job": "end", "data":	
+                                { "vt":"krp", "v": "1.0.0", "message": params.content }, "vt":"krp", "v": "1.0.0" } );
+        }
+
+        else
+        {
+		    //this.console.log( 'sendfile, 2 = ' + pathname );
+		
+		    session.response.sendFile( params.pathname );   
+
+		    //this.console.log( 'sendfile, 3 = ' + pathname );
+        }
 	}
 	
 	catch ( err )

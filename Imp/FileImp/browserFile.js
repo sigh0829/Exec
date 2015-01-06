@@ -128,7 +128,16 @@ module.exports = function ()	{
 			if ( typeof successCallback === "function" )
 				successCallback	();
 			
-			session.response.sendFile( pathname );   
+            if ( typeof params.type !== "undefined"  &&  params.type === "message" )
+            {
+    	        this.execute( { "session": session, "job": "end", "data":	
+                                    { "vt":"krp", "v": "1.0.0", "message": params.message }, "vt":"krp", "v": "1.0.0" } );
+            }
+
+            else
+            {
+			    session.response.sendFile( pathname );   
+            }
 
 			//this.console.log( 'sendfile, 2 = ' + pathname );
 		}

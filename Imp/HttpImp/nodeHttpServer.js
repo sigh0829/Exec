@@ -115,67 +115,85 @@ NodeHttpServer.prototype.statusCode = function ( params )	{
 	params.session.response.statusCode	= params.data.statusCode;
 };
 
-NodeHttpServer.prototype.sendFile = function ( session, pathname, successCallback, errorCallback )	{
+NodeHttpServer.prototype.sendFile = function ( session, params, successCallback, errorCallback )	{
 	
 	try
 	{
 		//	http://eloquentjavascript.net/20_node.html
 		
-		//this.console.log( 'NodeHttpServer.prototype.sendfile, 1 = ' + pathname );
-		
-		fs.stat( pathname, function( error, stats )
-		{
-		    if ( error && error.code == "ENOENT" )
-		    {
-				//this.console.log( 'NodeHttpServer.prototype.sendfile, 2 = ' + "File not found" );
-				
-				if ( typeof errorCallback === "function" )
-					errorCallback( 404, "File not found" );
-		    }
-		    
-		    else if ( error )
-		    {
-				//this.console.log( 'NodeHttpServer.prototype.sendfile, 3 = ' + error.toString() );
-				
-				if ( typeof errorCallback === "function" )
-					errorCallback( 500, error.toString() );
-		    }
-		    
-		    /*
-		    else if ( stats.isDirectory() )
-		    {
-		    	fs.readdir(path, function(error, files) {
-		        	if (error)
-		          		respond(500, error.toString());
-		        	else
-		          		respond(200, files.join("\n"));
-		      	});
-		    }
-		    */
-		    
-		    else
-		    {
-		    	//this.console.log( 'NodeHttpServer.prototype.sendfile, 4 = ' + pathname );
-		    	//this.console.log( 'NodeHttpServer.prototype.sendfile, 4a = ' + stats.size );
-		    	
-				var body = fs.createReadStream( pathname );
+		//this.console.log( 'NodeHttpServer.prototype.sendfile, 1 = ' );
 
-				//	I think this needs to be called before starting to write.
-				if ( typeof successCallback === "function" )
-					successCallback	();
+        //  See HttpServerBase.prototype.GET() where sendFile is called.
+        if ( typeof params.message !== "undefined"  &&  params.message === true )
+        {
+			//	I think this needs to be called before starting to write.
+			if ( typeof successCallback === "function" )
+				successCallback	();
 				
-				if ( body && body.pipe )
-				{
-					//this.console.log( 'NodeHttpServer.prototype.sendfile, 6 = ' );
-				    body.pipe( session.response );
-				}
-				else
-				{
-					//this.console.log( 'NodeHttpServer.prototype.sendfile, 7 = ' );
-					session.response.end( body );			
-				}
-		    }
-		  });			
+		    //this.console.log( 'NodeHttpServer.prototype.sendfile, 2 = ' + params.content );
+
+    	    this.execute( { "session": session, "job": "end", "data":	
+                                { "vt":"krp", "v": "1.0.0", "message": params.content }, "vt":"krp", "v": "1.0.0" } );
+        }
+
+        else
+        {
+		    //this.console.log( 'NodeHttpServer.prototype.sendfile, 3 = ' + params.pathname );
+
+		    fs.stat( params.pathname, function( error, stats )
+		    {
+		        if ( error && error.code == "ENOENT" )
+		        {
+				    //this.console.log( 'NodeHttpServer.prototype.sendfile, 4 = ' + "File not found" );
+				
+				    if ( typeof errorCallback === "function" )
+					    errorCallback( 404, "File not found" );
+		        }
+		    
+		        else if ( error )
+		        {
+				    //this.console.log( 'NodeHttpServer.prototype.sendfile, 5 = ' + error.toString() );
+				
+				    if ( typeof errorCallback === "function" )
+					    errorCallback( 500, error.toString() );
+		        }
+		    
+		        /*
+		        else if ( stats.isDirectory() )
+		        {
+		    	    fs.readdir(path, function(error, files) {
+		        	    if (error)
+		          		    respond(500, error.toString());
+		        	    else
+		          		    respond(200, files.join("\n"));
+		      	    });
+		        }
+		        */
+		    
+		        else
+		        {
+		    	    //this.console.log( 'NodeHttpServer.prototype.sendfile, 6 = ' );
+		    	    //this.console.log( 'NodeHttpServer.prototype.sendfile, 4a = ' + stats.size );
+		    	
+				    var body = fs.createReadStream( params.pathname );
+
+				    //	I think this needs to be called before starting to write.
+				    if ( typeof successCallback === "function" )
+					    successCallback	();
+				
+				    if ( body && body.pipe )
+				    {
+					    //this.console.log( 'NodeHttpServer.prototype.sendfile, 7 = ' );
+				        body.pipe( session.response );
+				    }
+				    else
+				    {
+					    //this.console.log( 'NodeHttpServer.prototype.sendfile, 8 = ' );
+					    session.response.end( body );			
+				    }
+		        }
+		      });
+        }
 	}
 	
 	catch ( err )

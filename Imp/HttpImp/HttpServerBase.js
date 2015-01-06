@@ -114,7 +114,7 @@ HttpServerBase.prototype.execute = function ( params )
                 case "getRequestMethod":    jsonResult[ params.returnIn ] 	= this.getRequestMethod   	( params.session ); break;
                 case "getRequestPathname":	jsonResult[ params.returnIn ] 	= this.getRequestPathname	( params.session ); break;
                 case "getRequestQuery":     jsonResult[ params.returnIn ] 	= this.getRequestQuery    	( params.session ); break;
-                case "sendFile":            jsonResult[ params.returnIn ] 	= this.sendFile           	( params.session, params.pathname, params.success, params.failure );  break;
+                case "sendFile":            jsonResult[ params.returnIn ] 	= this.sendFile           	( params.session, params.params, params.success, params.failure );  break;
 
 		        case "end":			        jsonResult[ params.returnIn ] 	= this.end			( params );  break;
 		        case "setHeader":	        jsonResult[ params.returnIn ] 	= this.setHeader	( params );  break;
@@ -644,6 +644,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
         //this.console.log( "this.GET, 1c = " + apiLower );
         
 
+        //  If some rest api's have been defined.
         //  Look for "myApi"  or  "myapi"
         if ( apiAnyCase in this.restHandlers || apiLower in this.restHandlers )
         {
@@ -676,7 +677,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
         else
         {
             //  This is not a rest api it must be
-            //  a request for a html page.
+            //  a request for a html page, image, etc.
 
 	        if ( pathname === "/" )
             {
@@ -700,23 +701,26 @@ HttpServerBase.prototype.GET     = function ( session )	{
             var site            = this.site;
             var	ext	            = "";
             var self		    = this;
-            var localSendfile   = function( pathname, contentType )
+            var localSendfile   = function( params )
             {
-	            //  Make the "site" variable happy.
-                if ( pathname.indexOf( "/" ) !== 0 )
-		            pathname = "/" + pathname;
+                if ( typeof params.pathname !== "undefined" )
+                {
+	                //  Make the "site" variable happy.
+                    if ( params.pathname.indexOf( "/" ) !== 0 )
+		                params.pathname = "/" + params.pathname;
 	
-	            //  site gives us the sub-folder where
-                //  the website is located on disk.
-                pathname = site + pathname;
+	                //  site gives us the sub-folder where
+                    //  the website is located on disk.
+                    params.pathname = site + params.pathname;
+                }
 
-                //self.console.log( "localSendfile, 1, pathname = " + pathname );
+                //self.console.log( "localSendfile, 1, params.pathname = " + params.pathname );
 
                 //  sendFile() will process the file asynchronously so
                 //  the result must be assumed to be true.
-		        var success     = function()				{ self.writeHead( session, ServerUtils.httpStatus.OK.code, contentType          );	};
+		        var success     = function()				{ self.writeHead( session, ServerUtils.httpStatus.OK.code, params.contentType   );	};
 		        var failure     = function( code, message )	{ self.writeHead( session, code, self.mimeTypes.getMimeTypes().html, message    );	};
-		        self.sendFile	( session, pathname, success, failure );
+		        self.sendFile	( session, params, success, failure );
             };
 
 	        //  If this implementation doesn't handle
@@ -732,25 +736,27 @@ HttpServerBase.prototype.GET     = function ( session )	{
                 }
                 else
                 {
-                    var params  = 
-                    {
-                        "sendFile"  :   localSendfile,
-                        "pathname"  :   pathname
-                    };
-
+                    //this.console.log( "this.GET, 5, pathname = " + pathname );
                     //this.console.log( "this.GET, 5, localSendfile = " + localSendfile );
                     //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
-                    this.noExtensionHandler ( params );
+
+                    //  See kevinRichardPastorino_s.js
+                    this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname } );
                 }
             }
             else
 	        {
                 //this.console.log( "this.GET, 6 = " + ext );
 
-                var contentType = self.mimeTypes.getMimeType ( ext );
+                var params =
+                {
+                    "message"       :   false,      //  A file not a message
+                    "pathname"      :   pathname,   //  Name of the file
+                    "contentType"   :   self.mimeTypes.getMimeType( ext )
+                }
 
                 //  Send the requested file.
-                localSendfile ( pathname, contentType );
+                localSendfile ( params );
 
                 //  We don't know if this is ok because
                 //  sendFile is asynchronous.  But it should
@@ -771,7 +777,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
 
     catch ( err )
     {
-	    this.console.log( 'this.GET, catch err = ' + err );
+	    this.console.log( 'HttpServerBase.GET, catch err = ' + err );
     }
 
     //this.console.log( "this.GET, 10" );
@@ -793,7 +799,7 @@ HttpServerBase.prototype.statusCode = function ( params )	{
 	this.console.log( 'HttpServerBase, statusCode, not implemented ' );
 };
 
-HttpServerBase.prototype.sendFile = function ( session, pathname, successCallback, errorCallback )	{
+HttpServerBase.prototype.sendFile = function ( session, params, successCallback, errorCallback )	{
 	
 	this.console.log( 'HttpServerBase, sendfile, not implemented ' );
 };
