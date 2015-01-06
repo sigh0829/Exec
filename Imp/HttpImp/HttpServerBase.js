@@ -732,9 +732,15 @@ HttpServerBase.prototype.GET     = function ( session )	{
                 }
                 else
                 {
+                    var params  = 
+                    {
+                        "sendFile"  :   localSendfile,
+                        "pathname"  :   pathname
+                    };
+
                     //this.console.log( "this.GET, 5, localSendfile = " + localSendfile );
                     //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
-                    this.noExtensionHandler ( localSendfile );
+                    this.noExtensionHandler ( params );
                 }
             }
             else
