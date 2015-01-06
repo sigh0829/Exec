@@ -46,7 +46,9 @@ function	HttpServerBase	()
 	//	https://github.com/winjs/winjs
 	//	https://github.com/mozbrick/brick , http://brick.readme.io/
 	//	https://www.polymer-project.org/
-	this.site                = "Sites/ForTesting";
+	this.site               = "Sites/ForTesting";
+    this.defaultFilename    = "index.html";
+    this.noExtensionHandler = null;
 	
     this.anyUtils			= new AnyUtils	();
 	this.mimeTypes			= new MimeTypes ();
@@ -216,6 +218,18 @@ HttpServerBase.prototype.init = function ( params )	{
 	    //	Read in any config data here.
 	    this.readMimeTypes ();
 	    
+	    
+        //  Reset the websites default file name.
+        if ( typeof params.defaultFilename !== "undefined" )
+            this.defaultFilename = params.defaultFilename;
+
+
+        //  Any request that is not a rest api, but does not have
+        //  and extension will be handled by this.noExtensionHandler
+        if ( typeof params.noExtensionHandler !== "undefined" )
+            this.noExtensionHandler = params.noExtensionHandler;
+
+
 	    //	If no rest apps are requested this is undefined.
 	    if ( typeof params.rest !== "undefined" )
 	    {
@@ -664,43 +678,73 @@ HttpServerBase.prototype.GET     = function ( session )	{
             //  This is not a rest api it must be
             //  a request for a html page.
 
-	        if ( pathname == "/" )
+	        if ( pathname === "/" )
             {
 	            //	Change 	http://www.mysite.com/ 
 	            //	to 		http://www.mysite.com/index.html:  
-		        pathname = "/index.html";
+
+		        pathname = "/" + this.defaultFilename;
             }
 	
 	        //  Make the "site" variable happy.
             if ( pathname.indexOf( "/" ) !== 0 )
 		        pathname = "/" + pathname;
 	
-	        //  This gives us the sub-folder where
-            //  the website is located on disk.
-            pathname = this.site + pathname;
+            //this.console.log( "this.GET, 4, this.site = " + this.site );
+            //this.console.log( "this.GET, 4, pathname = " + pathname );
 
-            //this.console.log( "this.GET, 4 = " + pathname );
+            //  localSendfile can be called from users of Exec
+            //  when they want to allow users to make requests
+            //  for pages without extensions like: http://mysite.com/index
+            //  instead of http://mysite.com/index.html
+            var site            = this.site;
+            var	ext	            = "";
+            var self		    = this;
+            var localSendfile   = function( pathname, contentType )
+            {
+	            //  Make the "site" variable happy.
+                if ( pathname.indexOf( "/" ) !== 0 )
+		            pathname = "/" + pathname;
+	
+	            //  site gives us the sub-folder where
+                //  the website is located on disk.
+                pathname = site + pathname;
+
+                //self.console.log( "localSendfile, 1, pathname = " + pathname );
+
+                //  sendFile() will process the file asynchronously so
+                //  the result must be assumed to be true.
+		        var success     = function()				{ self.writeHead( session, ServerUtils.httpStatus.OK.code, contentType          );	};
+		        var failure     = function( code, message )	{ self.writeHead( session, code, self.mimeTypes.getMimeTypes().html, message    );	};
+		        self.sendFile	( session, pathname, success, failure );
+            };
 
 	        //  If this implementation doesn't handle
             //  this type of file.
-            var	ext	= ServerUtils.getFileExt( pathname );
+            ext	= ServerUtils.getFileExt( site + pathname );
 	        if ( (ext in this.mimeTypes.getMimeTypes()) === false )
             {
-                //this.console.log( "this.GET, 5 = " + ext );
-                statusCode  = ServerUtils.httpStatus.BadRequest.code;
+                if ( this.noExtensionHandler === null  ||  
+                     this.anyUtils.isFunction( this.noExtensionHandler ) === false )
+                {
+                    //this.console.log( "this.GET, 5, ext = " + ext );
+                    statusCode  = ServerUtils.httpStatus.BadRequest.code;
+                }
+                else
+                {
+                    //this.console.log( "this.GET, 5, localSendfile = " + localSendfile );
+                    //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
+                    this.noExtensionHandler ( localSendfile );
+                }
             }
             else
 	        {
                 //this.console.log( "this.GET, 6 = " + ext );
 
-                var contentType = this.mimeTypes.getMimeType ( ext );
+                var contentType = self.mimeTypes.getMimeType ( ext );
 
-                //  sendFile() will process the file asynchronously so
-                //  the result must be assumed to be true.
-            	var self		= this;
-		        var success     = function()				{ self.writeHead ( session, ServerUtils.httpStatus.OK.code, contentType );	};
-		        var failure     = function( code, message )	{ self.writeHead ( session, code, self.mimeTypes.getMimeTypes().html, message );	};
-		        this.sendFile	( session, pathname, success, failure );
+                //  Send the requested file.
+                localSendfile ( pathname, contentType );
 
                 //  We don't know if this is ok because
                 //  sendFile is asynchronous.  But it should
