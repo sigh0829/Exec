@@ -25,6 +25,8 @@
 //	SOFTWARE. 
 
 //  http://technologyconversations.com/2014/08/12/rest-api-with-json/
+
+//  Usage:
 //  http://localhost:7777/books/id/24
 
 module.exports = function ()	{
@@ -63,7 +65,7 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = luo.httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;

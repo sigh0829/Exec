@@ -24,6 +24,10 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
+//  Usage:
+//  All this example does is write what it gets from 
+//  the form submit to the server console.
+
 //var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 
 module.exports = function ()	{
@@ -63,25 +67,25 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //luo.console .log( "testForm, execute, 1 = " );
+            //luo.console.log( "testForm, execute, 1 = " );
 
             //  execute() should handle all previous versions.
             //  Since this is version 1 there is only one version to handle.
             if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
-                //luo.console .log( "testForm, execute, 2 = " );
+                //luo.console.log( "testForm, execute, 2 = " );
 
                 //  For now only handling POST and  NAME.
                 jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
             }
             else
             {
-                //luo.console .log( "testForm, execute, 3 = " );
+                //luo.console.log( "testForm, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
                 luo .message                    = params.v + " is not handled by this implementation";
             }
@@ -89,11 +93,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            luo.console .log( "testForm, execute, 4 = " + err );
+            luo.console.log( "testForm, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console .log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //luo.console.log( "testForm, execute, 5 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -103,17 +107,16 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
-        //luo.console .log( "testForm, _execute, 1a = " + httpImp );
-        //luo.console .log( "testForm, _execute, 1b = " + session );
-        //luo.console .log( "testForm, _execute, 1c = " + methodType );
-        //luo.console .log( "testForm, _execute, 1d = " + method );
-        //luo.console .log( "testForm, _execute, 1e = " + httpStatus );
-        //luo.console .log( "testForm, _execute, 1f = " + luo.console  );
+        //luo.console.log( "testForm, _execute, 1b = " + session );
+        //luo.console.log( "testForm, _execute, 1c = " + methodType );
+        //luo.console.log( "testForm, _execute, 1d = " + method );
+        //luo.console.log( "testForm, _execute, 1e = " + httpStatus );
+        //luo.console.log( "testForm, _execute, 1f = " + luo.console );
 
         if ( method === methodType.NAME )
         {
             result = "testForm";
-            //luo.console .log( "testForm.POST, _execute, return = " + result );
+            //luo.console.log( "testForm.POST, _execute, return = " + result );
         }
 
         else if ( method === methodType.DELETE )
@@ -129,14 +132,14 @@ module.exports = function ()	{
 		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
-			    luo.console .log( "testForm.GET, parsedQuery = "	+ parsedQuery );
-			    luo.console .log( "testForm.GET, query.name = "	    + parsedQuery.name );
-			    luo.console .log( "testForm.GET, query.age = " 	    + parsedQuery.age );
+			    luo.console.log( "testForm.GET, parsedQuery = "	+ parsedQuery );
+			    luo.console.log( "testForm.GET, query.name = "	    + parsedQuery.name );
+			    luo.console.log( "testForm.GET, query.age = " 	    + parsedQuery.age );
 
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
                 //  Use parsedQuery
-			    httpImp.writeHead   ( session, httpStatus.OK.code );
+			    helpers.writeHead   ( session, httpStatus.OK.code );
 		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 
                 result = httpStatus.OK.code;
@@ -146,37 +149,37 @@ module.exports = function ()	{
             
         else if ( method === methodType.POST )
         {
-            //luo.console .log( "testForm.POST, _execute, 1 = " );
+            //luo.console.log( "testForm.POST, _execute, 1 = " );
 
-            session.request.on ( 'data', function ( data ) {
+            function startHandler ( data ) {
 
-                //luo.console .log( "testForm.POST, _execute, 2 = " + data );
+                //luo.console.log( "testForm.POST, _execute, 2 = " + data );
 
                 luo.body += data;
                 
-                //luo.console .log( "testForm.POST, _execute, 3 = " + luo.body );
+                //luo.console.log( "testForm.POST, _execute, 3 = " + luo.body );
 
                 // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-                if ( luo.body.length > 1e6)
+                if ( luo.body.length > 1e6 )
                 { 
                     // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
                     session.request.connection.destroy();
                 }
                 
-                //luo.console .log( "testForm.POST, _execute, 4 = " + luo.body );
-            });
+                //luo.console.log( "testForm.POST, _execute, 4 = " + luo.body );
+            };
 
-            session.request.on('end', function () {
+            function endHandler () {
 
                 var both    = luo.body  .split ( "&" );
-                var first   = both[ 0 ]     .split ( "=" );
-                var second  = both[ 1 ]     .split ( "=" );
+                var name    = both[ 0 ] .split ( "=" );
+                var email   = both[ 1 ] .split ( "=" );
                 
-                luo.console .log( "testForm.POST, _execute, 5a = " + luo.body );
-                luo.console .log( "testForm.POST, _execute, 5b = " + first[ 0 ] );
-                luo.console .log( "testForm.POST, _execute, 5c = " + first[ 1 ] );
-                luo.console .log( "testForm.POST, _execute, 5d = " + second[ 0 ] );
-                luo.console .log( "testForm.POST, _execute, 5e = " + second[ 1 ] );
+                luo.console.log( "testForm.POST, _execute, body = "             + luo.body      );
+                luo.console.log( "testForm.POST, _execute, name  property = "   + name[ 0 ]     );
+                luo.console.log( "testForm.POST, _execute, name  value    = "   + name[ 1 ]     );
+                luo.console.log( "testForm.POST, _execute, email property = "   + email[ 0 ]    );
+                luo.console.log( "testForm.POST, _execute, email value    = "   + email[ 1 ]    );
 
                 //  Don't allow it to accumulate any more.
                 luo.body    = "";
@@ -184,17 +187,24 @@ module.exports = function ()	{
                 //var POST = qs.parse( luo.body );
 
                 // use POST
-                //luo.console .log( "testForm.POST, _execute, 6 = " + POST );
-            });
+                //luo.console.log( "testForm.POST, _execute, 6 = " + POST );
+            };
+
+            //  Register the callbacks for POST data handling.
+		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "startHandler", "callback":startHandler,
+                                            "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+
+		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "endHandler", "callback":endHandler,
+                                            "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
         }
 
         else if ( method === methodType.PUT )
         {
             //  Update
-            //luo.console .log( "testForm.PUT, _execute, return = " + result );
+            //luo.console.log( "testForm.PUT, _execute, return = " + result );
         }
 
-        //luo.console .log( "testForm.POST, _execute, return = " + result );
+        //luo.console.log( "testForm.POST, _execute, return = " + result );
 
         return  result
     }

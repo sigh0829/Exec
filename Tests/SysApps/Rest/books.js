@@ -25,6 +25,8 @@
 //	SOFTWARE. 
 
 //  http://technologyconversations.com/2014/08/12/rest-api-with-json/
+
+//  Usage:
 //  http://localhost:7777/books/id/24
 
 module.exports = function ()	{
