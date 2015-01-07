@@ -151,7 +151,7 @@ module.exports = function ()	{
         {
             //luo.console.log( "testForm.POST, _execute, 1 = " );
 
-            session.request.on ( 'data', function ( data ) {
+            function startHandler ( data ) {
 
                 //luo.console.log( "testForm.POST, _execute, 2 = " + data );
 
@@ -167,19 +167,19 @@ module.exports = function ()	{
                 }
                 
                 //luo.console.log( "testForm.POST, _execute, 4 = " + luo.body );
-            });
+            };
 
-            session.request.on('end', function () {
+            function endHandler () {
 
                 var both    = luo.body  .split ( "&" );
-                var first   = both[ 0 ] .split ( "=" );
-                var second  = both[ 1 ] .split ( "=" );
+                var name    = both[ 0 ] .split ( "=" );
+                var email   = both[ 1 ] .split ( "=" );
                 
-                luo.console.log( "testForm.POST, _execute, 5a = " + luo.body );
-                luo.console.log( "testForm.POST, _execute, 5b = " + first[ 0 ] );
-                luo.console.log( "testForm.POST, _execute, 5c = " + first[ 1 ] );
-                luo.console.log( "testForm.POST, _execute, 5d = " + second[ 0 ] );
-                luo.console.log( "testForm.POST, _execute, 5e = " + second[ 1 ] );
+                luo.console.log( "testForm.POST, _execute, body = "             + luo.body      );
+                luo.console.log( "testForm.POST, _execute, name  property = "   + name[ 0 ]     );
+                luo.console.log( "testForm.POST, _execute, name  value    = "   + name[ 1 ]     );
+                luo.console.log( "testForm.POST, _execute, email property = "   + email[ 0 ]    );
+                luo.console.log( "testForm.POST, _execute, email value    = "   + email[ 1 ]    );
 
                 //  Don't allow it to accumulate any more.
                 luo.body    = "";
@@ -188,7 +188,14 @@ module.exports = function ()	{
 
                 // use POST
                 //luo.console.log( "testForm.POST, _execute, 6 = " + POST );
-            });
+            };
+
+            //  Register the callbacks for POST data handling.
+		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "startHandler", "callback":startHandler,
+                                            "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+
+		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "endHandler", "callback":endHandler,
+                                            "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
         }
 
         else if ( method === methodType.PUT )
