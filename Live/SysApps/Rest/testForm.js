@@ -24,6 +24,10 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
+//  Usage:
+//  All this example does is write what it gets from 
+//  the form submit to the server console.
+
 //var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 
 module.exports = function ()	{
@@ -93,7 +97,7 @@ module.exports = function ()	{
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //luo.console.log( "testForm, execute, 5 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -103,7 +107,6 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
-        //luo.console.log( "testForm, _execute, 1a = " + httpImp );
         //luo.console.log( "testForm, _execute, 1b = " + session );
         //luo.console.log( "testForm, _execute, 1c = " + methodType );
         //luo.console.log( "testForm, _execute, 1d = " + method );
@@ -157,7 +160,7 @@ module.exports = function ()	{
                 //luo.console.log( "testForm.POST, _execute, 3 = " + luo.body );
 
                 // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-                if ( luo.body.length > 1e6)
+                if ( luo.body.length > 1e6 )
                 { 
                     // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
                     session.request.connection.destroy();
@@ -169,8 +172,8 @@ module.exports = function ()	{
             session.request.on('end', function () {
 
                 var both    = luo.body  .split ( "&" );
-                var first   = both[ 0 ]     .split ( "=" );
-                var second  = both[ 1 ]     .split ( "=" );
+                var first   = both[ 0 ] .split ( "=" );
+                var second  = both[ 1 ] .split ( "=" );
                 
                 luo.console.log( "testForm.POST, _execute, 5a = " + luo.body );
                 luo.console.log( "testForm.POST, _execute, 5b = " + first[ 0 ] );

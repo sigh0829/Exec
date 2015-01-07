@@ -473,8 +473,9 @@ HttpServerBase.prototype.httpRequestHandler = function ( session )   {
 
             	switch ( method )
             	{
-		    		case "PUT":	this.PUT ( session );	break;
-		    		case "GET":	this.GET ( session );	break;
+		    		case "PUT":	    this.PUT    ( session );	break;
+		    		case "GET":     this.GET    ( session );	break;
+		    		case "POST":	this.POST   ( session );	break;
 		    		
 		    		default:	break;
             	}
