@@ -247,4 +247,19 @@ VertxHttpServer.prototype.create = function ( params )	{
 	return	true;
 };
 
+VertxHttpServer.prototype.startHandler = function	( session, callback )	{
+    
+    session.request.dataHandler ( function ( data ) {
+        callback ( data );
+    });
+};
+
+VertxHttpServer.prototype.endHandler = function	( session, callback )    {
+    
+    session.request.endHandler( function () {
+        callback ();
+    });
+};
+
+
 module.exports = VertxHttpServer;

@@ -116,6 +116,9 @@ HttpServerBase.prototype.execute = function ( params )
                 case "getRequestQuery":     jsonResult[ params.returnIn ] 	= this.getRequestQuery    	( params.session ); break;
                 case "sendFile":            jsonResult[ params.returnIn ] 	= this.sendFile           	( params.session, params.params, params.success, params.failure );  break;
 
+                case "startHandler":        jsonResult[ params.returnIn ] 	= this.startHandler         ( params.session, params.callback );  break;
+                case "endHandler":          jsonResult[ params.returnIn ] 	= this.endHandler           ( params.session, params.callback );  break;
+
 		        case "end":			        jsonResult[ params.returnIn ] 	= this.end			( params );  break;
 		        case "setHeader":	        jsonResult[ params.returnIn ] 	= this.setHeader	( params );  break;
 		        case "statusCode":	        jsonResult[ params.returnIn ] 	= this.statusCode	( params );  break;
@@ -473,8 +476,9 @@ HttpServerBase.prototype.httpRequestHandler = function ( session )   {
 
             	switch ( method )
             	{
-		    		case "PUT":	this.PUT ( session );	break;
-		    		case "GET":	this.GET ( session );	break;
+		    		case "PUT":	    this.PUT    ( session );	break;
+		    		case "GET":     this.GET    ( session );	break;
+		    		case "POST":	this.POST   ( session );	break;
 		    		
 		    		default:	break;
             	}
@@ -854,6 +858,11 @@ HttpServerBase.prototype.setServer = function	( server, console )	{
 	
 	this.server = server;
 };
+
+HttpServerBase.prototype.startHandler = function	( server, callback )	{};
+
+HttpServerBase.prototype.endHandler = function	( server, callback )	{};
+
 
 HttpServerBase.prototype.stopServer = function ( params, callBack )	{};
 

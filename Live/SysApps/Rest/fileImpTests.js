@@ -24,6 +24,9 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
+//  Usage:
+//  This file is only used in curlTests.cmd
+
 //var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 
 module.exports = function ()	{

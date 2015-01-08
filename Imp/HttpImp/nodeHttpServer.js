@@ -276,4 +276,18 @@ NodeHttpServer.prototype.getRequestQuery = function ( session )	{
 	return	parsedUrl	.query;
 };
 
+NodeHttpServer.prototype.startHandler = function	( session, callback )	{
+    
+    session.request.on ( 'data', function ( data ) {
+        callback ( data );
+    });
+};
+
+NodeHttpServer.prototype.endHandler = function	( session, callback )    {
+        
+    session.request.on( 'end', function () {
+        callback ();
+    });
+};
+
 module.exports = NodeHttpServer;

@@ -24,6 +24,7 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
+//  Usage:
 //  http://localhost:7777/myApi?prop&value;
 //  http://localhost:7777/myApi?name=fred&age=33
 
@@ -69,7 +70,7 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -127,7 +128,7 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/myApi?name=fred&age=33
 
-		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		    var parsedQuery	= luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
 			    //luo.console.log( "myApi.GET, parsedQuery = "	+ parsedQuery );
@@ -137,8 +138,8 @@ module.exports = function ()	{
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
                 //  Use parsedQuery
-			    httpImp .writeHead  ( session, httpStatus.OK.code );
-		        httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+			    luo.httpImp .writeHead  ( session, httpStatus.OK.code );
+		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
 
                 result = httpStatus.OK.code;
 		    }

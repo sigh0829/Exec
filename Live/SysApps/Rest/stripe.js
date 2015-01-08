@@ -24,6 +24,7 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
+//  Usage:
 //  http://localhost:7777/stripe?prop&value;
 //  http://localhost:7777/stripe?name=fred&age=33
 

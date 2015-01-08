@@ -24,30 +24,29 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
-//	http://127.0.0.1:7777/index.html
-//	http://127.0.0.1:7777/myApi?name=myName&age=33
-//	http://127.0.0.1:7777/api2?name=myName&age=33
-
-
 //  The server implementation shouldn't know anything about the website.
 //  It should only process files that it is requested to process.
-var console 			= require( 'vertx/console' );
-var Version	            = require( './Libs/Any/execVersion.js'          ).Version;
-var HttpImp         	= require( './Imp/HttpImp/vertxHttpServer.js'   );
-var FileImp         	= require( './Imp/FileImp/vertxFile.js'	)       ;
-var	ServerUtils         = require( './Libs/Server/execServerUtils.js'   ).ServerUtils;
-var VertxSockJsServer	= require( './Imp/WsImp/SockJsImp/vertxSockJsServer.js'	);
-
+var console 			= require( 'vertx/console'                              );
+var Version	            = require( './Libs/Any/execVersion.js'                  ).Version;
+var HttpImp         	= require( './Imp/HttpImp/vertxHttpServer.js'           );
+var FileImp         	= require( './Imp/FileImp/vertxFile.js'	                );
+var	ServerUtils         = require( './Libs/Server/execServerUtils.js'           ).ServerUtils;
+var VertxSockJsServer	= require( './Imp/WsImp/SockJsImp/vertxSockJsServer.js' );
 
 var fileImp     = new FileImp();
 var	siteType	= "Live/";
 var	site 		= siteType + "Sites/WinJS_3";
-				  //siteType + "Sites/ForTesting";	//	will see catch "site app not found" but html should work
-				  //siteType + "Sites/TestForm";		//	will see catch "site app not found" but html should work
 
 setupSystem     ( this );
 moveLibraries   ( this );
 	
+//  Initialize the http handler to look for requests for the following rest services.
+//
+//  The rest service handlers will be found in one of two places;
+//  If you look in the "Live" folder you'll see a sub-folder "SysApps" and a sub-folder "Sites/EXEC-INF/SiteApp".
+//  If you look in either of these you'll find the service handlers.
+//
+//  For example the service handler "myApi" is in "Live/SysApps/Rest.
 var httpImp	= new HttpImp	();
 var result  = httpImp.execute                
 	({ 
@@ -57,10 +56,9 @@ var result  = httpImp.execute
         "defaultValue": "error",
 		"rest":		    [ 
 						    { "appType":"SysApp", 	"name": "myApi" }, 
-						    { "appType":"SysApp", 	"name": "books" }, 
-						    { "appType":"SiteApp",	"name": "books" }, 
+						    { "appType":"SysApp", 	"name": "books" },   //  first "books" in the list gets served.
+						    { "appType":"SiteApp",	"name": "books" },   //  first "books" in the list gets served.
 						    { "appType":"SysApp", 	"name": "stripe" }, 
-						    { "appType":"SysApp", 	"name": "testForm" }, 
 						    { "appType":"SysApp", 	"name": "fileImpTests" }
 					    ],
 
@@ -72,6 +70,7 @@ var result  = httpImp.execute
 
 if ( result !== "error" )
 {
+    //  Start two sockJS handlers.  They are found in "Live/SysApps/SockJsApps".
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
@@ -92,14 +91,15 @@ if ( result !== "error" )
 		    "vt":"krp", "v": "1.0.0"
 	    });
 
+    //  Now start the http server listening on "port".
     httpImp  .execute    
     ({ 
         "system":   this, 
 	    "job":      "listen", 
-	    //"host":"127.0.0.1",       //  Handle loopback address 
-	    //"host":"localhost",       //  Handle localhost 
-	    //"host":"192.168.1.116",   //  Handle LAN assigned ip
-        //                          //  If nothing then handle every ip address on this port    
+	    //"host":   "127.0.0.1",        //  Handle loopback address 
+	    //"host":   "localhost",        //  Handle localhost 
+	    //"host":   "192.168.1.116",    //  Handle LAN assigned ip
+        //                              //  If nothing then handle every ip address on this port    
 	    "port":     7779, 
 	    "vt":"krp", "v": "1.0.0" 
     });
@@ -175,43 +175,6 @@ function moveLibraries  ( system )  {
 
 //Setup all of the websites that you want here.
 
-
-//This instance will handle the website found
-//in the folder "Sites/ForTesting" on port 7777
-//var httpImp         = new HttpImp 	        ();
-//var httpController  = new HttpController    ();
-//  httpController  .execute                ( { "system":this, "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"127.0.0.1", "port":7778, "site":"Sites/ForTesting", "vt":"krp", "v": "1.0.0",
-  //                                          "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" } ] } );
-//httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
-
-
-/*
-//This instance will handle the website found
-//in the folder "Sites/ForTesting" on port 7777
-var httpImp         = new HttpImp 	        ();
-var httpController  = new HttpController    ();
-httpController  .execute                ( { "system":this, "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"127.0.0.1", "port":7778, "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
-                                            "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" }, { "name": "fileImpTests" } ] } );
-httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
-*/
-
-//This instance will handle the website found
-//in the folder "Sites/TestForm" on port 7778
-/*
-var httpImp = new HttpImp	();
-httpImp	.execute                
-({ 
-    "system":this, 
-	"job":"initCreate", 
-	"console":console, 
-	"fileImp": fileImp, 
-	"httpImp": httpImp, 
-	"site":"Sites/WinJS_3",
-	"rest":[ { "appType":"SysApp", "name": "myApi" }, { "appType":"SysApp", "name": "books" }, { "appType":"SysApp", "name": "stripe" }, { "appType":"SysApp", "name": "testForm" }, { "appType":"SysApp", "name": "fileImpTests" } ],
-    //"rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" }, { "name": "fileImpTests" } ],
-    "vt":"krp", "v": "1.0.0"
-});
-*/
 
 //console.log( 'vertxConfig 5 = ' );
 

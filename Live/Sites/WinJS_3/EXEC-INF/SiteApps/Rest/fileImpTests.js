@@ -24,6 +24,9 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
+//  Usage:
+//  This file is only used in curlTests.cmd
+
 //var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 
 module.exports = function ()	{
@@ -99,6 +102,7 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
+        //luo.console.log( "fileImpTests, _execute, 1a = " + httpImp );
         //luo.console.log( "fileImpTests, _execute, 1b = " + session );
         //luo.console.log( "fileImpTests, _execute, 1c = " + methodType );
         //luo.console.log( "fileImpTests, _execute, 1d = " + method );
@@ -382,7 +386,7 @@ function deleteFolder	( folder )	{
 	{
 		var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"deleteFolder", "force":true, "pathname":folder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
 		testsOK		= (result.code === 200);
-		//luo.console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
+		//console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
 	}
 
 	//	Now the folder should not exist
