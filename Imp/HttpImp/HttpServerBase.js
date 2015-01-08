@@ -253,8 +253,9 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	if ( value.appType === "SiteApp" )
 		    		filename = '../../' + self.site + '/EXEC-INF/SiteApps/Rest/' + value.name + '.js';
 		    	
-		    	//self.console.log( "HttpServerBase.prototype.init 2 = " + ServerUtils.httpStatus );
-		    	//self.console.log( "HttpServerBase.prototype.init 2a = " + filename );
+		    	//self.console.log( "HttpServerBase.prototype.init ServerUtils.httpStatus = " + ServerUtils.httpStatus );
+		    	//self.console.log( "HttpServerBase.prototype.init value.appType = " + value.appType );
+		    	//self.console.log( "HttpServerBase.prototype.init filename = " + filename );
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
