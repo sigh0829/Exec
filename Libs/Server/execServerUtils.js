@@ -424,6 +424,21 @@ var	MimeTypes = require( './execMimeTypes.js' ).MimeTypes;
 
 			//	Used for curlTests.cmd
 			namespace.ServerUtils	.httpStatus.FileImpTestOkay		= { code:9999,	contentType: MimeTypes.html, message:"FileImpTestOkay"         };
+
+            //  Mostly for Imp/HttpImp/HttpServerBase.js
+			namespace.ServerUtils	.methodType	        = {};
+			namespace.ServerUtils	.methodType.INIT    = "INIT";
+			namespace.ServerUtils	.methodType.GET     = "GET";
+			namespace.ServerUtils	.methodType.PUT 	= "PUT";
+			namespace.ServerUtils	.methodType.POST 	= "POST";
+			namespace.ServerUtils	.methodType.DELETE 	= "DELETE";
+			namespace.ServerUtils	.methodType.HEAD 	= "HEAD";
+			namespace.ServerUtils	.methodType.NAME    = "NAME";       //  Added to switch - not part of http protocal.
+			namespace.ServerUtils	.methodType.OPTIONS = "OPTIONS";
+			namespace.ServerUtils	.methodType.CONNECT	= "CONNECT";
+			namespace.ServerUtils	.methodType.TRACE 	= "TRACE";
+			namespace.ServerUtils	.methodType.PATCH	= "PATCH";
+
 	//	}
 
 }( jsGlobal.exec.server.utils ) );	//	Attach to this namespace

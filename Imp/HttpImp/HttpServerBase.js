@@ -57,6 +57,7 @@ function	HttpServerBase	()
 	this.sqlImp             = null;
 	this.restHandlers       = {};
 
+    /*
 	this.methodType	        = {};
     this.methodType.INIT    = "INIT";
     this.methodType.GET     = "GET";
@@ -69,6 +70,7 @@ function	HttpServerBase	()
     this.methodType.CONNECT	= "CONNECT";
     this.methodType.TRACE 	= "TRACE";
     this.methodType.PATCH	= "PATCH";
+    */
 };
 
 HttpServerBase.prototype.execute = function ( params )
@@ -256,8 +258,8 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
-		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 		    	
 		    	//self.console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
@@ -547,18 +549,18 @@ HttpServerBase.prototype.writeHead = function ( session, code, contentType, mess
     }
 }
 
-HttpServerBase.prototype.PUT 		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.PUT 		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.DELETE 	= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.DELETE 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.HEAD 		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.HEAD 		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.OPTIONS 	= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.OPTIONS 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.CONNECT	= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.CONNECT	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.TRACE 		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.TRACE 		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.PATCH		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.PATCH		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.PUT 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.PUT 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.DELETE 	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.DELETE  ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.HEAD 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.HEAD 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.OPTIONS 	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.OPTIONS ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.CONNECT	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.CONNECT ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.TRACE 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.TRACE 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.PATCH		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.PATCH	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
 
 HttpServerBase.prototype.POST 		= function ( session )	{ 
 
     //this.console.log( ' ' ); 
-    //this.console.log( "this.POST  method = "   + this.methodType.POST ); 
+    //this.console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
     //this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); 
 
 
@@ -600,7 +602,7 @@ HttpServerBase.prototype.POST 		= function ( session )	{
                 "system":       this.system, 
                 "job":          "any", 
                 "session":      session, 
-                "methodType":   this.methodType, 
+                "methodType":   ServerUtils.methodType, 
                 "method":       "POST", 
                 "httpStatus":   ServerUtils.httpStatus, 
                 "returnIn":     "statusCode", 
@@ -667,7 +669,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
                 "system":       this.system, 
                 "job":          "any", 
                 "session":      session, 
-                "methodType":   this.methodType, 
+                "methodType":   ServerUtils.methodType, 
                 "method":       "GET", 
                 "httpStatus":   ServerUtils.httpStatus, 
                 "returnIn":     "statusCode", 
@@ -745,7 +747,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
                     //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
 
                     //  See kevinRichardPastorino_s.js
-                    this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname } );
+                    this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname, "session":session } );
                 }
             }
             else
