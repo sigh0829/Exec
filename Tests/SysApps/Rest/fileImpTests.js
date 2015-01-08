@@ -24,7 +24,12 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 //	SOFTWARE. 
 
-//var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
+//  Usage:
+//  This file is only used in curlTests.cmd
+
+//var Version	= require( '../../../Libs/Any/execVersion.js'   ).Version;
+var AnyUtils	= require( '../../../Libs/Any/execAnyUtils.js'	).AnyUtils;
+
 
 module.exports = function ()	{
 
@@ -35,6 +40,7 @@ module.exports = function ()	{
         luo .fileImp    = null;
         luo .httpImp    = null;
         luo .Version    = null;
+        luo .anyUtils   = new AnyUtils	();
 	
 	this.execute = function ( params )	{
 
@@ -54,6 +60,7 @@ module.exports = function ()	{
                 luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
                 luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
                 luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+                luo.site       = luo.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": ""   }).site;
             }
 
             //  All execute functions are told by the caller
@@ -62,7 +69,7 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -127,11 +134,16 @@ module.exports = function ()	{
         	//luo.console.log( "fileImpTests, testFileImp " );
         	
         	//	Run the test in the tests/output folder
-        	var	folder		= "./Tests/output/ForTestFileImp/";
         	var	test1File	= "test1.txt";
         	var	data		= "test1";
         	var	list 		= "";
         	var	testsOK		= true;
+
+        	
+            var	folder = "./Tests/output/ForTestFileImp/";
+            if ( luo.anyUtils.strStartsWith ( luo.site, "Live/" ) === true )	    	
+        	    folder  = "./Live/output/ForTestFileImp/";
+
 
         	//luo.console.log( "fileImpTests, testFileImp, data = " 	+ data );
         	//luo.console.log( "fileImpTests, testFileImp, folder = "	+ folder );
@@ -157,28 +169,28 @@ module.exports = function ()	{
 
         	//	Create the folder.
         	if ( testsOK === true )
-        		testsOK = createFolder	( luo, folder );
+        		testsOK = createFolder	( folder );
         	
         	//	Run some tests on the file like
         	//	write, read, and status.
         	if ( testsOK === true )
-        		testsOK = testFile	( luo, folder, test1File, test1File );
+        		testsOK = testFile	( folder, test1File, test1File );
         	
         	//	Create a sub folder.
         	if ( testsOK === true )
-        		testsOK = createFolder	( luo, folder + "two/" );
+        		testsOK = createFolder	( folder + "two/" );
 
         	//	File tests in that sub folder.
         	if ( testsOK === true )
-        		testsOK = testFile	( luo, folder + "two/", "test22.txt", "test22.txt" );
+        		testsOK = testFile	( folder + "two/", "test22.txt", "test22.txt" );
         	
         	//	Another sub folder.
         	if ( testsOK === true )
-        		testsOK = createFolder	( luo, folder + "two/" + "three/" );
+        		testsOK = createFolder	( folder + "two/" + "three/" );
         	
         	//	File tests in that sub folder.
         	if ( testsOK === true )
-        		testsOK = testFile	( luo, folder + "two/" + "three/", "test333.txt", "test333.txt" );
+        		testsOK = testFile	( folder + "two/" + "three/", "test333.txt", "test333.txt" );
 
         	//	Get a file list and test
         	//	that an expected file is there.
@@ -202,11 +214,11 @@ module.exports = function ()	{
         	
         	//	Test deleting a flie.
         	if ( testsOK === true )
-        		testsOK = deleteFile	( luo, folder, test1File );
+        		testsOK = deleteFile	( folder, test1File );
 
         	//	Test deleting all folders.
         	if ( testsOK === true )
-        		testsOK = deleteFolder	( luo, folder );
+        		testsOK = deleteFolder	( folder );
 
         	/*
         	//	Summarize the results.
@@ -253,185 +265,185 @@ module.exports = function ()	{
 
         return  result
     }
+
+
+
+    function createFolder	( folder )	{
+	
+	    var	testsOK		= true;
+	
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( "fileImpTests, createFolder, folder = "	+ folder );
+	
+	    //	The folder should not exist.
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === false;
+		    //luo.console.log( "fileImpTests, createFolder, testsOK = " + testsOK );
+	    }
+	
+	    //	Create the folder.
+	    if ( testsOK === true )
+	    {
+		    var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"createFolder", "pathname":folder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+		    testsOK		= (result.code === 200);
+		    //luo.console.log( "fileImpTests, createFolder, testsOK = " + testsOK );
+	    }
+
+	    //	Now the folder should exist
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === true;
+		    //luo.console.log( "fileImpTests, createFolder, testsOK = " + testsOK );
+	    }
+
+	    return testsOK;
+    }
+
+    function testFile	( folder, filename, data )	{
+	
+	    var	testsOK		= true;
+	    var	pathname	= folder + filename;
+	
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( "fileImpTests, testFileImp, pathname = "	+ pathname );
+	
+	    //	The file should not exist.
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":pathname, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === false;
+		    //luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
+	    }
+
+	    //	Test writeTextFile()
+	    if ( testsOK === true )
+	    {
+		    var	result	= luo.fileImp  .execute	( { "system":luo.system, "job":"writeTextFile", "pathname":pathname, "async":false, "data":data, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+		    testsOK		= (result.code === 200);
+		    //luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
+	    }
+
+	    //	Test exists()
+	    if ( testsOK === true )
+	    {
+		    testsOK = luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":pathname, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    //luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
+	    }
+
+	    //	Test readTextFile()
+	    if ( testsOK === true )
+	    {
+		    var	result	= luo.fileImp  .execute	( { "system":luo.system, "job":"readTextFile", "pathname":pathname, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
+		    testsOK 	= (result.contents === data);
+		    //luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
+	    }
+
+	    //	Test stats.size
+	    var	stats = luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"stats", "pathname":pathname, "returnIn": "stats", "defaultValue": { "size":-1 }, "vt":"krp", "v": "1.0.0" } ).stats;
+	    if ( testsOK === true )
+	    {
+		    testsOK = (stats.size === data.length);
+		    //luo.console.log( "fileImpTests, testFileImp, size = " 			+ testsOK 		);
+		    //luo.console.log( "fileImpTests, testFileImp, stats.size = " 	+ stats.size 	);
+		    //luo.console.log( "fileImpTests, testFileImp, data.length = " 	+ data.length 	);
+	    }
+
+	    //	Test stats.isFile
+	    if ( testsOK === true )
+	    {
+		    testsOK = (stats.isFile === true);
+		    //luo.console.log( "fileImpTests, testFileImp, isFile = " 		+ testsOK 		);
+	    }
+
+	    //	Test stats.isDirectory
+	    if ( testsOK === true )
+	    {
+		    testsOK = (stats.isDirectory === false);
+		    //luo.console.log( "fileImpTests, testFileImp, isDirectory = "	+ testsOK );
+	    }
+
+	    return testsOK;
+    }
+
+    function deleteFolder	( folder )	{
+	
+	    var	testsOK		= true;
+	
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( "fileImpTests, deleteFolder, folder = "	+ folder );
+
+	    //	Now the folder should exist
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === true;
+		    //luo.console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
+	    }
+	
+	    //	Delete the folder.
+	    if ( testsOK === true )
+	    {
+		    var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"deleteFolder", "force":true, "pathname":folder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+		    testsOK		= (result.code === 200);
+		    //console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
+	    }
+
+	    //	Now the folder should not exist
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === false;
+		    //luo.console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
+	    }
+
+	    return testsOK;
+    }
+
+    function deleteFile	( folder, filename )	{
+	
+	    var	testsOK	= true;
+	
+	    filename 	= folder + filename;
+	
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( " " );
+	    //luo.console.log( "fileImpTests, deleteFile, folder = " + filename );
+
+	    //	Now the file should exist
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":filename, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === true;
+		    //luo.console.log( "fileImpTests, deleteFile, testsOK = " + testsOK );
+	    }
+	
+	    //	Delete the file.
+	    if ( testsOK === true )
+	    {
+		    var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"deleteFile", "force":true, "pathname":filename, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+		    testsOK		= (result.code === 200);
+		    //luo.console.log( "fileImpTests, deleteFile, testsOK = " + testsOK );
+	    }
+
+	    //	Now the file should not exist
+	    if ( testsOK === true )
+	    {
+		    var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":filename, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+		    testsOK		= result === false;
+		    //luo.console.log( "fileImpTests, deleteFile, testsOK = " + testsOK );
+	    }
+
+	    return testsOK;
+    }
+
 };
-
-
-
-function createFolder	( luo, folder )	{
-	
-	var	testsOK		= true;
-	
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( "fileImpTests, createFolder, folder = "	+ folder );
-	
-	//	The folder should not exist.
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === false;
-		//luo.console.log( "fileImpTests, createFolder, testsOK = " + testsOK );
-	}
-	
-	//	Create the folder.
-	if ( testsOK === true )
-	{
-		var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"createFolder", "pathname":folder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
-		testsOK		= (result.code === 200);
-		//luo.console.log( "fileImpTests, createFolder, testsOK = " + testsOK );
-	}
-
-	//	Now the folder should exist
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === true;
-		//luo.console.log( "fileImpTests, createFolder, testsOK = " + testsOK );
-	}
-
-	return testsOK;
-}
-
-function testFile	( luo, folder, filename, data )	{
-	
-	var	testsOK		= true;
-	var	pathname	= folder + filename;
-	
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( "fileImpTests, testFileImp, pathname = "	+ pathname );
-	
-	//	The file should not exist.
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":pathname, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === false;
-		//luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
-	}
-
-	//	Test writeTextFile()
-	if ( testsOK === true )
-	{
-		var	result	= luo.fileImp  .execute	( { "system":luo.system, "job":"writeTextFile", "pathname":pathname, "async":false, "data":data, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
-		testsOK		= (result.code === 200);
-		//luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
-	}
-
-	//	Test exists()
-	if ( testsOK === true )
-	{
-		testsOK = luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":pathname, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		//luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
-	}
-
-	//	Test readTextFile()
-	if ( testsOK === true )
-	{
-		var	result	= luo.fileImp  .execute	( { "system":luo.system, "job":"readTextFile", "pathname":pathname, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
-		testsOK 	= (result.contents === data);
-		//luo.console.log( "fileImpTests, testFileImp, testsOK = " + testsOK );
-	}
-
-	//	Test stats.size
-	var	stats = luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"stats", "pathname":pathname, "returnIn": "stats", "defaultValue": { "size":-1 }, "vt":"krp", "v": "1.0.0" } ).stats;
-	if ( testsOK === true )
-	{
-		testsOK = (stats.size === data.length);
-		//luo.console.log( "fileImpTests, testFileImp, size = " 			+ testsOK 		);
-		//luo.console.log( "fileImpTests, testFileImp, stats.size = " 	+ stats.size 	);
-		//luo.console.log( "fileImpTests, testFileImp, data.length = " 	+ data.length 	);
-	}
-
-	//	Test stats.isFile
-	if ( testsOK === true )
-	{
-		testsOK = (stats.isFile === true);
-		//luo.console.log( "fileImpTests, testFileImp, isFile = " 		+ testsOK 		);
-	}
-
-	//	Test stats.isDirectory
-	if ( testsOK === true )
-	{
-		testsOK = (stats.isDirectory === false);
-		//luo.console.log( "fileImpTests, testFileImp, isDirectory = "	+ testsOK );
-	}
-
-	return testsOK;
-}
-
-function deleteFolder	( luo, folder )	{
-	
-	var	testsOK		= true;
-	
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( "fileImpTests, deleteFolder, folder = "	+ folder );
-
-	//	Now the folder should exist
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === true;
-		//luo.console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
-	}
-	
-	//	Delete the folder.
-	if ( testsOK === true )
-	{
-		var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"deleteFolder", "force":true, "pathname":folder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
-		testsOK		= (result.code === 200);
-		//console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
-	}
-
-	//	Now the folder should not exist
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":folder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === false;
-		//luo.console.log( "fileImpTests, deleteFolder, testsOK = " + testsOK );
-	}
-
-	return testsOK;
-}
-
-function deleteFile	( luo, folder, filename )	{
-	
-	var	testsOK	= true;
-	
-	filename 	= folder + filename;
-	
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( " " );
-	//luo.console.log( "fileImpTests, deleteFile, folder = " + filename );
-
-	//	Now the file should exist
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":filename, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === true;
-		//luo.console.log( "fileImpTests, deleteFile, testsOK = " + testsOK );
-	}
-	
-	//	Delete the file.
-	if ( testsOK === true )
-	{
-		var result	= luo.fileImp  .execute	( { "system":luo.system, "job":"deleteFile", "force":true, "pathname":filename, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
-		testsOK		= (result.code === 200);
-		//luo.console.log( "fileImpTests, deleteFile, testsOK = " + testsOK );
-	}
-
-	//	Now the file should not exist
-	if ( testsOK === true )
-	{
-		var result 	= luo.fileImp  .execute	( { "system":luo.system, "job":"getInfo", "get":"exists", "pathname":filename, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
-		testsOK		= result === false;
-		//luo.console.log( "fileImpTests, deleteFile, testsOK = " + testsOK );
-	}
-
-	return testsOK;
-}
-
