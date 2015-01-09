@@ -37,7 +37,9 @@ var HttpImp     = require( './Imp/HttpImp/vertxHttpServer.js'   );
 var FileImp     = require( './Imp/FileImp/vertxFile.js'	)       ;
 
 var fileImp     = new FileImp();
-var	site 		= "Live/Sites/TestForm";
+var	siteType	= "Live/";
+var	site 		= siteType + "Sites/TestForm";
+var self        = this;
 
 setupSystem     ( this );
 	

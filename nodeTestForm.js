@@ -34,24 +34,30 @@
 var Version	    = require( './Libs/Any/execVersion.js'          ).Version;
 var HttpImp     = require( './Imp/HttpImp/nodeHttpServer.js'    );
 var FileImp		= require( './Imp/FileImp/nodeFile.js'			);
+var	ServerUtils = require( './Libs/Server/execServerUtils.js'   ).ServerUtils;
+var MimeTypes	= require( './Libs/Server/execMimeTypes.js'		).MimeTypes;
 
 var fileImp     = new FileImp();
 var httpImp     = new HttpImp();
-var	site 		= "Live/Sites/TestForm";
+var mimeTypes   = new MimeTypes ();
+var	siteType	= "Live/";
+var	site 		= siteType + "Sites/TestForm";
+var self        = this;
 
 setupSystem     ( this );
 	
 var result  =   httpImp.execute                
-	            ({ 
-                    "system"        :   this, 
-		            "job"           :	"initCreate", 
-                    "returnIn"      :   "result", 
-                    "defaultValue"  :   "error",
-		            "rest"          :	[ { "appType":"SysApp", "name": "testForm" } ],
+	({ 
+        "system"                :   this, 
+		"job"                   :	"initCreate", 
+        "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
+        "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
+        "returnIn"              :   "result", 
+        "defaultValue"          :   "error",
+        "vt"                    :   "krp",     
+        "v"                     :   "1.0.0"
 
-                    "vt":"krp",     "v": "1.0.0"
-
-	            }).result;
+	}).result;
 
 if ( result !== "error" )
 {
@@ -118,4 +124,87 @@ function setupSystem    ( system )  {
         //console.log( "nodeLive.js, execute, return, jsonResult[ params.returnIn ] = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
+}
+
+function noExtensionHandler ( inParams ) {
+
+    var statusCode  = ServerUtils.httpStatus.BadRequest.code;
+
+    try
+    {
+        /*  This is what inParams is expected to look like.
+        var inParams  = 
+        {
+            "pathname"  :   pathname        //  Used to show the request from the browser.
+            "sendFile"  :   localSendfile,  //  Used to return data to the browser.
+        };
+        */
+
+        console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
+
+		var filename    = "";
+        var api         = inParams.pathname;
+
+        //  Get the rest api name. For /books/id/24 get "books".
+        //  But you can do anything you want here.  Just need
+        //  to end up with a filename that handles the request.
+        //  {
+                if ( api.indexOf( '/' ) === 0 )
+                    api = api.substring ( 1 );
+
+                var index = api.indexOf ( '/' );
+                if ( index >= 0 )
+                    api = api.substring ( 0, index );
+
+                console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
+        //  }
+
+        switch ( api )
+        {
+            default:    break;
+
+            case "testForm":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+        }
+
+		console.log( "noExtensionHandler filename = " + filename );
+
+        if ( filename !== "" )
+        {
+		    var MyApi   = require   ( filename );
+		    var myApi   = new MyApi ();
+
+            //  Initialize the rest app
+		    myApi   .execute    ( { "system":self, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
+                                        "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } );
+
+            //  run the rest app
+            statusCode  = myApi.execute ( 
+            { 
+                "system":       self, 
+                "job":          "any", 
+                "session":      inParams.session, 
+                "methodType":   ServerUtils.methodType, 
+                "method":       "POST", 
+                "httpStatus":   ServerUtils.httpStatus, 
+                "returnIn":     "statusCode", 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
+                "vt":"krp", 	"v": "1.0.0" 
+            } ).statusCode;
+
+		    console.log( "noExtensionHandler statusCode = " + statusCode );
+        }
+    }
+
+    catch ( err )
+    {
+        console.log( "noExtensionHandler.js, noExtensionHandler, catch, err = " + err );
+    }
+
+    return statusCode;
 }

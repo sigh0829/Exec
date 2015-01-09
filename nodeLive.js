@@ -192,6 +192,8 @@ function noExtensionHandler ( inParams ) {
         var api         = inParams.pathname;
 
         //  Get the rest api name. For /books/id/24 get "books".
+        //  But you can do anything you want here.  Just need
+        //  to end up with a filename that handles the request.
         //  {
                 if ( api.indexOf( '/' ) === 0 )
                     api = api.substring ( 1 );
@@ -268,6 +270,19 @@ function noExtensionHandler ( inParams ) {
             } ).statusCode;
 
 		    //console.log( "noExtensionHandler statusCode = " + statusCode );
+
+            /*
+            var outParams =
+            {
+                "params"        :   inParams,
+                "message"       :   true,
+                "content"       :   getErrorPage(),
+                "contentType"   :   mimeTypes.getMimeType( "html" )
+            }
+
+            //  See HttpServerBase.prototype.__localSendfile()
+            inParams.sendFile ( outParams );
+            */
         }
     }
 

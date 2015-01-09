@@ -196,6 +196,8 @@ module.exports = function ()	{
 
 		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "endHandler", "callback":endHandler,
                                             "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+
+            //result = httpStatus.OK.code;
         }
 
         else if ( method === methodType.PUT )
