@@ -748,7 +748,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
                     //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
 
                     //  See kevinRichardPastorino_s.js
-                    this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname, "session":session } );
+                    statusCode  = this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname, "session":session } );
                 }
             }
             else

@@ -42,6 +42,7 @@ var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
 var fileImp     = new FileImp();
 var	siteType	= "Tests/";
 var	site 		= siteType + "Sites/WinJS_3";
+var self        = this;
 
 setupSystem     ( this );
 moveLibraries   ( this );
@@ -56,20 +57,14 @@ moveLibraries   ( this );
 var httpImp	= new HttpImp	();
 var result  = httpImp.execute                
 	({ 
-        "system":       this, 
-		"job":		    "initCreate", 
-        "returnIn":     "result", 
-        "defaultValue": "error",
-		"rest":		    [ 
-						    { "appType":"SysApp", 	"name": "myApi" }, 
-						    { "appType":"SiteApp",	"name": "books" },  //  first "books" in the list gets served.
-						    { "appType":"SysApp", 	"name": "books" },  //  first "books" in the list gets served. 
-						    { "appType":"SysApp", 	"name": "stripe" }, 
-						    { "appType":"SysApp", 	"name": "fileImpTests" }
-					    ],
-
-        "vt":"krp",     "v": "1.0.0"
-
+        "system"                :   this, 
+		"job"                   :   "initCreate", 
+        "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
+        "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
+        "returnIn"              :   "result", 
+        "defaultValue"          :   "error",
+        "vt"                    :   "krp",     
+        "v"                     :   "1.0.0"
 	}).result;
 
 //console.log ( "result = " + result );
@@ -177,27 +172,130 @@ function moveLibraries  ( system )  {
     ServerUtils.moveFile        ( system, console, fileImp, toFolder, fromPathName, toPathName );
 }
 
-/*
-//This instance will handle the website found
-//in the folder "Sites/TestForm" on port 7778
-var httpImp         = new HttpImp 	        ();
-var httpController  = new HttpController    ();
-httpController  .execute                ( { "system":this, "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"192.168.1.116", "port":8888, "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
-                                            "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" } ] } );
-httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
-*/
+function noExtensionHandler ( inParams ) {
 
-/*
-//This instance will handle the website found
-//in the folder "Sites/TestForm" on port 7778
-var httpImp         = new HttpImp 	        ();
-var httpController  = new HttpController    ();
-httpController  .execute                ( { "system":this, "job":"init", "console":console, "fileImp": fileImp, "httpImp": httpImp, "host":"0.0.0.0", "port":8080, "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
-                                            "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" } ] } );
-httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
-*/
+    var statusCode  = ServerUtils.httpStatus.BadRequest.code;
 
-//console.log( 'nodeConfig 2 = ' );
+    try
+    {
+        /*  This is what inParams is expected to look like.
+        var inParams  = 
+        {
+            "pathname"  :   pathname        //  Used to show the request from the browser.
+            "sendFile"  :   localSendfile,  //  Used to return data to the browser.
+        };
+        */
+
+        console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
+
+		var filename    = "";
+        var api         = inParams.pathname;
+
+        //  Get the rest api name. For /books/id/24 get "books".
+        //  {
+                if ( api.indexOf( '/' ) === 0 )
+                    api = api.substring ( 1 );
+
+                var index = api.indexOf ( '/' );
+                if ( index >= 0 )
+                    api = api.substring ( 0, index );
+
+                console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
+        //  }
+
+        switch ( api )
+        {
+            default:    break;
+
+            case "myApi":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+
+            case "books":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+
+            /*case "stripe":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }*/
+
+            case "fileImpTests":
+            {
+                //  "fileImpTests" is only used by curTests.cmd
+                //
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+        }
+
+		console.log( "noExtensionHandler filename = " + filename );
+
+        if ( filename !== "" )
+        {
+		    var MyApi   = require   ( filename );
+		    var myApi   = new MyApi ();
+
+            //  Initialize the rest app
+		    myApi   .execute    ( { "system":self, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
+                                        "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } );
+
+            //  run the rest app
+            statusCode  = myApi.execute ( 
+            { 
+                "system":       self, 
+                "job":          "any", 
+                "session":      inParams.session, 
+                "methodType":   ServerUtils.methodType, 
+                "method":       "GET", 
+                "httpStatus":   ServerUtils.httpStatus, 
+                "returnIn":     "statusCode", 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
+                "vt":"krp", 	"v": "1.0.0" 
+            } ).statusCode;
+
+		    //console.log( "noExtensionHandler statusCode = " + statusCode );
+        }
+    }
+
+    catch ( err )
+    {
+        console.log( "noExtensionHandler.js, noExtensionHandler, catch, err = " + err );
+    }
+
+    return statusCode;
+}
 
 
-//console.log( 'nodeConfig 5 = ' );
+function getErrorPage () {
+
+    var content =   "";
+
+        content +=  "<!DOCTYPE html > ";
+        content +=  "<html lang=\"en\"> ";
+
+        content +=  "  <head> ";
+        content +=  "    <title>Error On Page</title>";
+        content +=  "  </head>";
+
+        content +=  "  <body>";
+        content +=  "    Error On Page";
+        content +=  "  </body>";
+
+        content +=  "</html>";
+
+    return  content;
+}

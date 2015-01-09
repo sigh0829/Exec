@@ -36,6 +36,7 @@ var VertxSockJsServer	= require( './Imp/WsImp/SockJsImp/vertxSockJsServer.js' );
 var fileImp     = new FileImp();
 var	siteType	= "Live/";
 var	site 		= siteType + "Sites/WinJS_3";
+var self        = this;
 
 setupSystem     ( this );
 moveLibraries   ( this );
@@ -50,19 +51,14 @@ moveLibraries   ( this );
 var httpImp	= new HttpImp	();
 var result  = httpImp.execute                
 	({ 
-		"system":       this, 
-		"job":		    "initCreate", 
-        "returnIn":     "result", 
-        "defaultValue": "error",
-		"rest":		    [ 
-						    { "appType":"SysApp", 	"name": "myApi" }, 
-						    { "appType":"SysApp", 	"name": "books" },   //  first "books" in the list gets served.
-						    { "appType":"SiteApp",	"name": "books" },   //  first "books" in the list gets served.
-						    { "appType":"SysApp", 	"name": "stripe" }, 
-						    { "appType":"SysApp", 	"name": "fileImpTests" }
-					    ],
-
-		"vt":"krp",     "v": "1.0.0"
+		"system"                :   this, 
+		"job"                   :	"initCreate", 
+        "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
+        "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
+        "returnIn"              :   "result", 
+        "defaultValue"          :   "error",
+        "vt"                    :   "krp",     
+        "v"                     :   "1.0.0"
 
 	}).result;
 
@@ -100,7 +96,7 @@ if ( result !== "error" )
 	    //"host":   "localhost",        //  Handle localhost 
 	    //"host":   "192.168.1.116",    //  Handle LAN assigned ip
         //                              //  If nothing then handle every ip address on this port    
-	    "port":     7779, 
+	    "port":     7778, 
 	    "vt":"krp", "v": "1.0.0" 
     });
 }
@@ -171,54 +167,131 @@ function moveLibraries  ( system )  {
     ServerUtils.moveFile        ( system, console, fileImp, toFolder, fromPathName, toPathName );
 }
 
-//console.log( 'vertxConfig 1 = ' );
+function noExtensionHandler ( inParams ) {
 
-//Setup all of the websites that you want here.
+    var statusCode  = ServerUtils.httpStatus.BadRequest.code;
+
+    try
+    {
+        /*  This is what inParams is expected to look like.
+        var inParams  = 
+        {
+            "pathname"  :   pathname        //  Used to show the request from the browser.
+            "sendFile"  :   localSendfile,  //  Used to return data to the browser.
+        };
+        */
+
+        console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
+
+		var filename    = "";
+        var api         = inParams.pathname;
+
+        //  Get the rest api name. For /books/id/24 get "books".
+        //  {
+                if ( api.indexOf( '/' ) === 0 )
+                    api = api.substring ( 1 );
+
+                var index = api.indexOf ( '/' );
+                if ( index >= 0 )
+                    api = api.substring ( 0, index );
+
+                console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
+        //  }
+
+        switch ( api )
+        {
+            default:    break;
+
+            case "myApi":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+
+            case "books":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+
+            /*case "stripe":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }*/
+
+            case "fileImpTests":
+            {
+                //  "fileImpTests" is only used by curTests.cmd
+                //
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+        }
+
+		console.log( "noExtensionHandler filename = " + filename );
+
+        if ( filename !== "" )
+        {
+		    var MyApi   = require   ( filename );
+		    var myApi   = new MyApi ();
+
+            //  Initialize the rest app
+		    myApi   .execute    ( { "system":self, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
+                                        "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } );
+
+            //  run the rest app
+            statusCode  = myApi.execute ( 
+            { 
+                "system":       self, 
+                "job":          "any", 
+                "session":      inParams.session, 
+                "methodType":   ServerUtils.methodType, 
+                "method":       "GET", 
+                "httpStatus":   ServerUtils.httpStatus, 
+                "returnIn":     "statusCode", 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
+                "vt":"krp", 	"v": "1.0.0" 
+            } ).statusCode;
+
+		    //console.log( "noExtensionHandler statusCode = " + statusCode );
+        }
+    }
+
+    catch ( err )
+    {
+        console.log( "noExtensionHandler.js, noExtensionHandler, catch, err = " + err );
+    }
+
+    return statusCode;
+}
 
 
-//console.log( 'vertxConfig 5 = ' );
+function getErrorPage () {
 
+    var content =   "";
 
-/*
-//  This instance will handle the website found
-//  in the folder "Sites/TestForm" on port 7778
-var httpImp         = new HttpImp 	        ();
-var httpController  = new HttpController    ();
-    httpController  .execute                ( { "system":this, "job":"init", "console":console, "httpImp": httpImp, "port":8080, "host":"0.0.0.0", "site":"Sites/TestForm", "vt":"krp", "v": "1.0.0",
-                                                "rest":[ { "name": "myApi" }, { "name": "books" }, { "name": "stripe" }, { "name": "testForm" } ] } );
-    httpController  .execute                ( { "system":this, "job":"start", "console":console, "vt":"krp", "v": "1.0.0" } );
-*/
+        content +=  "<!DOCTYPE html > ";
+        content +=  "<html lang=\"en\"> ";
 
-//console.log( 'vertxConfig 2 = ' );
+        content +=  "  <head> ";
+        content +=  "    <title>Error On Page</title>";
+        content +=  "  </head>";
 
-    /*
-    var http = require('http');
-    var server = http.createServer();
-    var sockjs = require('sockjs');
-    var sjsServer = sockjs.createServer();
-    server.listen(9999, '0.0.0.0');
-    
-    sjsServer.installHandlers(server, {prefix:'/echo'});
-    sjsServer.on('connection', function(conn) {
-        conn.on('data', function(message) {
-            conn.write(message);
-        });
-        conn.on('close', function() {});
-    });
+        content +=  "  <body>";
+        content +=  "    Error On Page";
+        content +=  "  </body>";
 
-    //	https://github.com/vert-x/vertx-examples/blob/master/src/raw/javascript/sockjs/sockjs.js
-    //	https://github.com/sockjs/sockjs-node
-    var vertx = require('vertx') 
-    var console = require('vertx/console') 
-    var server = vertx.createHttpServer() 
-    var sjsServer = new vertx.createSockJSServer(server) 
-    server.listen(8080) 
+        content +=  "</html>";
 
-     // The handler for the SockJS app - we just echo data back 
-     sjsServer.installApp({prefix: "/testapp"}, function(sock) { 
-       sock.dataHandler(function(buff) { 
-         sock.write(buff) 
-       }) 
-     }); 
-     */
+    return  content;
+}
     
