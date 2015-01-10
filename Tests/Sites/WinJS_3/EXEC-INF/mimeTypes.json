@@ -1,9 +1,0 @@
-{ "mimeTypes":
-    [
-        { "ext":"woff",   "contentType":"application/x-font-woff"       },
-        { "ext":"eot",    "contentType":"application/vnd.ms-fontobject" },
-        { "ext":"opf",    "contentType":"application/octet-stream"      },
-        { "ext":"xhtml",  "contentType":"application/xhtml+xml"         }
-    ]
-}
-

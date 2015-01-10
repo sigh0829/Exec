@@ -55,20 +55,9 @@ function	HttpServerBase	()
 	this.fileImp	        = null;
 	this.noSqlImp           = null;
 	this.sqlImp             = null;
-	this.restHandlers       = {};
-
-	this.methodType	        = {};
-    this.methodType.INIT    = "INIT";
-    this.methodType.GET     = "GET";
-    this.methodType.PUT 	= "PUT";
-    this.methodType.POST 	= "POST";
-    this.methodType.DELETE 	= "DELETE";
-    this.methodType.HEAD 	= "HEAD";
-    this.methodType.NAME    = "NAME";       //  Added to switch - not part of http protocal.
-    this.methodType.OPTIONS = "OPTIONS";
-    this.methodType.CONNECT	= "CONNECT";
-    this.methodType.TRACE 	= "TRACE";
-    this.methodType.PATCH	= "PATCH";
+	
+    //  Using noExtensionHandler
+    //this.restHandlers       = {};
 };
 
 HttpServerBase.prototype.execute = function ( params )
@@ -233,6 +222,8 @@ HttpServerBase.prototype.init = function ( params )	{
             this.noExtensionHandler = params.noExtensionHandler;
 
 
+        //  Using noExtensionHandler
+        /*
 	    //	If no rest apps are requested this is undefined.
 	    if ( typeof params.rest !== "undefined" )
 	    {
@@ -251,18 +242,19 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	if ( value.appType === "SiteApp" )
 		    		filename = '../../' + self.site + '/EXEC-INF/SiteApps/Rest/' + value.name + '.js';
 		    	
-		    	//self.console.log( "HttpServerBase.prototype.init 2 = " + ServerUtils.httpStatus );
-		    	//self.console.log( "HttpServerBase.prototype.init 2a = " + filename );
+		    	//self.console.log( "HttpServerBase.prototype.init ServerUtils.httpStatus = " + ServerUtils.httpStatus );
+		    	//self.console.log( "HttpServerBase.prototype.init value.appType = " + value.appType );
+		    	//self.console.log( "HttpServerBase.prototype.init filename = " + filename );
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
-		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":self.methodType, "method":self.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":self.methodType, "method":self.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 		    	
 		    	//self.console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
 
-		    	/*
+		    	/ *
 		    	//	./Apps/Rest/
 		    	//value.folderName = this.anyUtils.terminatePathWith ( value.folderName, "/" );
 		    	//var	filename2	= value.folderName + value.name + '.js';
@@ -275,9 +267,10 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	self.console.log( "HttpServerBase.prototype.init 5 = " + require.main.filename );
 		    	self.console.log( "HttpServerBase.prototype.init 6 = " + require('path').dirname(require.main.filename) );
 		    	self.console.log( "HttpServerBase.prototype.init 7 = " + require('path').dirname( value.folderName ) );
-		    	*/
+		    	* /
 		    }); 
 	    }
+        */
 	}
 	
 	catch ( err )
@@ -547,20 +540,19 @@ HttpServerBase.prototype.writeHead = function ( session, code, contentType, mess
     }
 }
 
-HttpServerBase.prototype.PUT 		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.PUT 		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.DELETE 	= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.DELETE 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.HEAD 		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.HEAD 		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.OPTIONS 	= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.OPTIONS 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.CONNECT	= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.CONNECT	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.TRACE 		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.TRACE 		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.PATCH		= function ( session )	{ this.console.log( ' ' ); this.console.log( this.methodType.PATCH		); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.PUT 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.PUT 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.DELETE 	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.DELETE  ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.HEAD 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.HEAD 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.OPTIONS 	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.OPTIONS ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.CONNECT	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.CONNECT ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.TRACE 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.TRACE 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.PATCH		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.PATCH	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
 
 HttpServerBase.prototype.POST 		= function ( session )	{ 
 
     //this.console.log( ' ' ); 
-    //this.console.log( "this.POST  method = "   + this.methodType.POST ); 
+    //this.console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
     //this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); 
-
 
     try
     {
@@ -582,32 +574,19 @@ HttpServerBase.prototype.POST 		= function ( session )	{
         //this.console.log( "this.POST, 1c = " + apiLower );
         
 
-        //  Look for "myApi"  or  "myapi"
-	    if ( apiAnyCase in this.restHandlers || apiLower in this.restHandlers )
+        if ( this.noExtensionHandler === null  ||  this.anyUtils.isFunction( this.noExtensionHandler ) === false )
         {
-            if ( apiLower in this.restHandlers )
-                apiAnyCase = apiLower;
-
-            //  Call the defined rest api handler.
-            //  To see where restHandlers is set up 
-            //  look in (below):
-            //  module.exports = function ()	{
-            //      this.init = function ( params )	{
-            //
-            //this.console.log( "this.POST, 2 = " + apiAnyCase );
-            statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
-            { 
-                "system":       this.system, 
-                "job":          "any", 
-                "session":      session, 
-                "methodType":   this.methodType, 
-                "method":       "POST", 
-                "httpStatus":   ServerUtils.httpStatus, 
-                "returnIn":     "statusCode", 
-                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
-                "vt":"krp", 	"v": "1.0.0" 
-            } ).statusCode;
+            //this.console.log( "this.POST, 5, ext = " + ext );
+            statusCode  = ServerUtils.httpStatus.BadRequest.code;
         }
+        else
+        {
+            //this.console.log( "this.POST, 6" );
+
+            //  See nodeLive.js
+            statusCode  = this.noExtensionHandler ( { "sendFile":AnyUtils.useThis ( this, "__localSendfile" ), "pathname":pathname, "session":session } );
+        }
+
 
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
@@ -616,14 +595,13 @@ HttpServerBase.prototype.POST 		= function ( session )	{
 	    	this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'this.POST 9' );
+	    //this.console.log( 'this.POST 8' );
     }
 
     catch ( err )
     {
-	    this.console.log( 'this.GET, catch err = ' + err );
+	    this.console.log( 'this.POST, catch err = ' + err );
     }
-
 }
 
 HttpServerBase.prototype.GET     = function ( session )	{
@@ -648,126 +626,61 @@ HttpServerBase.prototype.GET     = function ( session )	{
         //this.console.log( "this.GET, 1c = " + apiLower );
         
 
-        //  If some rest api's have been defined.
-        //  Look for "myApi"  or  "myapi"
-        if ( apiAnyCase in this.restHandlers || apiLower in this.restHandlers )
+        //  This is not a rest api it must be
+        //  a request for a html page, image, etc.
+
+	    if ( pathname === "/" )
         {
-            if ( apiLower in this.restHandlers )
-                apiAnyCase = apiLower;
+	        //	Change 	http://www.mysite.com/ 
+	        //	to 		http://www.mysite.com/index.html:  
 
-            //  Call the defined rest api handler.
-            //  To see where restHandlers is set up 
-            //  look in (below):
-            //  module.exports = function ()	{
-            //      this.init = function ( params )	{
-            //
-            //this.console.log( "this.GET, 2 = " + apiAnyCase );
-            statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
-            { 
-                "system":       this.system, 
-                "job":          "any", 
-                "session":      session, 
-                "methodType":   this.methodType, 
-                "method":       "GET", 
-                "httpStatus":   ServerUtils.httpStatus, 
-                "returnIn":     "statusCode", 
-                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
-                "vt":"krp", 	"v": "1.0.0" 
-            } ).statusCode;
-
-            //this.console.log( "this.GET, 3 = " + statusCode );
+		    pathname = "/" + this.defaultFilename;
         }
+	
+	    //  Make the "site" variable happy.
+        if ( pathname.indexOf( "/" ) !== 0 )
+		    pathname = "/" + pathname;
+	
+        //this.console.log( "this.GET, 4, this.site = " + this.site );
+        //this.console.log( "this.GET, 4, pathname = " + pathname );
 
-        else
+	    //  If this implementation doesn't handle
+        //  this type of file.
+        var ext	= ServerUtils.getFileExt( this.site + pathname );
+	    if ( (ext in this.mimeTypes.getMimeTypes()) === false )
         {
-            //  This is not a rest api it must be
-            //  a request for a html page, image, etc.
-
-	        if ( pathname === "/" )
+            if ( this.noExtensionHandler === null  ||  this.anyUtils.isFunction( this.noExtensionHandler ) === false )
             {
-	            //	Change 	http://www.mysite.com/ 
-	            //	to 		http://www.mysite.com/index.html:  
-
-		        pathname = "/" + this.defaultFilename;
-            }
-	
-	        //  Make the "site" variable happy.
-            if ( pathname.indexOf( "/" ) !== 0 )
-		        pathname = "/" + pathname;
-	
-            //this.console.log( "this.GET, 4, this.site = " + this.site );
-            //this.console.log( "this.GET, 4, pathname = " + pathname );
-
-            //  localSendfile can be called from users of Exec
-            //  when they want to allow users to make requests
-            //  for pages without extensions like: http://mysite.com/index
-            //  instead of http://mysite.com/index.html
-            var site            = this.site;
-            var	ext	            = "";
-            var self		    = this;
-            var localSendfile   = function( params )
-            {
-                if ( typeof params.pathname !== "undefined" )
-                {
-	                //  Make the "site" variable happy.
-                    if ( params.pathname.indexOf( "/" ) !== 0 )
-		                params.pathname = "/" + params.pathname;
-	
-	                //  site gives us the sub-folder where
-                    //  the website is located on disk.
-                    params.pathname = site + params.pathname;
-                }
-
-                //self.console.log( "localSendfile, 1, params.pathname = " + params.pathname );
-
-                //  sendFile() will process the file asynchronously so
-                //  the result must be assumed to be true.
-		        var success     = function()				{ self.writeHead( session, ServerUtils.httpStatus.OK.code, params.contentType   );	};
-		        var failure     = function( code, message )	{ self.writeHead( session, code, self.mimeTypes.getMimeTypes().html, message    );	};
-		        self.sendFile	( session, params, success, failure );
-            };
-
-	        //  If this implementation doesn't handle
-            //  this type of file.
-            ext	= ServerUtils.getFileExt( site + pathname );
-	        if ( (ext in this.mimeTypes.getMimeTypes()) === false )
-            {
-                if ( this.noExtensionHandler === null  ||  
-                     this.anyUtils.isFunction( this.noExtensionHandler ) === false )
-                {
-                    //this.console.log( "this.GET, 5, ext = " + ext );
-                    statusCode  = ServerUtils.httpStatus.BadRequest.code;
-                }
-                else
-                {
-                    //this.console.log( "this.GET, 5, pathname = " + pathname );
-                    //this.console.log( "this.GET, 5, localSendfile = " + localSendfile );
-                    //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
-
-                    //  See kevinRichardPastorino_s.js
-                    this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname } );
-                }
+                //this.console.log( "this.GET, 5, ext = " + ext );
+                statusCode  = ServerUtils.httpStatus.BadRequest.code;
             }
             else
-	        {
-                //this.console.log( "this.GET, 6 = " + ext );
-
-                var params =
-                {
-                    "message"       :   false,      //  A file not a message
-                    "pathname"      :   pathname,   //  Name of the file
-                    "contentType"   :   self.mimeTypes.getMimeType( ext )
-                }
-
-                //  Send the requested file.
-                localSendfile ( params );
-
-                //  We don't know if this is ok because
-                //  sendFile is asynchronous.  But it should
-                //  take care of it's own status.
-                statusCode = ServerUtils.httpStatus.OK.code;
-	        }
+            {
+                //  See kevinRichardPastorino_s.js
+                //statusCode  = this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname, "session":session } );
+                statusCode  = this.noExtensionHandler ( { "sendFile":AnyUtils.useThis ( this, "__localSendfile" ), "pathname":pathname, "session":session } );
+            }
         }
+        else
+	    {
+            //this.console.log( "this.GET, 6 = " + ext );
+
+            var params =
+            {
+                "session"       :   session,
+                "message"       :   false,      //  A file not a message
+                "pathname"      :   pathname,   //  Name of the file
+                "contentType"   :   this.mimeTypes.getMimeType( ext )
+            }
+
+            //  Send the requested file.
+            this.__localSendfile ( params );
+
+            //  We don't know if this is ok because
+            //  sendFile is asynchronous.  But it should
+            //  take care of it's own status.
+            statusCode = ServerUtils.httpStatus.OK.code;
+	    }
 	
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
@@ -786,6 +699,37 @@ HttpServerBase.prototype.GET     = function ( session )	{
 
     //this.console.log( "this.GET, 10" );
     //this.console.log( ' ' );
+}
+
+HttpServerBase.prototype.   __localSendfile    = function ( params )	{
+
+    try
+    {
+        if ( typeof params.pathname !== "undefined" )
+        {
+	        //  Make the "site" variable happy.
+            if ( params.pathname.indexOf( "/" ) !== 0 )
+		        params.pathname = "/" + params.pathname;
+	
+	        //  site gives us the sub-folder where
+            //  the website is located on disk.
+            params.pathname = this.site + params.pathname;
+        }
+
+        //this.console.log( "__localSendfile, 1, params.pathname = " + params.pathname );
+
+        //  sendFile() will process the file asynchronously so
+        //  the result must be assumed to be true.
+        var self        = this;
+	    var success     = function()				{ self.writeHead( params.session, ServerUtils.httpStatus.OK.code, params.contentType   );	};
+	    var failure     = function( code, message )	{ self.writeHead( params.session, code, self.mimeTypes.getMimeTypes().html, message    );	};
+	    self.sendFile	( params.session, params, success, failure );
+    }
+
+    catch ( err )
+    {
+        this.console.log( "__localSendfile, catch, err = " + err );
+    }
 }
 
 HttpServerBase.prototype.end = function ( params )	{
@@ -868,3 +812,246 @@ HttpServerBase.prototype.stopServer = function ( params, callBack )	{};
 
 
 module.exports = HttpServerBase;
+
+
+/*
+HttpServerBase.prototype.POST_orig 		= function ( session )	{ 
+
+    //this.console.log( ' ' ); 
+    //this.console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
+    //this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); 
+
+
+    try
+    {
+	    //this.console.log( ' ' ); 
+
+        //  if This is an ajax request then the file name
+        //  will be the ajax prefix "api" in 
+        //  http://localhost:8888/api?property&value
+        //  or "myApi" in http://localhost:8888/myApi?property&value
+
+        var statusCode  = ServerUtils.httpStatus.OK.code;
+	    var	pathname 	= this.getRequestPathname	( session );
+        var apiAnyCase  = ServerUtils.getFileName   ( pathname, true )
+        var apiLower    = apiAnyCase.toLowerCase	();
+
+
+        //this.console.log( "this.POST, 1a = " + pathname );
+        //this.console.log( "this.POST, 1b = " + apiAnyCase );
+        //this.console.log( "this.POST, 1c = " + apiLower );
+        
+
+        //  Look for "myApi"  or  "myapi"
+	    if ( apiAnyCase in this.restHandlers || apiLower in this.restHandlers )
+        {
+            if ( apiLower in this.restHandlers )
+                apiAnyCase = apiLower;
+
+            //  Call the defined rest api handler.
+            //  To see where restHandlers is set up 
+            //  look in (below):
+            //  module.exports = function ()	{
+            //      this.init = function ( params )	{
+            //
+            //this.console.log( "this.POST, 2 = " + apiAnyCase );
+            statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
+            { 
+                "system":       this.system, 
+                "job":          "any", 
+                "session":      session, 
+                "methodType":   ServerUtils.methodType, 
+                "method":       "POST", 
+                "httpStatus":   ServerUtils.httpStatus, 
+                "returnIn":     "statusCode", 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
+                "vt":"krp", 	"v": "1.0.0" 
+            } ).statusCode;
+        }
+
+	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
+	    {
+		    //this.console.log( 'this.POST 7, statusCode = '    + statusCode    );
+		
+	    	this.writeHead   ( session, statusCode );
+	    }
+
+	    //this.console.log( 'this.POST 9' );
+    }
+
+    catch ( err )
+    {
+	    this.console.log( 'this.GET, catch err = ' + err );
+    }
+
+}
+*/
+
+
+/*
+HttpServerBase.prototype.GET_orig     = function ( session )	{
+
+    try
+    {
+	    //this.console.log( ' ' ); 
+
+        //  if This is an ajax request then the file name
+        //  will be the ajax prefix "api" in 
+        //  http://localhost:8888/api?property&value
+        //  or "myApi" in http://localhost:8888/myApi?property&value
+
+        var statusCode  = ServerUtils.httpStatus.OK .code;
+	    var	pathname 	= this.getRequestPathname	( session );
+        var apiAnyCase  = ServerUtils.getFileName	( pathname, true )
+        var apiLower    = apiAnyCase.toLowerCase	();
+
+
+        //this.console.log( "this.GET, 1a = " + pathname );
+        //this.console.log( "this.GET, 1b = " + apiAnyCase );
+        //this.console.log( "this.GET, 1c = " + apiLower );
+        
+
+        //  If some rest api's have been defined.
+        //  Look for "myApi"  or  "myapi"
+        if ( apiAnyCase in this.restHandlers || apiLower in this.restHandlers )
+        {
+            if ( apiLower in this.restHandlers )
+                apiAnyCase = apiLower;
+
+            //  Call the defined rest api handler.
+            //  To see where restHandlers is set up 
+            //  look in (below):
+            //  module.exports = function ()	{
+            //      this.init = function ( params )	{
+            //
+            //this.console.log( "this.GET, 2 = " + apiAnyCase );
+            statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
+            { 
+                "system":       this.system, 
+                "job":          "any", 
+                "session":      session, 
+                "methodType":   ServerUtils.methodType, 
+                "method":       "GET", 
+                "httpStatus":   ServerUtils.httpStatus, 
+                "returnIn":     "statusCode", 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
+                "vt":"krp", 	"v": "1.0.0" 
+            } ).statusCode;
+
+            //this.console.log( "this.GET, 3 = " + statusCode );
+        }
+
+        else
+        {
+            //  This is not a rest api it must be
+            //  a request for a html page, image, etc.
+
+	        if ( pathname === "/" )
+            {
+	            //	Change 	http://www.mysite.com/ 
+	            //	to 		http://www.mysite.com/index.html:  
+
+		        pathname = "/" + this.defaultFilename;
+            }
+	
+	        //  Make the "site" variable happy.
+            if ( pathname.indexOf( "/" ) !== 0 )
+		        pathname = "/" + pathname;
+	
+            //this.console.log( "this.GET, 4, this.site = " + this.site );
+            //this.console.log( "this.GET, 4, pathname = " + pathname );
+
+            //  localSendfile can be called from users of Exec
+            //  when they want to allow users to make requests
+            //  for pages without extensions like: http://mysite.com/index
+            //  instead of http://mysite.com/index.html
+            var site            = this.site;
+            var	ext	            = "";
+            var self		    = this;
+
+            / *
+            var localSendfile   = function( params )
+            {
+                if ( typeof params.pathname !== "undefined" )
+                {
+	                //  Make the "site" variable happy.
+                    if ( params.pathname.indexOf( "/" ) !== 0 )
+		                params.pathname = "/" + params.pathname;
+	
+	                //  site gives us the sub-folder where
+                    //  the website is located on disk.
+                    params.pathname = site + params.pathname;
+                }
+
+                //self.console.log( "localSendfile, 1, params.pathname = " + params.pathname );
+
+                //  sendFile() will process the file asynchronously so
+                //  the result must be assumed to be true.
+		        var success     = function()				{ self.writeHead( session, ServerUtils.httpStatus.OK.code, params.contentType   );	};
+		        var failure     = function( code, message )	{ self.writeHead( session, code, self.mimeTypes.getMimeTypes().html, message    );	};
+		        self.sendFile	( session, params, success, failure );
+            };
+            * /
+
+	        //  If this implementation doesn't handle
+            //  this type of file.
+            ext	= ServerUtils.getFileExt( site + pathname );
+	        if ( (ext in this.mimeTypes.getMimeTypes()) === false )
+            {
+                if ( this.noExtensionHandler === null  ||  
+                     this.anyUtils.isFunction( this.noExtensionHandler ) === false )
+                {
+                    //this.console.log( "this.GET, 5, ext = " + ext );
+                    statusCode  = ServerUtils.httpStatus.BadRequest.code;
+                }
+                else
+                {
+                    //this.console.log( "this.GET, 5, pathname = " + pathname );
+                    //this.console.log( "this.GET, 5, localSendfile = " + localSendfile );
+                    //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
+
+                    //  See kevinRichardPastorino_s.js
+                    //statusCode  = this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname, "session":session } );
+                    statusCode  = this.noExtensionHandler ( { "sendFile":AnyUtils.useThis ( this, "__localSendfile" ), "pathname":pathname, "session":session } );
+                }
+            }
+            else
+	        {
+                //this.console.log( "this.GET, 6 = " + ext );
+
+                var params =
+                {
+                    "message"       :   false,      //  A file not a message
+                    "pathname"      :   pathname,   //  Name of the file
+                    "contentType"   :   self.mimeTypes.getMimeType( ext )
+                }
+
+                //  Send the requested file.
+                localSendfile ( params );
+
+                //  We don't know if this is ok because
+                //  sendFile is asynchronous.  But it should
+                //  take care of it's own status.
+                statusCode = ServerUtils.httpStatus.OK.code;
+	        }
+        }
+	
+	
+	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
+	    {
+		    //this.console.log( 'this.GET 7, statusCode = '    + statusCode    );
+	    	this.writeHead   ( session, statusCode );
+	    }
+
+	    //this.console.log( 'this.GET 9' );
+    }
+
+    catch ( err )
+    {
+	    this.console.log( 'HttpServerBase.GET, catch err = ' + err );
+    }
+
+    //this.console.log( "this.GET, 10" );
+    //this.console.log( ' ' );
+}
+*/
