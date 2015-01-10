@@ -47,10 +47,10 @@ module.exports = function ()	{
 
         try
         {
-            if (    luo.system === null                     &&  
-                    typeof params.system !== "undefined"    &&  
-                    params.system !== null                  &&  
-                    typeof params.system.execute === "function"
+            if (    luo.system                      === null            &&  
+                    typeof params.system            !== "undefined"     &&  
+                    params.system                   !== null            &&  
+                    typeof params.system.execute    === "function"
                )
             {
     	        luo.system     = params.system;

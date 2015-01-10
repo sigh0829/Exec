@@ -88,7 +88,7 @@ module.exports = function ()	{
                 	//	or do whatever calculations are required.
                 	luo.data 	= params.data; 
                 	luo.data	+=	", 222222";
-                	//luo.data	+=	", SiteApp";
+                	luo.data	+=	", SiteApps";
                     
                 	//jsonResult  [ params.returnIn ]	= params.successValue;
 

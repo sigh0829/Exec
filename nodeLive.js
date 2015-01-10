@@ -77,7 +77,7 @@ if ( result !== "error" )
 	    ({
             "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "appType":	"SysApp", 	
+		    "appType":	"SiteApp", 	
 		    "name": 	"sockJsEcho1_s", 
 		    "vt":"krp", "v": "1.0.0"
 	    });
@@ -97,7 +97,8 @@ if ( result !== "error" )
     ({ 
         "system":   this, 
 	    "job":      "listen", 
-	    //"host":   "127.0.0.1",        //  Handle loopback address 
+	    
+        //"host":   "127.0.0.1",        //  Handle loopback address 
 	    //"host":   "localhost",        //  Handle localhost 
 	    //"host":   "192.168.1.116",    //  Handle LAN assigned ip
         //                              //  If nothing then handle every ip address on this port    
@@ -205,6 +206,17 @@ function noExtensionHandler ( inParams ) {
                 console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
         //  }
 
+        //  "filename" must point to a handler somewhere in the servers "reach".
+        //  You have complete freedom about where to place your handlers.
+        //  In this case they are placed in the folder './Live/SysApps/Rest/*.js'
+        //
+        //  Here is where you would inforce access to a rest api.  For example
+        //  If you want an api to be available to anyone in the world you could
+        //  place it in a folder called "world".  If you want it available only
+        //  to customers registered with your company you could put it in a folder
+        //  called "allCustomers".  Or, each website could have private rest
+        //  apps: "./Live/Sites/Site1/restApps",  "./Live/SysApps/restApps".
+        //
         switch ( api )
         {
             default:    break;
@@ -258,15 +270,18 @@ function noExtensionHandler ( inParams ) {
             //  run the rest app
             statusCode  = myApi.execute ( 
             { 
-                "system":       self, 
-                "job":          "any", 
-                "session":      inParams.session, 
-                "methodType":   ServerUtils.methodType, 
-                "method":       "GET", 
-                "httpStatus":   ServerUtils.httpStatus, 
-                "returnIn":     "statusCode", 
-                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
-                "vt":"krp", 	"v": "1.0.0" 
+                "method"        :   "GET", 
+
+                "system"        :   self, 
+                "job"           :   "any", 
+                "session"       :   inParams.session, 
+                "methodType"    :   ServerUtils.methodType, 
+                "httpStatus"    :   ServerUtils.httpStatus, 
+                "vt"            :   "krp", 	
+                "v"             :   "1.0.0", 
+
+                "defaultValue"  :   ServerUtils.httpStatus.InternalServerError.code, 
+                "returnIn"      :   "statusCode"
             } ).statusCode;
 
 		    //console.log( "noExtensionHandler statusCode = " + statusCode );

@@ -63,14 +63,16 @@ if ( result !== "error" )
 {
     httpImp  .execute    
     ({ 
-        "system":   this, 
-	    "job":      "listen", 
-	    //"host":   "127.0.0.1",       //  Handle loopback address 
-	    //"host":   "localhost",       //  Handle localhost 
-	    //"host":   "192.168.1.116",   //  Handle LAN assigned ip
-        //                          //  If nothing then handle every ip address on this port    
-	    "port":     7777, 
-	    "vt":"krp", "v": "1.0.0" 
+        "system"    :   this, 
+	    "job"       :   "listen", 
+	    "vt"        :   "krp", 
+        "v"         :   "1.0.0",
+
+	    //"host"    :   "127.0.0.1",        //  Handle loopback address 
+	    //"host"    :   "localhost",        //  Handle localhost 
+	    //"host"    :   "192.168.1.116",    //  Handle LAN assigned ip
+
+	    "port"      :   7777
     });
 }
 
@@ -145,7 +147,7 @@ function noExtensionHandler ( inParams ) {
 		var filename    = "";
         var api         = inParams.pathname;
 
-        //  Get the rest api name. For /books/id/24 get "books".
+        //  Get the rest api name. (For /books/id/24 get "books".)
         //  But you can do anything you want here.  Just need
         //  to end up with a filename that handles the request.
         //  {
@@ -159,6 +161,10 @@ function noExtensionHandler ( inParams ) {
                 console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
         //  }
 
+        //  Enter "http://localhost:7777" into a browser.
+        //  Then fill out and submit the form data which
+        //  will cause the "testForm" api to get called
+        //  and processed here.
         switch ( api )
         {
             default:    break;
@@ -166,6 +172,16 @@ function noExtensionHandler ( inParams ) {
             case "testForm":
             {
                 //  filename must point to a handler somewhere in the servers "reach".
+                //  You have complete freedom about where to place your handlers.
+                //  In this case it is placed in the folder './Live/SysApps/Rest/testForm.js'
+                //
+                //  Here is where you would inforce access to a rest api.  For example
+                //  If you want an api to be available to anyone in the world you could
+                //  place it in a folder called "world".  If you want it available only
+                //  to customers registered with your company you could put it in a folder
+                //  called "allCustomers".  Or, each website could have private rest
+                //  apps: "./Live/Sites/Site1/restApps",  "./Live/Sites/Site2/restApps".
+                //
 			    filename = './' + siteType + 'SysApps/Rest/' + api + '.js';
 			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
                 break;
@@ -176,25 +192,30 @@ function noExtensionHandler ( inParams ) {
 
         if ( filename !== "" )
         {
+            //  Load the rest handler.
 		    var MyApi   = require   ( filename );
 		    var myApi   = new MyApi ();
 
-            //  Initialize the rest app
-		    myApi   .execute    ( { "system":self, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
-                                        "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } );
+            //  Initialize the rest app: INIT
+		    myApi   .execute
+            ({
+                "system":self, "job": "any", 
+                "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
+                "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" 
+            });
 
-            //  run the rest app
+            //  Run the rest app
             statusCode  = myApi.execute ( 
             { 
-                "system":       self, 
-                "job":          "any", 
+                //  Contains information about this http session.
+                //  See also: Imp/HttpImp/HttpServerBase.js
                 "session":      inParams.session, 
-                "methodType":   ServerUtils.methodType, 
-                "method":       "POST", 
-                "httpStatus":   ServerUtils.httpStatus, 
-                "returnIn":     "statusCode", 
+
+                "method":"POST", "system":self, "job":"any", "vt":"krp", "v": "1.0.0",
+                "methodType":ServerUtils.methodType, "httpStatus":ServerUtils.httpStatus, 
+
                 "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
-                "vt":"krp", 	"v": "1.0.0" 
+                "returnIn":     "statusCode" 
             } ).statusCode;
 
 		    console.log( "noExtensionHandler statusCode = " + statusCode );
