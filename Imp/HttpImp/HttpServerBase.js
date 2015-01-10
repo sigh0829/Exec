@@ -644,17 +644,9 @@ HttpServerBase.prototype.GET     = function ( session )	{
         //this.console.log( "this.GET, 4, this.site = " + this.site );
         //this.console.log( "this.GET, 4, pathname = " + pathname );
 
-        //  localSendfile can be called from users of Exec
-        //  when they want to allow users to make requests
-        //  for pages without extensions like: http://mysite.com/index
-        //  instead of http://mysite.com/index.html
-        var site    = this.site;
-        var	ext	    = "";
-        var self    = this;
-
 	    //  If this implementation doesn't handle
         //  this type of file.
-        ext	= ServerUtils.getFileExt( site + pathname );
+        var ext	= ServerUtils.getFileExt( this.site + pathname );
 	    if ( (ext in this.mimeTypes.getMimeTypes()) === false )
         {
             if ( this.noExtensionHandler === null  ||  this.anyUtils.isFunction( this.noExtensionHandler ) === false )
@@ -678,7 +670,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
                 "session"       :   session,
                 "message"       :   false,      //  A file not a message
                 "pathname"      :   pathname,   //  Name of the file
-                "contentType"   :   self.mimeTypes.getMimeType( ext )
+                "contentType"   :   this.mimeTypes.getMimeType( ext )
             }
 
             //  Send the requested file.
@@ -724,7 +716,7 @@ HttpServerBase.prototype.   __localSendfile    = function ( params )	{
             params.pathname = this.site + params.pathname;
         }
 
-        this.console.log( "__localSendfile, 1, params.pathname = " + params.pathname );
+        //this.console.log( "__localSendfile, 1, params.pathname = " + params.pathname );
 
         //  sendFile() will process the file asynchronously so
         //  the result must be assumed to be true.

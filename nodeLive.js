@@ -65,6 +65,7 @@ var result  = httpImp.execute
         "defaultValue"          :   "error",
         "vt"                    :   "krp",     
         "v"                     :   "1.0.0"
+
 	}).result;
 
 //console.log ( "result = " + result );
@@ -139,6 +140,7 @@ function setupSystem    ( system )  {
 		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;  break;
 		            case "site":		jsonResult  [ params.returnIn ] = site;     break;
 		            case "Version":		jsonResult  [ params.returnIn ] = Version;  break;
+		            case "AnyUtils":    jsonResult  [ params.returnIn ] = AnyUtils;  break;
                 }
             }
         }
@@ -187,7 +189,7 @@ function noExtensionHandler ( inParams ) {
         };
         */
 
-        console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
+        //console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
 
 		var filename    = "";
         var api         = inParams.pathname;
@@ -203,7 +205,7 @@ function noExtensionHandler ( inParams ) {
                 if ( index >= 0 )
                     api = api.substring ( 0, index );
 
-                console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
+                //console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
         //  }
 
         //  "filename" must point to a handler somewhere in the servers "reach".
@@ -231,8 +233,13 @@ function noExtensionHandler ( inParams ) {
 
             case "myApi_c":
             {
+                //  "_c" client side, "_s" server side.
+                //  See Live/Sites/WinJS_3/EXEC-INF/SiteApps/Rest/*.js
+                //
+                //  Notice the switch from "myApi_c" to "myApi_s" for client side/server side handling.
+                //
                 //  filename must point to a handler somewhere in the servers "reach".
-			    filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+			    filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + "myApi_s" + '.js';
 			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
                 break;
             }
@@ -264,7 +271,7 @@ function noExtensionHandler ( inParams ) {
             }
         }
 
-		console.log( "noExtensionHandler filename = " + filename );
+		//console.log( "noExtensionHandler filename = " + filename );
 
         if ( filename !== "" )
         {
@@ -315,25 +322,4 @@ function noExtensionHandler ( inParams ) {
     }
 
     return statusCode;
-}
-
-
-function getErrorPage () {
-
-    var content =   "";
-
-        content +=  "<!DOCTYPE html > ";
-        content +=  "<html lang=\"en\"> ";
-
-        content +=  "  <head> ";
-        content +=  "    <title>Error On Page</title>";
-        content +=  "  </head>";
-
-        content +=  "  <body>";
-        content +=  "    Error On Page";
-        content +=  "  </body>";
-
-        content +=  "</html>";
-
-    return  content;
 }

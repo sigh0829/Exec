@@ -82,28 +82,22 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
             //  Get it from the rest handler that services "namespace.MyApi_c.restApi"
             this.restRequest    =   location.protocol + "//" + location.hostname + ":" + location.port;
             this.restRequest    +=  "/" + namespace.MyApi_c.restApi + "?name=fred&age=33&returnType=text";
-            WinJS.log( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
-            WinJS.xhr
-            ({ url: this.restRequest, responseType: "text" }
-            ).done( this.textCompleted, this.textError, this.textProgress );
+            WinJS.log           ( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
+            WinJS.xhr           ({ url: this.restRequest, responseType: "text" } ).done( this.textCompleted, this.textError, this.textProgress );
 
 
             //  Get some json.
 		    this.restRequest    =   location.protocol + "//" + location.hostname + ":" + location.port;
             this.restRequest    +=  "/" + namespace.MyApi_c.restApi + "?name=fred&age=33&returnType=json";
-            WinJS.log( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
-            WinJS.xhr
-            ({ url: this.restRequest, responseType: "text" }
-            ).done( this.jsonCompleted, this.jsonError, this.jsonProgress );
+            WinJS.log           ( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
+            WinJS.xhr           ({ url: this.restRequest, responseType: "text" }).done( this.jsonCompleted, this.jsonError, this.jsonProgress );
 
 
             //  Get a file.
 		    this.restRequest    =   location.protocol + "//" + location.hostname + ":" + location.port;
             this.restRequest    +=  "/" + namespace.MyApi_c.restApi + "?name=fred&age=33&returnType=blob";
-            WinJS.log( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
-            WinJS.xhr
-            ({ url: this.restRequest, responseType: "blob" }
-            ).done( this.blobCompleted, this.blobError, this.blobProgress );
+            WinJS.log           ( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
+            WinJS.xhr           ({ url: this.restRequest, responseType: "blob" }).done( this.blobCompleted, this.blobError, this.blobProgress );
 
 
             //  Get some binary data in ArrayBuffer format.
@@ -112,10 +106,8 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
             //  will see an exception.
 		    this.restRequest    =   location.protocol + "//" + location.hostname + ":" + location.port;
             this.restRequest    +=  "/" + namespace.MyApi_c.restApi + "?name=fred&age=33&returnType=arrayBuffer";
-            WinJS.log( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
-            WinJS.xhr
-            ({ url: this.restRequest, responseType: "arraybuffer" }
-            ).done( this.arrayBufferCompleted, this.arrayBufferError, this.arrayBufferProgress );
+            WinJS.log           ( "MyApi_c, restRequest = " + this.restRequest, "winjs", "info" );
+            WinJS.xhr           ({ url: this.restRequest, responseType: "arraybuffer" }).done( this.arrayBufferCompleted, this.arrayBufferError, this.arrayBufferProgress );
         }
 
         catch ( err )
@@ -228,8 +220,8 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
                     //WinJS.log( "myApi_c.js, WinJS.xhr, blobCompleted, Blob.type = " + result.response.type, "winjs", "info" );
 
                     //  http://stackoverflow.com/questions/19672685/setting-binary-data-on-img
-                    var img = document.createElement("IMG");
-                        img .alt = "alt alt alt";
+                    var img = document.createElement( "IMG" );
+                        img .alt = "important alt text";
                         img .src = URL.createObjectURL( result.response );
 
                     divResult.appendChild( img );
@@ -272,6 +264,7 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
                 if( result.response instanceof ArrayBuffer )
                 {
                     WinJS.log( "myApi_c.js, WinJS.xhr, arrayBufferCompleted, 2 = " + result.response,  "winjs", "info" );
+                    WinJS.log( "myApi_c.js, WinJS.xhr, arrayBufferCompleted, 2z = " + result.response.byteLength,  "winjs", "info" );
 
                     //  Warning:  this section will not work with vertx 2.0 because
                     //  vertx does not provide ArrayBuffer support.  So, you
@@ -279,8 +272,12 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
 
                     //  http://chimera.labs.oreilly.com/books/1230000000545/ch17.html#_receiving_text_and_binary_data
                     var usernameView    = new Uint8Array    ( result.response,  0,  16  );
+                    WinJS.log( "myApi_c.js, WinJS.xhr, arrayBufferCompleted, 2a = " + result.response,  "winjs", "info" );
                     var idView          = new Uint16Array   ( result.response,  16, 1   );
+                    WinJS.log( "myApi_c.js, WinJS.xhr, arrayBufferCompleted, 2b = " + result.response,  "winjs", "info" );
                     var scoresView      = new Float32Array  ( result.response,  20, 32  );
+                    //var scoresView      = new Float32Array  ( result.response,  18, 32  );
+                    WinJS.log( "myApi_c.js, WinJS.xhr, arrayBufferCompleted, 2c = " + result.response,  "winjs", "info" );
 
                     usernameView        = jsGlobal.exec.any.utils.AnyUtils.Utf8ArrayToStr         ( usernameView );
 
@@ -293,7 +290,9 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
             }
             catch ( err )
             {
+                console.log ( "myApi_c.js, WinJS.xhr, vertx 2.0 does not provide ArrayBuffer support" );
                 console.log ( "myApi_c.js, WinJS.xhr, arrayBufferCompleted, catch err = " + err );
+                console.log ( "myApi_c.js, WinJS.xhr, vertx 2.0 does not provide ArrayBuffer support" );
             }
         }
 	};
@@ -315,7 +314,7 @@ if ( typeof jsGlobal.site_winjs_3.myapi === "undefined" )
 	//	{
 			//	There may be many classes in this name space so include 
 			//	the class name where these statics are located.
-			namespace.MyApi_c	.restApi    = "myApi";
+			namespace.MyApi_c	.restApi    = "myApi_c";
 	//	}
 
 }( jsGlobal.site_winjs_3.myapi ) );	//	Attach to this namespace

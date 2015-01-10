@@ -135,6 +135,8 @@ module.exports = function ()	{
 
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
+                //luo.console.log( "myApi_s, _execute, parsedQuery.returnType = " + parsedQuery.returnType );
+
                 if ( parsedQuery.returnType === "json" )
                     message = JSON.stringify( { "name":parsedQuery.name, "age":parsedQuery.age  } );
 
@@ -176,7 +178,6 @@ module.exports = function ()	{
                         //
                         //  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays?redirectlocale=en-US&redirectslug=JavaScript%2FTyped_arrays
                         //  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
-
 
                         //  Create a workarea for the output with the following fields:
                         //  Uint8Array: 1 byte, Uint16Array: 2 bytes, Float32Array: 4 bytes

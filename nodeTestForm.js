@@ -142,7 +142,7 @@ function noExtensionHandler ( inParams ) {
         };
         */
 
-        console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
+        //console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
 
 		var filename    = "";
         var api         = inParams.pathname;
@@ -158,7 +158,7 @@ function noExtensionHandler ( inParams ) {
                 if ( index >= 0 )
                     api = api.substring ( 0, index );
 
-                console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
+                //console.log( "noExtensionHandler.js, noExtensionHandler, api = " + api );
         //  }
 
         //  Enter "http://localhost:7777" into a browser.
@@ -188,7 +188,7 @@ function noExtensionHandler ( inParams ) {
             }
         }
 
-		console.log( "noExtensionHandler filename = " + filename );
+		//console.log( "noExtensionHandler filename = " + filename );
 
         if ( filename !== "" )
         {
@@ -218,7 +218,7 @@ function noExtensionHandler ( inParams ) {
                 "returnIn":     "statusCode" 
             } ).statusCode;
 
-		    console.log( "noExtensionHandler statusCode = " + statusCode );
+		    //console.log( "noExtensionHandler statusCode = " + statusCode );
         }
     }
 
