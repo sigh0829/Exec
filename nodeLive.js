@@ -229,6 +229,14 @@ function noExtensionHandler ( inParams ) {
                 break;
             }
 
+            case "myApi_c":
+            {
+                //  filename must point to a handler somewhere in the servers "reach".
+			    filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+			    //filename = './' + siteType + 'Sites/WinJS_3/EXEC-INF/SiteApps/Rest/' + api + '.js';
+                break;
+            }
+
             case "books":
             {
                 //  filename must point to a handler somewhere in the servers "reach".

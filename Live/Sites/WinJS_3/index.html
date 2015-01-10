@@ -20,8 +20,7 @@
     <script src="./PUB-INF/libs/execAnyUtils.js"></script>
     <script src="./EXEC-INF/SiteApps/SockJsApps/sockJsEcho2_c.js"></script>
     <script src="./EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_c.js"></script>
-    <!--<script src="./EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_s.js"></script>-->
-
+    <script src="./EXEC-INF/SiteApps/Rest/myApi_c.js"></script>
 
 
     <!-- http://cdnjs.com/libraries/winjs# -->
@@ -68,6 +67,8 @@
     
 </head>
 <body>
+
+    <div id='divResult'>nothing here yet</div>
 
     <!-- Simple template for the ListView instantiation  -->
     <div class="smallListIconTextTemplate" data-win-control="WinJS.Binding.Template" style="display: none">
@@ -118,6 +119,15 @@
         WinJS.UI.processAll();
 
     </script>
+
+
+    <script>
+
+        //  See ./EXEC-INF/SiteApps/Rest/myApi_c.js
+        var sockJsEcho2 = new site_winjs_3.myapi	.MyApi_c ();
+
+    </script>
+
 
     <!--
 
