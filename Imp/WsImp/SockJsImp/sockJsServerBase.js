@@ -203,23 +203,12 @@ SockJsServerBase.prototype.init = function ( params )	{
 	
 	try
 	{
-		var	filename = '../../../Tests/SysApps/SockJsApps/' + params.name + ".js";
-    	if ( this.anyUtils.strStartsWith ( this.site, "Live/" ) === true )
-    		filename = '../../../Live/SysApps/SockJsApps/' + params.name + ".js";
-    		
-		if ( params.appType === "SiteApp" )
-			filename = '../../../' + this.site + '/EXEC-INF/SiteApps/SockJsApps/' + params.name + ".js";
-		
-		//this.console.log( "SockJsServerBase.prototype.init 1 = " + filename );
-	
 	    //  Get all of the wsApp api's the caller wants this to handle.
-	    var MyApi   	= require       ( filename );
+	    var MyApi   	= params.module;//require       ( filename );
 	    var myApi   	= new MyApi     ();
 	    this.appName	= myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 	                      myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
 	    this.appHandler	= myApi;
-	
-	    //this.console.log( "sockJsServerBase.init 1 = " + name );
 	    
 	    result = ServerUtils.httpStatus.OK.code;
 	}

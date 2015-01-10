@@ -81,16 +81,16 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //luo.console.log( "myApi, execute, 1 = " );
+            //luo.console.log( "myApi_s, execute, 1 = " );
 
             if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
-                //luo.console.log( "myApi, execute, 2 = " );
+                //luo.console.log( "myApi_s, execute, 2 = " );
                 jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
             }
             else
             {
-                //luo.console.log( "myApi, execute, 3 = " );
+                //luo.console.log( "myApi_s, execute, 3 = " );
                 jsonResult  [ params.returnIn ] = params.defaultValue;
                 luo .message                    = params.v + " is not handled by this implementation";
             }
@@ -98,11 +98,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            luo.console.log( "myApi, execute, catch err = " + err );
+            luo.console.log( "myApi_s, execute, catch err = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console.log( "myApi, execute, result = " + jsonResult[ params.returnIn ] );
+        //luo.console.log( "myApi_s, execute, result = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -151,7 +151,7 @@ module.exports = function ()	{
                                                 "async":false, "data":"krp", "returnIn": "result", 
                                                     "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result.contents;
 
-                    //luo.console.log( "myApi, _execute, pathname = " + pathname );
+                    //luo.console.log( "myApi_s, _execute, pathname = " + pathname );
                 }
 
                 else if ( parsedQuery.returnType === "arrayBuffer" )
@@ -205,7 +205,9 @@ module.exports = function ()	{
 
                     catch ( err )
                     {
-                        luo.console.log( "myApi, _execute, parsedQuery.returnType === \"arrayBuffer\", catch err = " + err );
+                        luo.console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", Vertx 2.0 does not define ArrayBuffer" );
+                        luo.console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", catch err = " + err );
+                        luo.console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", Vertx 2.0 does not define ArrayBuffer" );
                     }
                 }
 
@@ -228,7 +230,7 @@ module.exports = function ()	{
         {
         }
 
-        //luo.console.log( "myApi, _execute, return = " + result );
+        //luo.console.log( "myApi_s, _execute, return = " + result );
 
         return  result
     }

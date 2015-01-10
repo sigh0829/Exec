@@ -27,12 +27,14 @@
 //  The server implementation shouldn't know anything about the website.
 //  It should only process files that it is requested to process.
 var console 			= require( 'vertx/console'                              );
+var AnyUtils			= require( './Libs/Any/execAnyUtils.js'			        ).AnyUtils;
 var Version	            = require( './Libs/Any/execVersion.js'                  ).Version;
 var HttpImp         	= require( './Imp/HttpImp/vertxHttpServer.js'           );
 var FileImp         	= require( './Imp/FileImp/vertxFile.js'	                );
 var	ServerUtils         = require( './Libs/Server/execServerUtils.js'           ).ServerUtils;
 var VertxSockJsServer	= require( './Imp/WsImp/SockJsImp/vertxSockJsServer.js' );
 
+var	anyUtils	= new AnyUtils	();
 var fileImp     = new FileImp();
 var	siteType	= "Live/";
 var	site 		= siteType + "Sites/WinJS_3";
@@ -70,20 +72,18 @@ if ( result !== "error" )
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
-		    "system":   this, 
+            "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "appType":	"SiteApp", 	
-		    "name": 	"sockJsEcho1_s", 
+            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_s.js" ),
 		    "vt":"krp", "v": "1.0.0"
 	    });
 
     var	sockJSController = new VertxSockJsServer ();    
 	    sockJSController .execute
 	    ({
-		    "system":   this, 
+            "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "appType":	"SiteApp",	
-		    "name": 	"sockJsEcho2_s", 
+            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho2_s.js" ),
 		    "vt":"krp", "v": "1.0.0"
 	    });
 
@@ -134,6 +134,7 @@ function setupSystem    ( system )  {
 		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;  break;
 		            case "site":		jsonResult  [ params.returnIn ] = site;     break;
 		            case "Version":		jsonResult  [ params.returnIn ] = Version;  break;
+		            case "AnyUtils":    jsonResult  [ params.returnIn ] = AnyUtils;  break;
                 }
             }
         }

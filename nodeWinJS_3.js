@@ -36,13 +36,13 @@ var	ServerUtils         = require( './Libs/Server/execServerUtils.js'           
 var NodeSockJsServer	= require( './Imp/WsImp/SockJsImp/nodeSockJsServer.js'  );
 
 var	anyUtils	= new AnyUtils	();
-var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
-	dirName		= anyUtils.replaceAll			( dirName, "/" );
-
 var fileImp     = new FileImp();
 var	siteType	= "Live/";
 var	site 		= siteType + "Sites/WinJS_3";
 var self        = this;
+
+var	dirName		= anyUtils.terminatePathWith	( __dirname, "/" );
+	dirName		= anyUtils.replaceAll			( dirName, "/" );
 
 setupSystem     ( this );
 moveLibraries   ( this );
@@ -78,8 +78,7 @@ if ( result !== "error" )
 	    ({
             "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "appType":	"SiteApp", 	
-		    "name": 	"sockJsEcho1_s", 
+            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_s.js" ),
 		    "vt":"krp", "v": "1.0.0"
 	    });
 
@@ -88,8 +87,7 @@ if ( result !== "error" )
 	    ({
             "system":   this, 
 		    "job":		"installCreateInstall", 
-		    "appType":	"SiteApp",	
-		    "name": 	"sockJsEcho2_s", 
+            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho2_s.js" ),
 		    "vt":"krp", "v": "1.0.0"
 	    });
 
