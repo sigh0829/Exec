@@ -309,7 +309,7 @@ function noExtensionHandler ( inParams ) {
             }
 
             //  See HttpServerBase.prototype.__localSendfile()
-            inParams.sendFile ( outParams );
+            statusCode = inParams.sendFile ( outParams );
             */
         }
     }

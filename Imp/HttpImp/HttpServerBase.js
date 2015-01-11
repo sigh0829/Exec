@@ -674,12 +674,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
             }
 
             //  Send the requested file.
-            this.__localSendfile ( params );
-
-            //  We don't know if this is ok because
-            //  sendFile is asynchronous.  But it should
-            //  take care of it's own status.
-            statusCode = ServerUtils.httpStatus.OK.code;
+            statusCode = this.__localSendfile ( params );
 	    }
 	
 	
@@ -703,6 +698,8 @@ HttpServerBase.prototype.GET     = function ( session )	{
 
 HttpServerBase.prototype.   __localSendfile    = function ( params )	{
 
+    var statusCode  = ServerUtils.httpStatus.BadRequest.code;
+
     try
     {
         if ( typeof params.pathname !== "undefined" )
@@ -724,12 +721,19 @@ HttpServerBase.prototype.   __localSendfile    = function ( params )	{
 	    var success     = function()				{ self.writeHead( params.session, ServerUtils.httpStatus.OK.code, params.contentType   );	};
 	    var failure     = function( code, message )	{ self.writeHead( params.session, code, self.mimeTypes.getMimeTypes().html, message    );	};
 	    self.sendFile	( params.session, params, success, failure );
+
+        //  We don't know if this is ok because
+        //  sendFile is asynchronous.  But it should
+        //  take care of it's own status.
+        statusCode = ServerUtils.httpStatus.OK.code;
     }
 
     catch ( err )
     {
         this.console.log( "__localSendfile, catch, err = " + err );
     }
+
+    return statusCode;
 }
 
 HttpServerBase.prototype.end = function ( params )	{
