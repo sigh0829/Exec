@@ -31,13 +31,16 @@
 
 module.exports = function ()	{
 
-    var luo 			= {};	//	Local Use Only
-        luo .message    = "";
-    	luo .system     = null;
-        luo .console    = null;
-        luo .fileImp    = null;
-        luo .httpImp    = null;
-        luo .Version    = null;
+    var luo 			    = {};	//	Local Use Only
+        luo .message        = "";
+
+        luo .console        = null;
+        luo .fileImp        = null;
+        luo .httpImp        = null;
+    	luo .system         = null;
+
+        luo .ServerUtils    = null;
+        luo .Version        = null;
 	
 	this.execute = function ( params )	{
 
@@ -51,12 +54,14 @@ module.exports = function ()	{
                     typeof params.system.execute === "function"
                )
             {
-    	        luo.system     = params.system;
+    	        luo.system      = params.system;
 
-                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
-                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
-                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
-                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
+                luo.console     = luo.system.execute ({ "get": "console",       "returnIn": "console",      "defaultValue": null }).console;
+                luo.fileImp     = luo.system.execute ({ "get": "fileImp",       "returnIn": "fileImp",      "defaultValue": null }).fileImp;
+                luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
+
+                luo.ServerUtils = luo.system.execute ({ "get": "ServerUtils",   "returnIn": "ServerUtils",  "defaultValue": null }).ServerUtils;
+                luo.Version     = luo.system.execute ({ "get": "Version",       "returnIn": "Version",      "defaultValue": null }).Version;
             }
 
             //  All execute functions are told by the caller
@@ -75,7 +80,7 @@ module.exports = function ()	{
             if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
                 //luo.console.log( "books, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
+                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
             }
             else
             {
@@ -95,30 +100,30 @@ module.exports = function ()	{
         return jsonResult;
     }
 
-    luo._execute = function ( session, methodType, method, httpStatus )  {
+    luo._execute = function ( session, method )  {
 
-        var result = false; //
+        var result = luo.ServerUtils.httpStatus.InternalServerError.code; //
 
         method  = method.toString ();
             
         //luo.console.log( "books, _execute, 1b = " + session );
-        //luo.console.log( "books, _execute, 1c = " + methodType );
+        //luo.console.log( "books, _execute, 1c = " + luo.ServerUtils.methodType );
         //luo.console.log( "books, _execute, 1d = " + method );
-        //luo.console.log( "books, _execute, 1e = " + httpStatus );
+        //luo.console.log( "books, _execute, 1e = " + luo.ServerUtils.httpStatus );
         //luo.console.log( "books, _execute, 1f = " + luo.console );
 
-        if ( method === methodType.NAME )
+        if ( method === luo.ServerUtils.methodType.NAME )
         {
             result = "books";
             //luo.console.log( "books, _execute, 2 = " + result );
         }
 
-        else if ( method === methodType.DELETE )
+        else if ( method === luo.ServerUtils.methodType.DELETE )
         {
             //  
         }
 
-        else if (  method === methodType.GET )
+        else if (  method === luo.ServerUtils.methodType.GET )
         {
             //  http://localhost:7777/books/id/24
 
@@ -134,19 +139,19 @@ module.exports = function ()	{
                 var message = "id is " + split[ 3 ];
 
                 //  Use parsedQuery
-			    luo.httpImp .writeHead  ( session, httpStatus.OK.code );
+			    luo.httpImp .writeHead  ( session, luo.ServerUtils.httpStatus.OK.code );
 		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 
-                result = httpStatus.OK.code;
+                result = luo.ServerUtils.httpStatus.OK.code;
 		    }
         }
             
-        else if ( method === methodType.POST )
+        else if ( method === luo.ServerUtils.methodType.POST )
         {
             //  
         }
 
-        else if ( method === methodType.PUT )
+        else if ( method === luo.ServerUtils.methodType.PUT )
         {
             //  Update
         }

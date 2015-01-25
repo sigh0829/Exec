@@ -129,12 +129,14 @@ function setupSystem    ( system )  {
                 {
                     default:            break;
 
-		            case "console":	    jsonResult  [ params.returnIn ] = console;  break;
-		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;  break;
-		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;  break;
-		            case "site":		jsonResult  [ params.returnIn ] = site;     break;
-		            case "Version":		jsonResult  [ params.returnIn ] = Version;  break;
-		            case "AnyUtils":    jsonResult  [ params.returnIn ] = AnyUtils;  break;
+		            case "console":	    jsonResult  [ params.returnIn ] = console;      break;
+		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;      break;
+		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;      break;
+		            case "site":		jsonResult  [ params.returnIn ] = site;         break;
+
+		            case "AnyUtils":    jsonResult  [ params.returnIn ] = AnyUtils;     break;
+                    case "ServerUtils": jsonResult  [ params.returnIn ] = ServerUtils;  break;
+		            case "Version":		jsonResult  [ params.returnIn ] = Version;      break;
                 }
             }
         }
@@ -273,7 +275,7 @@ function noExtensionHandler ( inParams ) {
 		    var myApi   = new MyApi ();
 
             //  Initialize the rest app
-		    myApi   .execute    ( { "system":self, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
+		    myApi   .execute    ( { "system":self, "job": "any", "method":ServerUtils.methodType.INIT, 
                                         "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } );
 
             //  run the rest app
@@ -284,8 +286,6 @@ function noExtensionHandler ( inParams ) {
                 "system"        :   self, 
                 "job"           :   "any", 
                 "session"       :   inParams.session, 
-                "methodType"    :   ServerUtils.methodType, 
-                "httpStatus"    :   ServerUtils.httpStatus, 
                 "vt"            :   "krp", 	
                 "v"             :   "1.0.0", 
 

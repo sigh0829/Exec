@@ -36,16 +36,18 @@ var myApi_c = require( './myApi_c.js' );
 
 module.exports = function ()	{
 
-    var luo 			= {};	//	Local Use Only
-        luo .message    = "";
-    	luo .system     = null;
+    var luo 			    = {};	//	Local Use Only
+        luo .message        = "";
 
-        luo .AnyUtils   = null;
-        luo .console    = null;
-        luo .fileImp    = null;
-        luo .httpImp    = null;
-        luo .site       = null;
-        luo .Version    = null;
+        luo .console        = null;
+        luo .fileImp        = null;
+        luo .httpImp        = null;
+        luo .site           = null;
+    	luo .system         = null;
+
+        luo .AnyUtils       = null;
+        luo .ServerUtils    = null;
+        luo .Version        = null;
 
 	this.execute = function ( params )	{
 
@@ -62,12 +64,14 @@ module.exports = function ()	{
             {
     	        luo.system  = params.system;
 
-                luo.AnyUtils    = luo.system.execute ({ "get": "AnyUtils",  "returnIn": "AnyUtils", "defaultValue": null }).AnyUtils;
-                luo.console     = luo.system.execute ({ "get": "console",   "returnIn": "console",  "defaultValue": null }).console;
-                luo.fileImp     = luo.system.execute ({ "get": "fileImp",   "returnIn": "fileImp",  "defaultValue": null }).fileImp;
-                luo.httpImp     = luo.system.execute ({ "get": "httpImp",   "returnIn": "httpImp",  "defaultValue": null }).httpImp;
-                luo.site        = luo.system.execute ({ "get": "site",      "returnIn": "site",     "defaultValue": null }).site;
-                luo.Version     = luo.system.execute ({ "get": "Version",   "returnIn": "Version",  "defaultValue": null }).Version;
+                luo.console     = luo.system.execute ({ "get": "console",       "returnIn": "console",      "defaultValue": null }).console;
+                luo.fileImp     = luo.system.execute ({ "get": "fileImp",       "returnIn": "fileImp",      "defaultValue": null }).fileImp;
+                luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
+                luo.site        = luo.system.execute ({ "get": "site",          "returnIn": "site",         "defaultValue": null }).site;
+                
+                luo.AnyUtils    = luo.system.execute ({ "get": "AnyUtils",      "returnIn": "AnyUtils",     "defaultValue": null }).AnyUtils;
+                luo.ServerUtils = luo.system.execute ({ "get": "ServerUtils",   "returnIn": "ServerUtils",  "defaultValue": null }).ServerUtils;
+                luo.Version     = luo.system.execute ({ "get": "Version",       "returnIn": "Version",      "defaultValue": null }).Version;
             }
 
             //  All execute functions are told by the caller
@@ -86,7 +90,7 @@ module.exports = function ()	{
             if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
                 //luo.console.log( "myApi_s, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
+                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
             }
             else
             {
@@ -106,23 +110,23 @@ module.exports = function ()	{
         return jsonResult;
     }
 
-    luo._execute = function ( session, methodType, method, httpStatus )  {
+    luo._execute = function ( session, method )  {
 
-        var result = false; //
+        var result = luo.ServerUtils.httpStatus.InternalServerError.code; //
 
         method  = method.toString ();
             
-        if ( method === methodType.NAME )
+        if ( method === luo.ServerUtils.methodType.NAME )
         {
             result = myApi_c.MyApi_c	.restApi;
         }
 
-        else if ( method === methodType.DELETE )
+        else if ( method === luo.ServerUtils.methodType.DELETE )
         {
             //  
         }
 
-        else if ( method === methodType.GET )
+        else if ( method === luo.ServerUtils.methodType.GET )
         {
             //  http://localhost:7777/myApi?name=fred&age=33
 
@@ -212,21 +216,21 @@ module.exports = function ()	{
                 }
 
                 //  Now send it.
-			    luo.httpImp .writeHead  ( session, httpStatus.OK.code );
+			    luo.httpImp .writeHead  ( session, luo.ServerUtils.httpStatus.OK.code );
 		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", 
                                                 "data": { "vt":"krp", "v": "1.0.0", "message": message }, 
                                                     "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
 
-                result = httpStatus.OK.code;
+                result = luo.ServerUtils.httpStatus.OK.code;
 		    }
         }
             
-        else if ( method === methodType.POST )
+        else if ( method === luo.ServerUtils.methodType.POST )
         {
             //  
         }
 
-        else if ( method === methodType.PUT )
+        else if ( method === luo.ServerUtils.methodType.PUT )
         {
         }
 
