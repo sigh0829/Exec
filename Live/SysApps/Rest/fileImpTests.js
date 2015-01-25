@@ -28,19 +28,23 @@
 //  This file is only used in curlTests.cmd
 
 //var Version	= require( '../../../Libs/Any/execVersion.js'   ).Version;
-var AnyUtils	= require( '../../../Libs/Any/execAnyUtils.js'	).AnyUtils;
+//var AnyUtils	= require( '../../../Libs/Any/execAnyUtils.js'	).AnyUtils;
 
 
 module.exports = function ()	{
 
-    var luo 			= {};	//	Local Use Only
-        luo .message    = "";
-    	luo .system     = null;
-        luo .console    = null;
-        luo .fileImp    = null;
-        luo .httpImp    = null;
-        luo .Version    = null;
-        luo .anyUtils   = new AnyUtils	();
+    var luo 			    = {};	//	Local Use Only
+        luo .message        = "";
+
+        luo .anyUtils       = null;
+        luo .console        = null;
+        luo .fileImp        = null;
+        luo .httpImp        = null;
+    	luo .system         = null;
+
+        luo .AnyUtils       = null;
+        luo .ServerUtils    = null;
+        luo .Version        = null;
 	
 	this.execute = function ( params )	{
 
@@ -56,11 +60,16 @@ module.exports = function ()	{
             {
     	        luo.system     = params.system;
 
-                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
-                luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
-                luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
-                luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
-                luo.site       = luo.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": ""   }).site;
+                luo.console    = luo.system.execute ({ "get": "console",        "returnIn": "console",      "defaultValue": null }).console;
+                luo.fileImp    = luo.system.execute ({ "get": "fileImp",        "returnIn": "fileImp",      "defaultValue": null }).fileImp;
+                luo.httpImp    = luo.system.execute ({ "get": "httpImp",        "returnIn": "httpImp",      "defaultValue": null }).httpImp;
+                luo.site       = luo.system.execute ({ "get": "site",           "returnIn": "site",         "defaultValue": ""   }).site;
+
+                luo.AnyUtils    = luo.system.execute ({ "get": "AnyUtils",      "returnIn": "AnyUtils",     "defaultValue": null }).AnyUtils;
+                luo.ServerUtils = luo.system.execute ({ "get": "ServerUtils",   "returnIn": "ServerUtils",  "defaultValue": null }).ServerUtils;
+                luo.Version     = luo.system.execute ({ "get": "Version",       "returnIn": "Version",      "defaultValue": null }).Version;
+
+                luo .anyUtils   = new luo.AnyUtils	();
             }
 
             //  All execute functions are told by the caller
@@ -79,7 +88,7 @@ module.exports = function ()	{
             if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
             {
                 //luo.console.log( "fileImpTests, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.methodType, params.method, params.httpStatus );
+                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
             }
             else
             {
@@ -100,31 +109,31 @@ module.exports = function ()	{
         return jsonResult;
     }
 
-    luo._execute = function ( session, methodType, method, httpStatus )  {
+    luo._execute = function ( session, method )  {
 
-        var result = false; //
+        var result = luo.ServerUtils.httpStatus.InternalServerError.code; //
 
         method  = method.toString ();
             
         //luo.console.log( "fileImpTests, _execute, 1a = " + httpImp );
         //luo.console.log( "fileImpTests, _execute, 1b = " + session );
-        //luo.console.log( "fileImpTests, _execute, 1c = " + methodType );
+        //luo.console.log( "fileImpTests, _execute, 1c = " + luo.ServerUtils.methodType );
         //luo.console.log( "fileImpTests, _execute, 1d = " + method );
-        //luo.console.log( "fileImpTests, _execute, 1e = " + httpStatus );
+        //luo.console.log( "fileImpTests, _execute, 1e = " + luo.ServerUtils.httpStatus );
         //luo.console.log( "fileImpTests, _execute, 1f = " + luo.console );
 
-        if ( method === methodType.NAME )
+        if ( method === luo.ServerUtils.methodType.NAME )
         {
             result = "fileImpTests";
             //luo.console.log( "fileImpTests, _execute, 2 = " + result );
         }
 
-        else if ( method === methodType.DELETE )
+        else if ( method === luo.ServerUtils.methodType.DELETE )
         {
             //  
         }
 
-        else if ( method === methodType.GET )
+        else if ( method === luo.ServerUtils.methodType.GET )
         {
         	//luo.console.log( " " );
         	//luo.console.log( " " );
@@ -246,17 +255,17 @@ module.exports = function ()	{
         	*/
         	
     		if ( testsOK === true )
-    			result  = httpStatus.FileImpTestOkay.code;
+    			result  = luo.ServerUtils.httpStatus.FileImpTestOkay.code;
     		else
-    			result  = httpStatus.BadRequest.code;
+    			result  = luo.ServerUtils.httpStatus.BadRequest.code;
         }
             
-        else if ( method === methodType.POST )
+        else if ( method === luo.ServerUtils.methodType.POST )
         {
             //  
         }
 
-        else if ( method === methodType.PUT )
+        else if ( method === luo.ServerUtils.methodType.PUT )
         {
             //  Update
         }

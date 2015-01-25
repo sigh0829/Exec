@@ -38,7 +38,7 @@ var FileImp     = require( './Imp/FileImp/vertxFile.js'	)       ;
 var	ServerUtils = require( './Libs/Server/execServerUtils.js'   ).ServerUtils;
 var MimeTypes	= require( './Libs/Server/execMimeTypes.js'		).MimeTypes;
 
-var fileImp     = new FileImp();
+var fileImp     = new FileImp   ();
 var httpImp	    = new HttpImp	();
 var mimeTypes   = new MimeTypes ();
 var	siteType	= "Live/";
@@ -104,11 +104,13 @@ function setupSystem    ( system )  {
                 {
                     default:            break;
 
-		            case "console":	    jsonResult  [ params.returnIn ] = console;  break;
-		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;  break;
-		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;  break;
-		            case "site":		jsonResult  [ params.returnIn ] = site;     break;
-		            case "Version":		jsonResult  [ params.returnIn ] = Version;  break;
+		            case "console":	    jsonResult  [ params.returnIn ] = console;      break;
+		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;      break;
+		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;      break;
+		            case "site":		jsonResult  [ params.returnIn ] = site;         break;
+
+                    case "ServerUtils": jsonResult  [ params.returnIn ] = ServerUtils;  break;
+		            case "Version":		jsonResult  [ params.returnIn ] = Version;      break;
                 }
             }
         }
@@ -201,8 +203,9 @@ function noExtensionHandler ( inParams ) {
 		    myApi   .execute
             ({
                 "system":self, "job": "any", 
-                "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, 
-                "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" 
+                "method":ServerUtils.methodType.INIT, 
+                "returnIn": "name", "defaultValue": "none", 
+                "vt":"krp", "v": "1.0.0" 
             });
 
             //  Run the rest app
@@ -213,7 +216,6 @@ function noExtensionHandler ( inParams ) {
                 "session":      inParams.session, 
 
                 "method":"POST", "system":self, "job":"any", "vt":"krp", "v": "1.0.0",
-                "methodType":ServerUtils.methodType, "httpStatus":ServerUtils.httpStatus, 
 
                 "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
                 "returnIn":     "statusCode" 
