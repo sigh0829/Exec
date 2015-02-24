@@ -51,7 +51,7 @@ var result  =   httpImp.execute
         "system"                :   this, 
 		"job"                   :	"initCreate", 
         "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
-        "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
+        //"noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
         "returnIn"              :   "result", 
         "defaultValue"          :   "error",
         "vt"                    :   "krp",     
@@ -130,19 +130,20 @@ function setupSystem    ( system )  {
     }
 }
 
+/*
 function noExtensionHandler ( inParams ) {
 
     var statusCode  = ServerUtils.httpStatus.BadRequest.code;
 
     try
     {
-        /*  This is what inParams is expected to look like.
+        / *  This is what inParams is expected to look like.
         var inParams  = 
         {
             "pathname"  :   pathname        //  Used to show the request from the browser.
             "sendFile"  :   localSendfile,  //  Used to return data to the browser.
         };
-        */
+        * /
 
         console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
 
@@ -231,3 +232,5 @@ function noExtensionHandler ( inParams ) {
 
     return statusCode;
 }
+*/
+
