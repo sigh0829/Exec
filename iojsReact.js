@@ -29,20 +29,19 @@
 //  The only thing it does is write what it gets from a POST request
 //  from the form that is in Sites/TestForm/index.html
 
-//  The server implementation shouldn't know anything about the website.
+//  The server implementation shouldn't know anything about the website.  
 //  It should only process files that it is requested to process.
-var console 	= require( 'vertx/console' );
 var Version	    = require( './Libs/Any/execVersion.js'          ).Version;
-var HttpImp     = require( './Imp/HttpImp/vertxHttpServer.js'   );
-var FileImp     = require( './Imp/FileImp/vertxFile.js'	)       ;
+var HttpImp     = require( './Imp/HttpImp/iojsHttpServer.js'    );
+var FileImp		= require( './Imp/FileImp/iojsFile.js'			);
 var	ServerUtils = require( './Libs/Server/execServerUtils.js'   ).ServerUtils;
 var MimeTypes	= require( './Libs/Server/execMimeTypes.js'		).MimeTypes;
 
 var fileImp     = new FileImp   ();
-var httpImp	    = new HttpImp	();
+var httpImp     = new HttpImp   ();
 var mimeTypes   = new MimeTypes ();
 var	siteType	= "Live/";
-var	site 		= siteType + "Sites/TestForm";
+var	site 		= siteType + "Sites/React";
 var self        = this;
 
 setupSystem     ( this );
@@ -52,7 +51,7 @@ var result  =   httpImp.execute
         "system"                :   this, 
 		"job"                   :	"initCreate", 
         "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
-        "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
+        //"noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
         "returnIn"              :   "result", 
         "defaultValue"          :   "error",
         "vt"                    :   "krp",     
@@ -73,7 +72,7 @@ if ( result !== "error" )
 	    //"host"    :   "localhost",        //  Handle localhost 
 	    //"host"    :   "192.168.1.116",    //  Handle LAN assigned ip
 
-	    "port"      :   18002
+	    "port"      :   19001
     });
 }
 
@@ -85,7 +84,7 @@ function setupSystem    ( system )  {
 
         try
         {
-            //console.log( "vertxTest.js, execute, 1" );
+            //console.log( "iojsLive.js, execute, 1" );
 
             //  All execute functions are told by the caller
             //  where to put the return value.  This is the name
@@ -108,7 +107,7 @@ function setupSystem    ( system )  {
 		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;      break;
 		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;      break;
 		            case "site":		jsonResult  [ params.returnIn ] = site;         break;
-
+		            
                     case "ServerUtils": jsonResult  [ params.returnIn ] = ServerUtils;  break;
 		            case "Version":		jsonResult  [ params.returnIn ] = Version;      break;
                 }
@@ -117,7 +116,7 @@ function setupSystem    ( system )  {
 
         catch ( err )
         {
-            console.log( "vertxLive.js, execute, catch, err = " + err );
+            console.log( "iojsLive.js, execute, catch, err = " + err );
 
             //  This might have caused the exception.
             if ( typeof params.returnIn === "undefined" )
@@ -126,26 +125,27 @@ function setupSystem    ( system )  {
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //console.log( "vertxTest.js, execute, return, jsonResult[ params.returnIn ] = " + jsonResult[ params.returnIn ] );
+        //console.log( "iojsLive.js, execute, return, jsonResult[ params.returnIn ] = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 }
 
+/*
 function noExtensionHandler ( inParams ) {
 
     var statusCode  = ServerUtils.httpStatus.BadRequest.code;
 
     try
     {
-        /*  This is what inParams is expected to look like.
+        / *  This is what inParams is expected to look like.
         var inParams  = 
         {
             "pathname"  :   pathname        //  Used to show the request from the browser.
             "sendFile"  :   localSendfile,  //  Used to return data to the browser.
         };
-        */
+        * /
 
-        //console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
+        console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
 
 		var filename    = "";
         var api         = inParams.pathname;
@@ -232,3 +232,5 @@ function noExtensionHandler ( inParams ) {
 
     return statusCode;
 }
+*/
+

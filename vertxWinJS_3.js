@@ -97,7 +97,7 @@ if ( result !== "error" )
 	    //"host":   "localhost",        //  Handle localhost 
 	    //"host":   "192.168.1.116",    //  Handle LAN assigned ip
         //                              //  If nothing then handle every ip address on this port    
-	    "port":     7778, 
+	    "port":     18000, 
 	    "vt":"krp", "v": "1.0.0" 
     });
 }
