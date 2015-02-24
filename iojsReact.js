@@ -72,7 +72,7 @@ if ( result !== "error" )
 	    //"host"    :   "localhost",        //  Handle localhost 
 	    //"host"    :   "192.168.1.116",    //  Handle LAN assigned ip
 
-	    "port"      :   7775
+	    "port"      :   7773
     });
 }
 
