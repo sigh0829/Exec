@@ -8,7 +8,7 @@ Exec
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
 [Exec Wiki Contents](https://github.com/kevinpas/Exec/wiki/Wiki-Contents)<br>
 
-
+<!--
 <h1>Warning</h1>
 
     	//	Use this software at your own risk.
@@ -47,6 +47,8 @@ Exec
     	//
     	//	Use this software at your own risk.
     	//	Use Exec at your own risk.
+    	
+    	-->
 
 
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
