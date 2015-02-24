@@ -138,13 +138,13 @@ function noExtensionHandler ( inParams ) {
 
     try
     {
-        /*  This is what inParams is expected to look like.
+        / *  This is what inParams is expected to look like.
         var inParams  = 
         {
             "pathname"  :   pathname        //  Used to show the request from the browser.
             "sendFile"  :   localSendfile,  //  Used to return data to the browser.
         };
-        */
+        * /
 
         //console.log( "noExtensionHandler.js, noExtensionHandler, inParams.pathname = " + inParams.pathname );
 
