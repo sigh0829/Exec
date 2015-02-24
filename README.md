@@ -3,9 +3,6 @@ Exec
 
 <p>Use JavaScript as a desktop app, web server, or embedded with either <a href="http://www.nodejs.org">Node</a>, <a href="https://iojs.org/en/index.html">ioJS</a>,  <a href="http://vertx.io/">Vertx</a>, or all three.</p>
 
-
-Use JavaScript to run multiple web sites with either Node, IoJS, Vertx, or all three.
-
 <p>As of October 9, 2014 I consider this pre-beta software.</p>
 
 [Quick Start Guide](https://github.com/kevinpas/Exec/wiki/Quick-Start)<br><br>
