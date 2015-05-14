@@ -132,6 +132,8 @@ FileImpBase.prototype.getSystemInfo = function ( params )
         //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
         //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
 
+        result = true;
+
         //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }
 
