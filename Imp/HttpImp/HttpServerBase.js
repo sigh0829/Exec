@@ -41,7 +41,6 @@ function	HttpServerBase	()
     this.system     = null;
 	this.console	= null;
 	this.server		= null;
-    this.Version    = null;
 	
 	//	https://github.com/winjs/winjs
 	//	https://github.com/mozbrick/brick , http://brick.readme.io/
@@ -72,7 +71,7 @@ HttpServerBase.prototype.execute = function ( params )
         //  will look for the result.  For example if the user
         //  wants the result in a property called "pathname" they
         //  would set up execute() like this:
-        //  var	result      = this.execute( { "system":this.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+        //  var	result      = this.execute( { "system":this.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
         //  var pathname    = result.pathname;
         //  if ( pathname === "myERROR" ) {}
         jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -149,7 +148,6 @@ HttpServerBase.prototype.getSystemInfo = function ( params )
             this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
             this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
             this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
-            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
         }
     	
         //  For version 1 sytle "params" need to check params.console.
@@ -160,19 +158,10 @@ HttpServerBase.prototype.getSystemInfo = function ( params )
     	  //  this.console = params.console;
     	
         //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
         //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
         //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
 
-        if ( this.Version === null )
-            result = false;
-
-        else if ( params.vt === "krp" )
-            result = this.Version.versionOK( params.v, 1, 0, 0 );
-
-        else
-            result = this.Version.OK( params, {"EQ":2}, {"EQ":0}, {"EQ":0} );
+        result = true;
 
         //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }
@@ -248,8 +237,8 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
-		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+		        var name                	= myApi.execute ( { "system":self.system, "job": "any", "httpStatus":ServerUtils.httpStatus, "session":null, "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.NAME, "returnIn": "name", "defaultValue": "none" } ).name;
+		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, "returnIn": "name", "defaultValue": "none" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 		    	
 		    	//self.console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
@@ -320,7 +309,7 @@ HttpServerBase.prototype.readMimeTypes = function ()	{
 	
 	//	Read web site user defined mime types.
 	var	mimeTypesFile	= "./" + this.site + "/EXEC-INF/" + "mimeTypes.json";
-	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false" } ).exists;
 	
 	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
 	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
@@ -328,7 +317,7 @@ HttpServerBase.prototype.readMimeTypes = function ()	{
 	
 	if ( exists === true )
 	{
-		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
+		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }  } ).result;
 
 		if ( result.contents != "" )
 		{
@@ -528,15 +517,15 @@ HttpServerBase.prototype.writeHead = function ( session, code, contentType, mess
     }
 
     //  Set up the status code and header.
-    this.execute( { "session": session, "job": "statusCode",	"data": { "vt":"krp", "v": "1.0.0", "statusCode" : code }, "vt":"krp", "v": "1.0.0" } );
-    this.execute( { "session": session, "job": "setHeader",		"data": { "vt":"krp", "v": "1.0.0", "property" : 'Content-Type', "value": contentType }, "vt":"krp", "v": "1.0.0" } );
+    this.execute( { "session": session, "job": "statusCode",	"data": { "statusCode" : code } } );
+    this.execute( { "session": session, "job": "setHeader",		"data": { "property" : 'Content-Type', "value": contentType } } );
 
     //  If there's a problem return some 
     //  content that describes the problem.
     if ( message !== null )
     {
         //  The browser will not display some messages like 204
-    	this.execute( { "session": session, "job": "end", "data":	{ "vt":"krp", "v": "1.0.0", "message": message }, "vt":"krp", "v": "1.0.0" } );
+    	this.execute( { "session": session, "job": "end", "data":	{ "message": message } } );
     }
 }
 
@@ -868,8 +857,7 @@ HttpServerBase.prototype.POST_orig 		= function ( session )	{
                 "method":       "POST", 
                 "httpStatus":   ServerUtils.httpStatus, 
                 "returnIn":     "statusCode", 
-                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
-                "vt":"krp", 	"v": "1.0.0" 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code
             } ).statusCode;
         }
 
@@ -938,8 +926,7 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
                 "method":       "GET", 
                 "httpStatus":   ServerUtils.httpStatus, 
                 "returnIn":     "statusCode", 
-                "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
-                "vt":"krp", 	"v": "1.0.0" 
+                "defaultValue": ServerUtils.httpStatus.InternalServerError.code
             } ).statusCode;
 
             //this.console.log( "this.GET, 3 = " + statusCode );

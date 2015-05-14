@@ -37,14 +37,12 @@
 //	onError, onLoadEnd
 
 //var	fs 		= require( "fs"		);
-//var Version	= require( '../../Libs/Any/execVersion.js' ).Version;
 
 function FileImpBase	()
 {
     this.system     = null;
 	this.console	= null;
 	this.server		= null;
-    this.Version    = null;
 };
 
 //AnyUtils.inherit ( NodeHttpServer, HttpServerBase );
@@ -61,7 +59,7 @@ FileImpBase.prototype.execute = function ( params )	{
         //  will look for the result.  For example if the user
         //  wants the result in a property called "pathname" they
         //  would set up execute() like this:
-        //  var	result      = httpImp.execute( { "system":this.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+        //  var	result      = httpImp.execute( { "system":this.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
         //  var pathname	= result.pathname;
         //  if ( pathname === "myERROR" ) {}
         result  [ params.returnIn ] = params.defaultValue;
@@ -70,7 +68,7 @@ FileImpBase.prototype.execute = function ( params )	{
         //  this.console.log( "FileImpBase.prototype, execute, 1 = " );
 
         if ( this.getSystemInfo( params ) === false )
-            jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
+            result  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
             //this.console.log( "FileImpBase.prototype, execute, 2 = " );
@@ -128,23 +126,11 @@ FileImpBase.prototype.getSystemInfo = function ( params )
             this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
             this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
             this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
-            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
         }
     	
         //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
         //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
         //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
-
-        if ( this.Version === null )
-            result = false;
-
-        else if ( params.vt === "krp" )
-            result = this.Version.versionOK( params.v, 1, 0, 0 );
-
-        else
-            result = this.Version.OK( params, {"EQ":1}, {"EQ":0}, {"EQ":0} );
 
         //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }

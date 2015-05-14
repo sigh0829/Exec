@@ -61,50 +61,40 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
             //this.console.log( "nodeHttpServer, execute, 1 = " );
 
-            //  execute() should handle all previous versions.
-            //  Since this is version 1 there is only one version to handle.
-            if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
-            {
-                jsonResult  [ params.returnIn ] = params.defaultValue;
-                params      .session.message	= params.v + " is not handled by this implementation";
-            }
-            else
-            {
-                //this.console.log( "nodeHttpServer, execute, 2 = " );
+            //this.console.log( "nodeHttpServer, execute, 2 = " );
 
-		        //  These are the functions that vertxHttpServer provides to switch.js
-                switch ( params.job )
-		        {
-			        case "isOK":                jsonResult[ params.returnIn ]  = luo.isOK( params.session );	break;
+		    //  These are the functions that vertxHttpServer provides to switch.js
+            switch ( params.job )
+		    {
+			    case "isOK":                jsonResult[ params.returnIn ]  = luo.isOK( params.session );	break;
 
-                    case "createServer":        jsonResult[ params.returnIn ] = luo.createServer       ( params.host, params.port, params.callBack ); break;
-                    case "getErrorMessage":     jsonResult[ params.returnIn ] = luo.getErrorMessage    ( params.session ); break;
-                    case "getRequestHref":      jsonResult[ params.returnIn ] = luo.getRequestHref     ( params.session ); break;
-                    case "getRequestMethod":    jsonResult[ params.returnIn ] = luo.getRequestMethod   ( params.session ); break;
-                    case "getRequestMethod":    jsonResult[ params.returnIn ] = luo.getRequestMethod   ( params.session ); break;
-                    case "getRequestPathname":  jsonResult[ params.returnIn ] = luo.getRequestPathname ( params.session ); break;
-                    case "getRequestQuery":     jsonResult[ params.returnIn ] = luo.getRequestQuery    ( params.session ); break;
-                    case "sendFile":            jsonResult[ params.returnIn ] = luo.sendFile           ( params.session, params.pathname, params.success, params.failure );  break;
+                case "createServer":        jsonResult[ params.returnIn ] = luo.createServer       ( params.host, params.port, params.callBack ); break;
+                case "getErrorMessage":     jsonResult[ params.returnIn ] = luo.getErrorMessage    ( params.session ); break;
+                case "getRequestHref":      jsonResult[ params.returnIn ] = luo.getRequestHref     ( params.session ); break;
+                case "getRequestMethod":    jsonResult[ params.returnIn ] = luo.getRequestMethod   ( params.session ); break;
+                case "getRequestMethod":    jsonResult[ params.returnIn ] = luo.getRequestMethod   ( params.session ); break;
+                case "getRequestPathname":  jsonResult[ params.returnIn ] = luo.getRequestPathname ( params.session ); break;
+                case "getRequestQuery":     jsonResult[ params.returnIn ] = luo.getRequestQuery    ( params.session ); break;
+                case "sendFile":            jsonResult[ params.returnIn ] = luo.sendFile           ( params.session, params.pathname, params.success, params.failure );  break;
 
-			        case "end":			        params.session.response.end		    ( params.data.message );	    break;
-			        case "setHeader":	        params.session.response.headers     ().set( params.data.property,	params.data.value );	break;
-			        case "statusCode":	        params.session.response.statusCode	= params.data.statusCode;	    break;
+			    case "end":			        params.session.response.end		    ( params.data.message );	    break;
+			    case "setHeader":	        params.session.response.headers     ().set( params.data.property,	params.data.value );	break;
+			    case "statusCode":	        params.session.response.statusCode	= params.data.statusCode;	    break;
 			
-			        default:
-                    {
-                        jsonResult  [ params.returnIn ] = params.defaultValue;
-                        this.console     .log ( "nodeHttpServer, execute, default = " + params.job );
-                        break;
-                    }
-		        }
-            }
+			    default:
+                {
+                    jsonResult  [ params.returnIn ] = params.defaultValue;
+                    this.console     .log ( "nodeHttpServer, execute, default = " + params.job );
+                    break;
+                }
+		    }
         }
 
         catch ( err )
@@ -130,8 +120,7 @@ module.exports = function ()	{
 			
             if ( typeof params.type !== "undefined"  &&  params.type === "message" )
             {
-    	        this.execute( { "session": session, "job": "end", "data":	
-                                    { "vt":"krp", "v": "1.0.0", "message": params.message }, "vt":"krp", "v": "1.0.0" } );
+    	        this.execute( { "session": session, "job": "end", "data": { "message": params.message } } );
             }
 
             else

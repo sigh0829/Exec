@@ -70,24 +70,15 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
             //luo.console.log( "books, execute, 1 = " );
 
-            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
-            {
-                //luo.console.log( "books, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
-            }
-            else
-            {
-                //luo.console.log( "books, execute, 3 = " );
-                jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                    = params.v + " is not handled by this implementation";
-            }
+            //luo.console.log( "books, execute, 2 = " );
+            jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
         }
 
         catch ( err )
@@ -127,7 +118,7 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/books/id/24
 
-		    var	pathname    = luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).pathname;
+		    var	pathname    = luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR" } ).pathname;
             var split       = pathname  .split  ( '/' );
 
 		    //luo.console.log( "books.GET, split[ 1 ] = "	+ split[ 1 ] );
@@ -140,7 +131,7 @@ module.exports = function ()	{
 
                 //  Use parsedQuery
 			    luo.httpImp .writeHead  ( session, luo.ServerUtils.httpStatus.OK.code );
-		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "message": message }, "returnIn": "void", "defaultValue": "void" } );
 
                 result = luo.ServerUtils.httpStatus.OK.code;
 		    }
