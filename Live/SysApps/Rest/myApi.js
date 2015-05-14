@@ -75,24 +75,15 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
             //luo.console.log( "myApi, execute, 1 = " );
 
-            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
-            {
-                //luo.console.log( "myApi, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
-            }
-            else
-            {
-                //luo.console.log( "myApi, execute, 3 = " );
-                jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                    = params.v + " is not handled by this implementation";
-            }
+            //luo.console.log( "myApi, execute, 2 = " );
+            jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
         }
 
         catch ( err )
@@ -133,7 +124,7 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/myApi?name=fred&age=33
 
-		    var parsedQuery	= luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		    var parsedQuery	= luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
 			    //luo.console.log( "myApi.GET, parsedQuery = "	+ parsedQuery );
@@ -144,7 +135,7 @@ module.exports = function ()	{
 
                 //  Use parsedQuery
 			    luo.httpImp .writeHead  ( session, luo.ServerUtils.httpStatus.OK.code );
-		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		        luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "message": message }, "returnIn": "void", "defaultValue": "void" } ).parsedQuery;
 
                 result = luo.ServerUtils.httpStatus.OK.code;
 		    }

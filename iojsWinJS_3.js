@@ -29,7 +29,6 @@
 //  The server implementation shouldn't know anything about the website.  
 //  It should only process files that it is requested to process.
 var AnyUtils			= require( './Libs/Any/execAnyUtils.js'			        ).AnyUtils;
-var Version	            = require( './Libs/Any/execVersion.js'                  ).Version;
 var HttpImp         	= require( './Imp/HttpImp/iojsHttpServer.js'	        );
 var FileImp				= require( './Imp/FileImp/iojsFile.js'			        );
 var	ServerUtils         = require( './Libs/Server/execServerUtils.js'           ).ServerUtils;
@@ -62,9 +61,7 @@ var result  = httpImp.execute
         "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
         "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
         "returnIn"              :   "result", 
-        "defaultValue"          :   "error",
-        "vt"                    :   "krp",     
-        "v"                     :   "1.0.0"
+        "defaultValue"          :   "error"
 
 	}).result;
 
@@ -78,8 +75,7 @@ if ( result !== "error" )
 	    ({
             "system":   this, 
 		    "job":		"installCreateInstall", 
-            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_s.js" ),
-		    "vt":"krp", "v": "1.0.0"
+            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho1_s.js" )
 	    });
 
     var	sockJSController = new iojsSockJsServer ();    
@@ -87,8 +83,7 @@ if ( result !== "error" )
 	    ({
             "system":   this, 
 		    "job":		"installCreateInstall", 
-            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho2_s.js" ),
-		    "vt":"krp", "v": "1.0.0"
+            "module":   require( "./Live/Sites/WinJS_3/EXEC-INF/SiteApps/SockJsApps/sockJsEcho2_s.js" )
 	    });
 
     //  Now start the http server listening on "port".
@@ -101,8 +96,7 @@ if ( result !== "error" )
 	    //"host":   "localhost",        //  Handle localhost 
 	    //"host":   "192.168.1.116",    //  Handle LAN assigned ip
         //                              //  If nothing then handle every ip address on this port    
-	    "port":     19000, 
-	    "vt":"krp", "v": "1.0.0" 
+	    "port":     19000
     });
 }
 
@@ -122,7 +116,7 @@ function setupSystem    ( system )  {
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -140,7 +134,6 @@ function setupSystem    ( system )  {
 
 		            case "AnyUtils":    jsonResult  [ params.returnIn ] = AnyUtils;     break;
                     case "ServerUtils": jsonResult  [ params.returnIn ] = ServerUtils;  break;
-		            case "Version":		jsonResult  [ params.returnIn ] = Version;      break;
                 }
             }
         }
@@ -280,7 +273,7 @@ function noExtensionHandler ( inParams ) {
 
             //  Initialize the rest app
 		    myApi   .execute    ( { "system":self, "job": "any", "method":ServerUtils.methodType.INIT, 
-                                        "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } );
+                                        "returnIn": "name", "defaultValue": "none" } );
 
             //  run the rest app
             statusCode  = myApi.execute ( 
@@ -290,8 +283,6 @@ function noExtensionHandler ( inParams ) {
                 "system"        :   self, 
                 "job"           :   "any", 
                 "session"       :   inParams.session, 
-                "vt"            :   "krp", 	
-                "v"             :   "1.0.0", 
 
                 "defaultValue"  :   ServerUtils.httpStatus.InternalServerError.code, 
                 "returnIn"      :   "statusCode"

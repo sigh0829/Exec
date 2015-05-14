@@ -64,67 +64,57 @@ module.exports = function ()	{
 
             //luo.console.log( "sockJsEcho2, execute, 1 = " );
 
-            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === false )
-            {
-                //luo.console.log( "jsEcho, execute, 3 = " );
-                jsonResult  [ params.returnIn ] = params.errorValue;
-                luo .message                	= params.v + " is not handled by this implementation";
-            }
-            else
-            {
-                var	method  = params.method;
+            var	method  = params.method;
                 
-                //luo.console.log( "sockJsEcho2, execute, 2 = " + method );
+            //luo.console.log( "sockJsEcho2, execute, 2 = " + method );
 
-                if ( method === params.methodType.NAME )
-                {
-                 	jsonResult  [ params.returnIn ] = "echo2";
-                }
+            if ( method === params.methodType.NAME )
+            {
+                jsonResult  [ params.returnIn ] = "echo2";
+            }
 
-                else if (  method === params.methodType.ReadFromClient )
-                {
-                	//	Read means there is data coming from the
-                	//	client.  So use it to access the data base
-                	//	or do whatever calculations are required.
-                	luo.data 	= params.data; 
-                	luo.data	+=	", 222222";
+            else if (  method === params.methodType.ReadFromClient )
+            {
+                //	Read means there is data coming from the
+                //	client.  So use it to access the data base
+                //	or do whatever calculations are required.
+                luo.data 	= params.data; 
+                luo.data	+=	", 222222";
                     
-                	//jsonResult  [ params.returnIn ]	= params.successValue;
+                //jsonResult  [ params.returnIn ]	= params.successValue;
 
-                    //luo.console.log( "sockJsEcho2, execute, 3 = " + luo.data );
+                //luo.console.log( "sockJsEcho2, execute, 3 = " + luo.data );
                     
-                	//	Since this is echo call write immediately.
-                    params.method	= params.methodType.WriteToClient;
-                    jsonResult [ params.returnIn ]	= this.execute ( params );
+                //	Since this is echo call write immediately.
+                params.method	= params.methodType.WriteToClient;
+                jsonResult [ params.returnIn ]	= this.execute ( params );
 
-                    //luo.console.log( "sockJsEcho2, execute, 4 = " + luo.data );
-                }
+                //luo.console.log( "sockJsEcho2, execute, 4 = " + luo.data );
+            }
                     
-                else if ( method === params.methodType.WriteToClient )
-                {
-                	//	A write means it is time to send to the 
-                	//	client whatever the current state dictates.
-                	//jsonResult  [ params.returnIn ] = luo.data; 
-                    //jsonResult  [ params.returnIn ] = successValue;
+            else if ( method === params.methodType.WriteToClient )
+            {
+                //	A write means it is time to send to the 
+                //	client whatever the current state dictates.
+                //jsonResult  [ params.returnIn ] = luo.data; 
+                //jsonResult  [ params.returnIn ] = successValue;
 
-                    //luo.console.log( "sockJsEcho2, execute, 5 = " + luo.data );
+                //luo.console.log( "sockJsEcho2, execute, 5 = " + luo.data );
                     
-                    var result	= params.socketJsImp.execute
-                    ({ 
-                        "system":       luo.system, 
-                    	"session": 		params.session, 
-                    	"job": 			"writeData", 
-                    	"data":			luo.data, 
-                    	"returnIn": 	"result", 
-                    	"successValue":	params.successValue, 
-                    	"errorValue": 	params.errorValue, 
-                    	"vt":"krp", 	"v": "1.0.0"
-                    }).result;
+                var result	= params.socketJsImp.execute
+                ({ 
+                    "system":       luo.system, 
+                    "session": 		params.session, 
+                    "job": 			"writeData", 
+                    "data":			luo.data, 
+                    "returnIn": 	"result", 
+                    "successValue":	params.successValue, 
+                    "errorValue": 	params.errorValue
+                }).result;
                 	
-                    //luo.console.log( "sockJsEcho2, execute, 6 = " + luo.data );
+                //luo.console.log( "sockJsEcho2, execute, 6 = " + luo.data );
                     
-                    jsonResult  [ params.returnIn ]	= result;
-                }
+                jsonResult  [ params.returnIn ]	= result;
             }
         }
 

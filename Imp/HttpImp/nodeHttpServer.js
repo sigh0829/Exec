@@ -132,8 +132,7 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 				
 		    //this.console.log( 'NodeHttpServer.prototype.sendfile, 2 = ' + params.content );
 
-    	    this.execute( { "session": session, "job": "end", "data":	
-                                { "vt":"krp", "v": "1.0.0", "message": params.content }, "vt":"krp", "v": "1.0.0" } );
+    	    this.execute( { "session": session, "job": "end", "data": { "message": params.content } } );
         }
 
         else

@@ -72,7 +72,7 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -81,19 +81,10 @@ module.exports = function ()	{
 
             //  execute() should handle all previous versions.
             //  Since this is version 1 there is only one version to handle.
-            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
-            {
-                //luo.console.log( "testForm, execute, 2 = " );
+            //luo.console.log( "testForm, execute, 2 = " );
 
-                //  For now only handling POST and  NAME.
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
-            }
-            else
-            {
-                //luo.console.log( "testForm, execute, 3 = " );
-                jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                    = params.v + " is not handled by this implementation";
-            }
+            //  For now only handling POST and  NAME.
+            jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
         }
 
         catch ( err )
@@ -136,7 +127,7 @@ module.exports = function ()	{
 			//luo.console.log( "testForm.GET " );
 
             /*
-		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
 			    luo.console.log( "testForm.GET, parsedQuery = "	+ parsedQuery );
@@ -147,7 +138,7 @@ module.exports = function ()	{
 
                 //  Use parsedQuery
 			    helpers.writeHead   ( session, luo.ServerUtils.httpStatus.OK.code );
-		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "message": message }, "returnIn": "void", "defaultValue": "void" } ).parsedQuery;
 
                 result = luo.ServerUtils.httpStatus.OK.code;
 		    }
@@ -215,16 +206,16 @@ module.exports = function ()	{
 
             //  Register the callbacks for POST data handling.
 		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "startHandler", "callback":startHandler,
-                                            "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+                                            "returnIn": "void", "defaultValue": "void" } );
 
 		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "endHandler", "callback":endHandler,
-                                            "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+                                            "returnIn": "void", "defaultValue": "void" } );
 
             var message = "Only http://localhost:nnnn/ causes a write to the server console, not http://localhost:nnnn/testForm";
 
             //  Use parsedQuery
 			luo.httpImp .writeHead  ( session, luo.ServerUtils.httpStatus.OK.code );
-		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } );
+		    luo.httpImp .execute    ( { "system":luo.system, "session": session, "job": "end", "data": { "message": message }, "returnIn": "void", "defaultValue": "void" } );
 
             result = luo.ServerUtils.httpStatus.OK.code;
         }

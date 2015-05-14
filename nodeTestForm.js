@@ -31,7 +31,6 @@
 
 //  The server implementation shouldn't know anything about the website.  
 //  It should only process files that it is requested to process.
-var Version	    = require( './Libs/Any/execVersion.js'          ).Version;
 var HttpImp     = require( './Imp/HttpImp/nodeHttpServer.js'    );
 var FileImp		= require( './Imp/FileImp/nodeFile.js'			);
 var	ServerUtils = require( './Libs/Server/execServerUtils.js'   ).ServerUtils;
@@ -53,9 +52,7 @@ var result  =   httpImp.execute
         "defaultFilename"       :   "index.html",       //  No extension needed, but if not must handle in noExtensionHandler
         "noExtensionHandler"    :   noExtensionHandler, //  Function to call when the http request does not have an extension (like .html)
         "returnIn"              :   "result", 
-        "defaultValue"          :   "error",
-        "vt"                    :   "krp",     
-        "v"                     :   "1.0.0"
+        "defaultValue"          :   "error"
 
 	}).result;
 
@@ -65,8 +62,6 @@ if ( result !== "error" )
     ({ 
         "system"    :   this, 
 	    "job"       :   "listen", 
-	    "vt"        :   "krp", 
-        "v"         :   "1.0.0",
 
 	    //"host"    :   "127.0.0.1",        //  Handle loopback address 
 	    //"host"    :   "localhost",        //  Handle localhost 
@@ -92,7 +87,7 @@ function setupSystem    ( system )  {
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
@@ -109,7 +104,6 @@ function setupSystem    ( system )  {
 		            case "site":		jsonResult  [ params.returnIn ] = site;         break;
 		            
                     case "ServerUtils": jsonResult  [ params.returnIn ] = ServerUtils;  break;
-		            case "Version":		jsonResult  [ params.returnIn ] = Version;      break;
                 }
             }
         }
@@ -203,8 +197,7 @@ function noExtensionHandler ( inParams ) {
             ({
                 "system":self, "job": "any", 
                 "method":ServerUtils.methodType.INIT, 
-                "returnIn": "name", "defaultValue": "none", 
-                "vt":"krp", "v": "1.0.0" 
+                "returnIn": "name", "defaultValue": "none"
             });
 
             //  Run the rest app
@@ -214,7 +207,7 @@ function noExtensionHandler ( inParams ) {
                 //  See also: Imp/HttpImp/HttpServerBase.js
                 "session":      inParams.session, 
 
-                "method":"POST", "system":self, "job":"any", "vt":"krp", "v": "1.0.0",
+                "method":"POST", "system":self, "job":"any",
 
                 "defaultValue": ServerUtils.httpStatus.InternalServerError.code, 
                 "returnIn":     "statusCode" 

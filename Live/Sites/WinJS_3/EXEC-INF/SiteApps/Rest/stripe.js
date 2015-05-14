@@ -32,7 +32,6 @@
 //  http://localhost:7777/stripe  is different than
 //  http://localhost:7777/stripe
 
-//var Version	= require( '../../../Libs/Any/execVersion.js' ).Version;
 //var stripe = require('stripe')('sk_MY_SECRET_KEY');
 
 module.exports = function ()	{
@@ -47,7 +46,6 @@ module.exports = function ()	{
     	luo .system         = null;
 
         luo .ServerUtils    = null;
-        luo .Version        = null;
 	
 	this.execute = function ( params )	{
 
@@ -68,7 +66,6 @@ module.exports = function ()	{
                 luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
 
                 luo.ServerUtils = luo.system.execute ({ "get": "ServerUtils",   "returnIn": "ServerUtils",  "defaultValue": null }).ServerUtils;
-                luo.Version     = luo.system.execute ({ "get": "Version",       "returnIn": "Version",      "defaultValue": null }).Version;
             }
 
             //  All execute functions are told by the caller
@@ -77,24 +74,16 @@ module.exports = function ()	{
             //  will look for the result.  For example if the user
             //  wants the result in a property called "pathname" they
             //  would set up execute() like this:
-            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR", "vt":"krp", "v": "1.0.0" } );
+            //  var	result      = httpImp.execute( { "system":luo.system, "job": "doSomething"  "returnIn": "pathname", "defaultValue": "myERROR" } );
             //  var pathname    = result.pathname;
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
             //luo.console.log( "stripe, execute, 1 = " );
 
-            if ( luo.Version.versionOK( params.v, 1, 0, 0 ) === true )
-            {
-                //luo.console.log( "stripe, execute, 2 = " );
-                jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
-            }
-            else
-            {
-                //luo.console.log( "stripe, execute, 3 = " );
-                jsonResult  [ params.returnIn ] = params.defaultValue;
-                luo .message                    = params.v + " is not handled by this implementation";
-            }
+            //luo.console.log( "stripe, execute, 3 = " );
+            jsonResult  [ params.returnIn ] = params.defaultValue;
+            luo .message                    = params.v + " is not handled by this implementation";
         }
 
         catch ( err )
@@ -140,7 +129,7 @@ module.exports = function ()	{
             //  http://localhost:7777/stripe?name=fred&age=33
 
             /*
-		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
 			    luo.console.log( "stripe.GET, parsedQuery = "	+ parsedQuery );
@@ -151,7 +140,7 @@ module.exports = function ()	{
 
                 //  Use parsedQuery
 			    helpers.writeHead   ( session, luo.ServerUtils.httpStatus.OK.code );
-		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "vt":"krp", "v": "1.0.0", "message": message }, "returnIn": "void", "defaultValue": "void", "vt":"krp", "v": "1.0.0" } ).parsedQuery;
+		        httpImp.execute( { "system":luo.system, "session": session, "job": "end", "data": { "message": message }, "returnIn": "void", "defaultValue": "void" } ).parsedQuery;
 
                 result = luo.ServerUtils.httpStatus.OK.code;
 		    }

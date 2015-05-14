@@ -28,7 +28,6 @@
 //	http://vertx.io/core_manual_js.html#request-method
 //	http://nodejs.org/api/fs.html#fs_fs_readfile_filename_options_callback
 
-//var Version		= require( '../../../Libs/Any/execVersion.js' 			).Version;
 var ServerUtils	= require( '../../../Libs/Server/execServerUtils.js'	).ServerUtils;
 var MimeTypes	= require( '../../../Libs/Server/execMimeTypes.js'		).MimeTypes;
 var AnyUtils	= require( '../../../Libs/Any/execAnyUtils.js'			).AnyUtils;
@@ -38,7 +37,6 @@ function SockJsServerBase ()
     this.system     = null;
 	this.console	= null;
 	this.server		= null;
-    this.Version    = null;
     this.httpImp    = null;
 	
 	//	https://github.com/winjs/winjs
@@ -130,7 +128,6 @@ SockJsServerBase.prototype.getSystemInfo = function ( params )
             this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
             this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
             this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
-            this.Version    = this.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
             this.httpImp    = this.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
         }
     	
@@ -142,19 +139,10 @@ SockJsServerBase.prototype.getSystemInfo = function ( params )
     	  //  this.console = params.console;
     	
         //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1 = " + this.Version );
         //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
         //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1c = " + (this.Version.versionOK( params.v, 1, 0, 0 )) );
 
-        if ( this.Version === null )
-            result = false;
-
-        else if ( params.vt === "krp" )
-            result = this.Version.versionOK( params.v, 1, 0, 0 );
-
-        else
-            result = this.Version.OK( params, {"EQ":2}, {"EQ":0}, {"EQ":0} );
+        result = true;
 
         //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }
@@ -206,8 +194,8 @@ SockJsServerBase.prototype.init = function ( params )	{
 	    //  Get all of the wsApp api's the caller wants this to handle.
 	    var MyApi   	= params.module;//require       ( filename );
 	    var myApi   	= new MyApi     ();
-	    this.appName	= myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
-	                      myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "returnIn": "name", "defaultValue": "none", "vt":"krp", "v": "1.0.0" } ).name;
+	    this.appName	= myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.NAME, "returnIn": "name", "defaultValue": "none" } ).name;
+	                      myApi.execute ( { "system":this.system, "job": "any", "methodType":this.methodType, "method":this.methodType.INIT, "returnIn": "name", "defaultValue": "none" } ).name;
 	    this.appHandler	= myApi;
 	    
 	    result = ServerUtils.httpStatus.OK.code;
@@ -235,7 +223,7 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 		
 	//	Read web site user defined mime types.
 	var	mimeTypesFile	= "./" + this.site + "/exec.config/" + "mimeTypes.json";
-	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false" } ).exists;
 	
 	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
 	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
@@ -243,7 +231,7 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 	
 	if ( exists === true )
 	{
-		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, "vt":"krp", "v": "1.0.0"  } ).result;
+		var	result	= this.fileImp  .execute	( { "system":this.system, "job":"readTextFile", "pathname":mimeTypesFile, "async":false, "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }  } ).result;
 
 		if ( result.contents != "" )
 		{
@@ -324,8 +312,7 @@ SockJsServerBase.prototype.WriteToClient	= function ( session )	{
         "data":   		session.data, 
         "returnIn":     "statusCode", 
         "successValue": ServerUtils.httpStatus.OK.code, 
-        "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 
-        "vt":"krp", 	"v": "1.0.0" 
+        "errorValue": 	ServerUtils.httpStatus.InternalServerError.code
     } ).statusCode;
 	
     if ( statusCode !== ServerUtils.httpStatus.OK.code )
@@ -353,8 +340,7 @@ SockJsServerBase.prototype.ConnectionOpened     = function ( session )	{
             "data":   		session.data, 
             "returnIn":     "statusCode", 
             "successValue": ServerUtils.httpStatus.OK.code, 
-            "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 
-            "vt":"krp", 	"v": "1.0.0" 
+            "errorValue": 	ServerUtils.httpStatus.InternalServerError.code
         } ).statusCode;
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
@@ -398,8 +384,7 @@ SockJsServerBase.prototype.ReadFromClient     = function ( session )	{
             "data":   		session.data, 
             "returnIn":     "statusCode", 
             "successValue": ServerUtils.httpStatus.OK.code, 
-            "errorValue": 	ServerUtils.httpStatus.InternalServerError.code, 
-            "vt":"krp", 	"v": "1.0.0" 
+            "errorValue": 	ServerUtils.httpStatus.InternalServerError.code
         } ).statusCode;
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )

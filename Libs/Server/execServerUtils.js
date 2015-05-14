@@ -114,7 +114,7 @@ var	MimeTypes = require( './execMimeTypes.js' ).MimeTypes;
 
 	
 	    var	okay		= true;
-	    var	pathname	= httpImp.execute( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "..", "vt":"krp", "v": "1.0.0" } ).pathname;
+	    var	pathname	= httpImp.execute( { "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": ".." } ).pathname;
 
 	    //console.log( "helpers.isUrlSafe, 1a = " + pathname );
 
@@ -380,9 +380,9 @@ var	MimeTypes = require( './execMimeTypes.js' ).MimeTypes;
 
                 try
                 {
-                    var	exists = fileImp  .execute	( { "system":system, "job":"getInfo", "get":"exists", "pathname":toFolder, "returnIn": "exists", "defaultValue": "false", "vt":"krp", "v": "1.0.0" } ).exists;
+                    var	exists = fileImp  .execute	( { "system":system, "job":"getInfo", "get":"exists", "pathname":toFolder, "returnIn": "exists", "defaultValue": "false" } ).exists;
                     if ( exists === false )
-                        fileImp  .execute	( { "system":system, "job":"createFolder", "pathname":toFolder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }, "vt":"krp", "v": "1.0.0"  } ).result;
+                        fileImp  .execute	( { "system":system, "job":"createFolder", "pathname":toFolder, "async":false, "returnIn": "result", "defaultValue": { "code":400 }  } ).result;
                 }
                 catch ( err )
                 {
@@ -397,13 +397,11 @@ var	MimeTypes = require( './execMimeTypes.js' ).MimeTypes;
                     //  Read the libray then write it to the new location.
                     var fromContent = fileImp.execute	( { "system":system, "job":"readTextFile", 
                                                                 "pathname":fromPathName, "async":false, 
-                                                                    "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }, 
-                                                                        "vt":"krp", "v": "1.0.0"  } ).result.contents;
+                                                                    "data":"krp", "returnIn": "result", "defaultValue": { "contents":"" }  } ).result.contents;
 
                         fileImp  .execute	( { "system":system, "job":"writeTextFile", 
                                                 "pathname":toPathName, "async":false, 
-                                                    "data":fromContent, "returnIn": "result", "defaultValue": { "code":400 }, 
-                                                        "vt":"krp", "v": "1.0.0"  } ).result;
+                                                    "data":fromContent, "returnIn": "result", "defaultValue": { "code":400 }  } ).result;
                 }
                 catch ( err )
                 {
@@ -423,7 +421,7 @@ var	MimeTypes = require( './execMimeTypes.js' ).MimeTypes;
 			namespace.ServerUtils	.httpStatus.NotImplemented      = { code:501, 	contentType: MimeTypes.html, message:"Not Implemented"         };
 
 			//	Used for curlTests.cmd
-			namespace.ServerUtils	.httpStatus.FileImpTestOkay		= { code:9999,	contentType: MimeTypes.html, message:"FileImpTestOkay"         };
+			namespace.ServerUtils	.httpStatus.FileImpTestOkay		= { code:17000,	contentType: MimeTypes.html, message:"FileImpTestOkay"         };
 
             //  Mostly for Imp/HttpImp/HttpServerBase.js
 			namespace.ServerUtils	.methodType	        = {};
