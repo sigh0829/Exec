@@ -34,7 +34,6 @@ module.exports = function ()	{
     var luo 			    = {};	//	Local Use Only
         luo .message        = "";
 
-        luo .console        = null;
         luo .fileImp        = null;
         luo .httpImp        = null;
     	luo .system         = null;
@@ -56,7 +55,6 @@ module.exports = function ()	{
             {
     	        luo.system      = params.system;
 
-                luo.console     = luo.system.execute ({ "get": "console",       "returnIn": "console",      "defaultValue": null }).console;
                 luo.fileImp     = luo.system.execute ({ "get": "fileImp",       "returnIn": "fileImp",      "defaultValue": null }).fileImp;
                 luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
 
@@ -75,19 +73,19 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //luo.console.log( "books, execute, 1 = " );
+            //console.log( "books, execute, 1 = " );
 
-            //luo.console.log( "books, execute, 2 = " );
+            //console.log( "books, execute, 2 = " );
             jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
         }
 
         catch ( err )
         {
-            luo.console.log( "books, execute, 4 = " + err );
+            console.log( "books, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -97,16 +95,15 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
-        //luo.console.log( "books, _execute, 1b = " + session );
-        //luo.console.log( "books, _execute, 1c = " + luo.ServerUtils.methodType );
-        //luo.console.log( "books, _execute, 1d = " + method );
-        //luo.console.log( "books, _execute, 1e = " + luo.ServerUtils.httpStatus );
-        //luo.console.log( "books, _execute, 1f = " + luo.console );
+        //console.log( "books, _execute, 1b = " + session );
+        //console.log( "books, _execute, 1c = " + luo.ServerUtils.methodType );
+        //console.log( "books, _execute, 1d = " + method );
+        //console.log( "books, _execute, 1e = " + luo.ServerUtils.httpStatus );
 
         if ( method === luo.ServerUtils.methodType.NAME )
         {
             result = "books";
-            //luo.console.log( "books, _execute, 2 = " + result );
+            //console.log( "books, _execute, 2 = " + result );
         }
 
         else if ( method === luo.ServerUtils.methodType.DELETE )
@@ -121,11 +118,11 @@ module.exports = function ()	{
 		    var	pathname    = luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestPathname", "returnIn": "pathname", "defaultValue": "ERROR" } ).pathname;
             var split       = pathname  .split  ( '/' );
 
-		    //luo.console.log( "books.GET, split[ 1 ] = "	+ split[ 1 ] );
+		    //console.log( "books.GET, split[ 1 ] = "	+ split[ 1 ] );
 
 		    if ( split[ 2 ] === "id" )
 		    {
-			    //luo.console.log( "books.GET, id.number = "	+ split[ 3 ] );
+			    //console.log( "books.GET, id.number = "	+ split[ 3 ] );
 
                 var message = "id is " + split[ 3 ];
 
@@ -147,7 +144,7 @@ module.exports = function ()	{
             //  Update
         }
 
-        //luo.console.log( "books, _execute, return = " + result );
+        //console.log( "books, _execute, return = " + result );
 
         return  result
     }

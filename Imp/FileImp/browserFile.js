@@ -66,9 +66,9 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //this.console.log( "nodeHttpServer, execute, 1 = " );
+            //console.log( "nodeHttpServer, execute, 1 = " );
 
-            //this.console.log( "nodeHttpServer, execute, 2 = " );
+            //console.log( "nodeHttpServer, execute, 2 = " );
 
 		    //  These are the functions that vertxHttpServer provides to switch.js
             switch ( params.job )
@@ -91,7 +91,7 @@ module.exports = function ()	{
 			    default:
                 {
                     jsonResult  [ params.returnIn ] = params.defaultValue;
-                    this.console     .log ( "nodeHttpServer, execute, default = " + params.job );
+                    console     .log ( "nodeHttpServer, execute, default = " + params.job );
                     break;
                 }
 		    }
@@ -99,11 +99,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            this.console.log( "nodeHttpServer, execute, 3 = " + err );
+            console.log( "nodeHttpServer, execute, 3 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //this.console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 	
@@ -113,7 +113,7 @@ module.exports = function ()	{
 		{
 			//	http://stackoverflow.com/questions/21237769/vertx-simple-web-server-doesnt-find-the-html-file
 			
-			//this.console.log( 'sendfile, 1 = ' + pathname );
+			//console.log( 'sendfile, 1 = ' + pathname );
 			
 			if ( typeof successCallback === "function" )
 				successCallback	();
@@ -128,12 +128,12 @@ module.exports = function ()	{
 			    session.response.sendFile( pathname );   
             }
 
-			//this.console.log( 'sendfile, 2 = ' + pathname );
+			//console.log( 'sendfile, 2 = ' + pathname );
 		}
 		
 		catch ( err )
 		{
-			this.console.log( 'vertxHttpServer, sendfile, catch err = ' + err + ', pathname = ' + pathname );
+			console.log( 'vertxHttpServer, sendfile, catch err = ' + err + ', pathname = ' + pathname );
 		}
 	}
 
@@ -193,10 +193,10 @@ module.exports = function ()	{
 		
 	luo.createServer = function ( host, port, callBack )	{
 		
-		//this.console.log( "http.createServer 1" );
-		//this.console.log( "http.createServer 2, params = " 		+ params );
-		//this.console.log( "http.createServer 3, params.port = " 	+ params.port );
-		//this.console.log( "http.createServer 4, params.host = " 	+ params.host );
+		//console.log( "http.createServer 1" );
+		//console.log( "http.createServer 2, params = " 		+ params );
+		//console.log( "http.createServer 3, params.port = " 	+ params.port );
+		//console.log( "http.createServer 4, params.host = " 	+ params.host );
 		
 		var self			= this;
 			self.callBack	= callBack;
@@ -213,16 +213,16 @@ module.exports = function ()	{
 					session.request		= req;
 					session.response	= req.response;
 				
-				//self.console.log( "http.createServer 7" );
+				//console.log( "http.createServer 7" );
 				
 				self.callBack ( session );
 				
-				//self.console.log( "http.createServer 8" );
+				//console.log( "http.createServer 8" );
 			}
 			
 			catch ( err )
 			{
-				this.console.log( 'vertxHttpServer, createHttpServer, catch err = ' + err );
+				console.log( 'vertxHttpServer, createHttpServer, catch err = ' + err );
 				
 				var	session				= {};
 					session.boolResult	= false;
@@ -231,14 +231,14 @@ module.exports = function ()	{
 					//session.url		= url;
 					session.message		= err;
 			
-				//self.console.log( "http.createServer 10" );
+				//console.log( "http.createServer 10" );
 				
 				self.callBack ( session );
 				
-				//self.console.log( "http.createServer 11" );
+				//console.log( "http.createServer 11" );
 			}
 
-			//self.console.log( " " );
+			//console.log( " " );
 
 		}).listen( port, host );
 		//}).listen( 7778, 'localhost' );
@@ -250,7 +250,7 @@ module.exports = function ()	{
 };
 
 
-//this.console.log('Server running at http://127.0.0.1:7777/');
+//console.log('Server running at http://127.0.0.1:7777/');
 
 
 /*
@@ -268,7 +268,7 @@ vertx.createHttpServer().requestHandler(function(req) {
 }).listen( 7778, 'localhost');
 */
 
-//this.console.log('Server running at http://127.0.0.1:7778/');
+//console.log('Server running at http://127.0.0.1:7778/');
 
 
 //	http://stackoverflow.com/questions/21237769/vertx-simple-web-server-doesnt-find-the-html-file

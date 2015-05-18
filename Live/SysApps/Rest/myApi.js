@@ -39,7 +39,6 @@ module.exports = function ()	{
     var luo 			    = {};	//	Local Use Only
         luo .message        = "";
 
-        luo .console        = null;
         luo .fileImp        = null;
         luo .httpImp        = null;
     	luo .system         = null;
@@ -61,7 +60,6 @@ module.exports = function ()	{
             {
     	        luo.system      = params.system;
 
-                luo.console     = luo.system.execute ({ "get": "console",       "returnIn": "console",      "defaultValue": null }).console;
                 luo.fileImp     = luo.system.execute ({ "get": "fileImp",       "returnIn": "fileImp",      "defaultValue": null }).fileImp;
                 luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
 
@@ -80,19 +78,19 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //luo.console.log( "myApi, execute, 1 = " );
+            //console.log( "myApi, execute, 1 = " );
 
-            //luo.console.log( "myApi, execute, 2 = " );
+            //console.log( "myApi, execute, 2 = " );
             jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
         }
 
         catch ( err )
         {
-            luo.console.log( "myApi, execute, 4 = " + err );
+            console.log( "myApi, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+        //console.log( "nodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -102,17 +100,17 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
-        //luo.console.log( "myApi, _execute, 1a = " + httpImp );
-        //luo.console.log( "myApi, _execute, 1b = " + session );
-        //luo.console.log( "myApi, _execute, 1c = " + luo.ServerUtils.methodType );
-        //luo.console.log( "myApi, _execute, 1d = " + method );
-        //luo.console.log( "myApi, _execute, 1e = " + luo.ServerUtils.httpStatus );
-        //luo.console.log( "myApi, _execute, 1f = " + luo.console );
+        //console.log( "myApi, _execute, 1a = " + httpImp );
+        //console.log( "myApi, _execute, 1b = " + session );
+        //console.log( "myApi, _execute, 1c = " + luo.ServerUtils.methodType );
+        //console.log( "myApi, _execute, 1d = " + method );
+        //console.log( "myApi, _execute, 1e = " + luo.ServerUtils.httpStatus );
+        //console.log( "myApi, _execute, 1f = " + console );
 
         if ( method === luo.ServerUtils.methodType.NAME )
         {
             result = "myApi";
-            //luo.console.log( "myApi, _execute, 2 = " + result );
+            //console.log( "myApi, _execute, 2 = " + result );
         }
 
         else if ( method === luo.ServerUtils.methodType.DELETE )
@@ -127,9 +125,9 @@ module.exports = function ()	{
 		    var parsedQuery	= luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
-			    //luo.console.log( "myApi.GET, parsedQuery = "	+ parsedQuery );
-			    //luo.console.log( "myApi.GET, query.name = "	    + parsedQuery.name );
-			    //luo.console.log( "myApi.GET, query.age = " 	    + parsedQuery.age );
+			    //console.log( "myApi.GET, parsedQuery = "	+ parsedQuery );
+			    //console.log( "myApi.GET, query.name = "	    + parsedQuery.name );
+			    //console.log( "myApi.GET, query.age = " 	    + parsedQuery.age );
 
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
@@ -151,7 +149,7 @@ module.exports = function ()	{
             //  Update
         }
 
-        //luo.console.log( "myApi, _execute, return = " + result );
+        //console.log( "myApi, _execute, return = " + result );
 
         return  result
     }

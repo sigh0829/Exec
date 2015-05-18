@@ -75,7 +75,7 @@ NodeSockJsServer.prototype.writeData = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeSockJsServer, writeData, catch err = ' + err );
+		console.log( 'nodeSockJsServer, writeData, catch err = ' + err );
 	}
 	
 	return	result;
@@ -87,12 +87,12 @@ NodeSockJsServer.prototype.create = function ( params )	{
 	
 	try
 	{
-		//this.console.log( "nodeSockJsServer.create 1 = " );
+		//console.log( "nodeSockJsServer.create 1 = " );
 		
 		this.httpServer	= this.httpImp .execute ( { "system":this.system, "job": "getServer",  
 														"returnIn": "server", "defaultValue": null } ).server;
 	
-		//this.console.log		( "nodeSockJsServer.create 2 = " + this.httpServer );
+		//console.log		( "nodeSockJsServer.create 2 = " + this.httpServer );
 	    this.sjsServer	= sockjs.createServer();
 
 		result	= ServerUtils.httpStatus.OK.code;
@@ -100,7 +100,7 @@ NodeSockJsServer.prototype.create = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeSockJsServer, create, catch err = ' + err );
+		console.log( 'nodeSockJsServer, create, catch err = ' + err );
 	}
 	
 	return	result
@@ -114,13 +114,13 @@ NodeSockJsServer.prototype.install = function ( params )	{
 	{
 		var	self = this;
 			
-		//this.console.log( "nodeSockJsServer.install 1 = " + this.appName );
+		//console.log( "nodeSockJsServer.install 1 = " + this.appName );
 			
 		this.sjsServer.installHandlers( this.httpServer, { prefix: "/" + this.appName } );
 		this.sjsServer.on( 'connection', function( sock ) {
 			
-			//self.console.log( "nodeSockJsServer.install 1a = " + sock );
-			//self.console.log( "nodeSockJsServer.install 1a = " + sock.write );
+			//console.log( "nodeSockJsServer.install 1a = " + sock );
+			//console.log( "nodeSockJsServer.install 1a = " + sock.write );
 			
 	    	self.sock = sock;
             self.requestHandler ( self.sock, "ConnectionOpened", "" );
@@ -138,7 +138,7 @@ NodeSockJsServer.prototype.install = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeSockJsServer, install, catch 2 err = ' + err );
+		console.log( 'nodeSockJsServer, install, catch 2 err = ' + err );
 	}
 	
 	return	result
