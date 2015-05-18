@@ -53,13 +53,13 @@ NodeFile.prototype.getInfo = function ( params )	{
 	
 	try
 	{
-        //this.console.log( "nodeFile, getInfo, 1 = " + params.get );
+        //console.log( "nodeFile, getInfo, 1 = " + params.get );
 
 		if ( params.get === "exists" )
 		{
-            //this.console.log( "nodeFile, getInfo, 2 = " + params.pathname );
+            //console.log( "nodeFile, getInfo, 2 = " + params.pathname );
 			result = fs.existsSync( params.pathname );
-            //this.console.log( "nodeFile, getInfo, 3 = " + result );
+            //console.log( "nodeFile, getInfo, 3 = " + result );
 		}
 		else if ( params.get === "stats" )
 		{
@@ -75,7 +75,7 @@ NodeFile.prototype.getInfo = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, getInfo, catch err = ' + err );
+		console.log( 'nodeFile, getInfo, catch err = ' + err );
 	}
 	
 	return result;
@@ -104,7 +104,7 @@ NodeFile.prototype.readFile = function ( params, options )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, readFile, catch err = ' + err );
+		console.log( 'nodeFile, readFile, catch err = ' + err );
 	}
 	
 	return result;
@@ -134,7 +134,7 @@ NodeFile.prototype.writeFile = function ( params, options )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, writeFile, catch err = ' + err );
+		console.log( 'nodeFile, writeFile, catch err = ' + err );
 		result = params.defaultValue;
 	}
 	
@@ -184,7 +184,7 @@ NodeFile.prototype.readFileList = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, readFileList, catch err = ' + err );
+		console.log( 'nodeFile, readFileList, catch err = ' + err );
 	}
 	
 	return result;
@@ -202,7 +202,7 @@ NodeFile.prototype.createFolder = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, createFolder, catch err = ' + err );
+		console.log( 'nodeFile, createFolder, catch err = ' + err );
 		result	= params.defaultValue;
 	}
 	
@@ -221,7 +221,7 @@ NodeFile.prototype.deleteFile = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, deleteFile, catch err = ' + err );
+		console.log( 'nodeFile, deleteFile, catch err = ' + err );
 		result	= params.defaultValue;
 	}
 	
@@ -249,7 +249,7 @@ NodeFile.prototype.deleteFolder = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'nodeFile, deleteFolder, catch err = ' + err );
+		console.log( 'nodeFile, deleteFolder, catch err = ' + err );
 		result	= params.defaultValue;
 	}
 	

@@ -39,7 +39,6 @@ var AnyUtils	= require( '../../Libs/Any/execAnyUtils.js'			).AnyUtils;
 function	HttpServerBase	()
 {
     this.system     = null;
-	this.console	= null;
 	this.server		= null;
 	
 	//	https://github.com/winjs/winjs
@@ -77,13 +76,13 @@ HttpServerBase.prototype.execute = function ( params )
         jsonResult  [ params.returnIn ] = params.defaultValue;
 
         //  Must call getSystemInfo() first
-        //  this.console.log( "HttpServerBase, execute, 1 = " + params.v);
+        //  console.log( "HttpServerBase, execute, 1 = " + params.v);
 
         if ( this.getSystemInfo( params ) === false )
             jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
-            //this.console.log( "HttpServerBase, execute, 2 = " );
+            //console.log( "HttpServerBase, execute, 2 = " );
 
 	        //  These are the functions that vertxHttpServer provides to switch.js
 	        switch ( params.job )
@@ -114,7 +113,7 @@ HttpServerBase.prototype.execute = function ( params )
 		        default:
                 {
                     jsonResult  	[ params.returnIn ] = params.defaultValue;
-                    //this.console	.log ( "HttpServerBase, execute, default = " + params.job );
+                    //console	.log ( "HttpServerBase, execute, default = " + params.job );
                     break;
                 }
 	        }
@@ -123,11 +122,11 @@ HttpServerBase.prototype.execute = function ( params )
 
     catch ( err )
     {
-        this.console.log( "HttpServerBase, execute, catch = " + err );
+        console.log( "HttpServerBase, execute, catch = " + err );
         jsonResult  [ params.returnIn ] = params.defaultValue;
     }
 
-    //this.console.log( "HttpServerBase, execute, 4 = " + jsonResult[ params.returnIn ] );
+    //console.log( "HttpServerBase, execute, 4 = " + jsonResult[ params.returnIn ] );
     return jsonResult;
 };
 
@@ -145,7 +144,6 @@ HttpServerBase.prototype.getSystemInfo = function ( params )
         {
     	    this.system     = params.system;
 
-            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
             this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
             this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
         }
@@ -154,16 +152,16 @@ HttpServerBase.prototype.getSystemInfo = function ( params )
         //
         //  Vertx doesn't provide a built in console.
         //  So, it needs to be passed in from vertxConfig.js 
-        //if ( this.console === null )
-    	  //  this.console = params.console;
+        //if ( console === null )
+    	  //  console = params.console;
     	
         //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
+        //console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
+        //console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
 
         result = true;
 
-        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
+        //console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }
 
     catch ( err )
@@ -221,7 +219,7 @@ HttpServerBase.prototype.init = function ( params )	{
 		    //  Get all of the rest api's the caller wants this to handle.
 		    params.rest.forEach ( function addNumber( value )
 		    {
-		    	//self.console.log( "HttpServerBase.prototype.init 1 = " + self.site );
+		    	//console.log( "HttpServerBase.prototype.init 1 = " + self.site );
 		    	
 		    	//	Assume value.appType === "SysApp"
 		    	var	filename = '../../Tests/SysApps/Rest/' + value.name + '.js';
@@ -231,9 +229,9 @@ HttpServerBase.prototype.init = function ( params )	{
 		    	if ( value.appType === "SiteApp" )
 		    		filename = '../../' + self.site + '/EXEC-INF/SiteApps/Rest/' + value.name + '.js';
 		    	
-		    	//self.console.log( "HttpServerBase.prototype.init ServerUtils.httpStatus = " + ServerUtils.httpStatus );
-		    	//self.console.log( "HttpServerBase.prototype.init value.appType = " + value.appType );
-		    	//self.console.log( "HttpServerBase.prototype.init filename = " + filename );
+		    	//console.log( "HttpServerBase.prototype.init ServerUtils.httpStatus = " + ServerUtils.httpStatus );
+		    	//console.log( "HttpServerBase.prototype.init value.appType = " + value.appType );
+		    	//console.log( "HttpServerBase.prototype.init filename = " + filename );
 		    	
 		        var MyApi               	= require       ( filename );
 		        var myApi               	= new MyApi     ();
@@ -241,21 +239,21 @@ HttpServerBase.prototype.init = function ( params )	{
 		                                      myApi.execute ( { "system":self.system, "job": "any", "methodType":ServerUtils.methodType, "method":ServerUtils.methodType.INIT, "returnIn": "name", "defaultValue": "none" } ).name;
 		        self.restHandlers[ name ]	= myApi;
 		    	
-		    	//self.console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
+		    	//console.log( "HttpServerBase.prototype.init 3 = " + ServerUtils.httpStatus );
 
 		    	/ *
 		    	//	./Apps/Rest/
 		    	//value.folderName = this.anyUtils.terminatePathWith ( value.folderName, "/" );
 		    	//var	filename2	= value.folderName + value.name + '.js';
-		    	//self.console.log( "HttpServerBase.prototype.init 2 = " + filename2 );
-		    	self.console.log( "HttpServerBase.prototype.init 2 = " + value.folderName );
+		    	//console.log( "HttpServerBase.prototype.init 2 = " + filename2 );
+		    	console.log( "HttpServerBase.prototype.init 2 = " + value.folderName );
 		    	
 		    	//	http://stackoverflow.com/questions/3133243/how-to-get-path-to-current-script-with-node-js
-		    	self.console.log( "HttpServerBase.prototype.init 3 = " + __filename );
-		    	self.console.log( "HttpServerBase.prototype.init 4 = " + __dirname );
-		    	self.console.log( "HttpServerBase.prototype.init 5 = " + require.main.filename );
-		    	self.console.log( "HttpServerBase.prototype.init 6 = " + require('path').dirname(require.main.filename) );
-		    	self.console.log( "HttpServerBase.prototype.init 7 = " + require('path').dirname( value.folderName ) );
+		    	console.log( "HttpServerBase.prototype.init 3 = " + __filename );
+		    	console.log( "HttpServerBase.prototype.init 4 = " + __dirname );
+		    	console.log( "HttpServerBase.prototype.init 5 = " + require.main.filename );
+		    	console.log( "HttpServerBase.prototype.init 6 = " + require('path').dirname(require.main.filename) );
+		    	console.log( "HttpServerBase.prototype.init 7 = " + require('path').dirname( value.folderName ) );
 		    	* /
 		    }); 
 	    }
@@ -264,7 +262,7 @@ HttpServerBase.prototype.init = function ( params )	{
 	
 	catch ( err )
 	{
-        this.console.log( "HttpServerBase, init, catch = " + err );
+        console.log( "HttpServerBase, init, catch = " + err );
 	}
 
     return	true;
@@ -272,7 +270,7 @@ HttpServerBase.prototype.init = function ( params )	{
 
 HttpServerBase.prototype.create = function ( params )	{
 	
-	this.console.log( "HttpServerBase.prototype.create not implemented" );
+	console.log( "HttpServerBase.prototype.create not implemented" );
 	return	false;
 };
 
@@ -285,8 +283,8 @@ HttpServerBase.prototype.listen = function ( params )	{
         this.host   = params.host;
         this.port	= params.port;
     
-        //this.console.log( "HttpServerBase, listen, host = " + this.host );
-        //this.console.log( "HttpServerBase, listen, port = " + this.port );
+        //console.log( "HttpServerBase, listen, host = " + this.host );
+        //console.log( "HttpServerBase, listen, port = " + this.port );
 
         if ( typeof this.host !== "undefined" )
 	        this.server	.listen( this.port, this.host );
@@ -299,7 +297,7 @@ HttpServerBase.prototype.listen = function ( params )	{
     catch ( err )
     {
         result = false;        
-        this.console.log( "HttpServerBase, listen, catch = " + err );
+        console.log( "HttpServerBase, listen, catch = " + err );
     }
     
 	return	true;
@@ -311,9 +309,9 @@ HttpServerBase.prototype.readMimeTypes = function ()	{
 	var	mimeTypesFile	= "./" + this.site + "/EXEC-INF/" + "mimeTypes.json";
 	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false" } ).exists;
 	
-	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
-	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
-	//this.console.log( "fileImpTests, testFileImp, site = " + this.site );
+	//console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
+	//console.log( "fileImpTests, testFileImp, exists = " + exists );
+	//console.log( "fileImpTests, testFileImp, site = " + this.site );
 	
 	if ( exists === true )
 	{
@@ -321,29 +319,29 @@ HttpServerBase.prototype.readMimeTypes = function ()	{
 
 		if ( result.contents != "" )
 		{
-			//this.console.log( "fileImpTests, testFileImp, contents = " + result.contents );
+			//console.log( "fileImpTests, testFileImp, contents = " + result.contents );
 			
 			try
 			{
 				result = JSON.parse ( result.contents );
-				//this.console.log( "fileImpTests, testFileImp, contents = " + result );
-				//this.console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes );
-				//this.console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes.length );
+				//console.log( "fileImpTests, testFileImp, contents = " + result );
+				//console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes );
+				//console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes.length );
 				
 				for ( var i = 0; i < result.mimeTypes.length; i++ )
 				{
 			        if ( (result.mimeTypes[ i ].ext in this.mimeTypes.getMimeTypes()) === false )
 			        {
 			        	this.mimeTypes.addMimeType ( result.mimeTypes[ i ].ext, result.mimeTypes[ i ].contentType );
-						//this.console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes[ i ].contentType );
+						//console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes[ i ].contentType );
 			        }
 				}
 				
-				//this.console.log( " " );
+				//console.log( " " );
 			}
 			catch ( err )
 			{
-				this.console.log( "fileImpTests, testFileImp, catch = " + err );
+				console.log( "fileImpTests, testFileImp, catch = " + err );
 			}
 		}
 	}
@@ -389,12 +387,12 @@ HttpServerBase.prototype.isSafe = function ( session )   {
     	//
     	//	Use this software at your own risk.
     	
-	    //this.console.log( ' ' );
-	    //this.console.log( 'this.isSafe 1' );
+	    //console.log( ' ' );
+	    //console.log( 'this.isSafe 1' );
     	
 	    var	pathname = this.getRequestPathname	( session );
 	    
-	    //this.console.log( 'this.isSafe 2 = ' + pathname );
+	    //console.log( 'this.isSafe 2 = ' + pathname );
     	
 	    //	Currently only allow local ip addresses.
     	if ( ServerUtils.isIpAddressAllowed( "127.0.0.1" ) === false )
@@ -415,11 +413,11 @@ HttpServerBase.prototype.isSafe = function ( session )   {
 
     catch ( err )
     {
-	    this.console.log( 'HttpServerBase.prototype.isSafe, catch err = ' + err );
+	    console.log( 'HttpServerBase.prototype.isSafe, catch err = ' + err );
     }
 
-    //this.console.log( "this.isSafe, 3" );
-    //this.console.log( ' ' );
+    //console.log( "this.isSafe, 3" );
+    //console.log( ' ' );
 	
     return	result;
 }
@@ -428,11 +426,11 @@ HttpServerBase.prototype.httpRequestHandler = function ( session )   {
 
     try
     {
-	    //this.console.log( ' ' );
-	    //this.console.log( 'this.httpRequestHandler 1' );
+	    //console.log( ' ' );
+	    //console.log( 'this.httpRequestHandler 1' );
     	
 	    if ( this.isOK( session ) === false )
-	    	this.console.log( "this.httpRequestHandler, isOK = false with: " + this.getErrorMessage( session ) );
+	    	console.log( "this.httpRequestHandler, isOK = false with: " + this.getErrorMessage( session ) );
 	
 	    //  Check to see that the incoming url is not going to cause
         //  any security problems.
@@ -446,7 +444,7 @@ HttpServerBase.prototype.httpRequestHandler = function ( session )   {
         		
         		/*for ( var i = 0; i < 10; i++ )
         		{
-    		        this.console.log( 'this.httpRequestHandler isSafe = ' +
+    		        console.log( 'this.httpRequestHandler isSafe = ' +
     		        		ServerUtils.httpStatus.BadRequest.code + ( ', ' + i ) );
         		}*/
         	}
@@ -454,7 +452,7 @@ HttpServerBase.prototype.httpRequestHandler = function ( session )   {
             {
 		        //	Get the http method: GET, POST, PUT, DELETE, ...
             	var	method	= this.getRequestMethod( session );
-		        //this.console.log( 'this.httpRequestHandler method = ' + method );
+		        //console.log( 'this.httpRequestHandler method = ' + method );
 
             	switch ( method )
             	{
@@ -470,11 +468,11 @@ HttpServerBase.prototype.httpRequestHandler = function ( session )   {
 
     catch ( err )
     {
-	    this.console.log( 'this.httpRequestHandler, catch err = ' + err );
+	    console.log( 'this.httpRequestHandler, catch err = ' + err );
     }
 
-    //this.console.log( "this.httpRequestHandler, 3" );
-    //this.console.log( ' ' );
+    //console.log( "this.httpRequestHandler, 3" );
+    //console.log( ' ' );
 }
 
 HttpServerBase.prototype.writeHead = function ( session, code, contentType, message )	{
@@ -485,8 +483,8 @@ HttpServerBase.prototype.writeHead = function ( session, code, contentType, mess
     if ( typeof contentType === "undefined"  ||  contentType === null )
 	    contentType = this.mimeTypes.getMimeTypes().html;
 
-    //this.console.log( "this.writeHead, code = " 		+ code );
-    //this.console.log( "this.writeHead, contentType = " 	+ contentType );
+    //console.log( "this.writeHead, code = " 		+ code );
+    //console.log( "this.writeHead, contentType = " 	+ contentType );
     
     //  What is the return code that
     //  is being returned to the browser?
@@ -529,23 +527,23 @@ HttpServerBase.prototype.writeHead = function ( session, code, contentType, mess
     }
 }
 
-HttpServerBase.prototype.PUT 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.PUT 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.DELETE 	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.DELETE  ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.HEAD 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.HEAD 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.OPTIONS 	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.OPTIONS ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.CONNECT	= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.CONNECT ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.TRACE 		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.TRACE 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
-HttpServerBase.prototype.PATCH		= function ( session )	{ this.console.log( ' ' ); this.console.log( ServerUtils.methodType.PATCH	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.PUT 		= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.PUT 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.DELETE 	= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.DELETE  ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.HEAD 		= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.HEAD 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.OPTIONS 	= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.OPTIONS ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.CONNECT	= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.CONNECT ); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.TRACE 		= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.TRACE 	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
+HttpServerBase.prototype.PATCH		= function ( session )	{ console.log( ' ' ); console.log( ServerUtils.methodType.PATCH	); this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); }
 
 HttpServerBase.prototype.POST 		= function ( session )	{ 
 
-    //this.console.log( ' ' ); 
-    //this.console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
+    //console.log( ' ' ); 
+    //console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
     //this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); 
 
     try
     {
-	    //this.console.log( ' ' ); 
+	    //console.log( ' ' ); 
 
         //  if This is an ajax request then the file name
         //  will be the ajax prefix "api" in 
@@ -558,19 +556,19 @@ HttpServerBase.prototype.POST 		= function ( session )	{
         var apiLower    = apiAnyCase.toLowerCase	();
 
 
-        //this.console.log( "this.POST, 1a = " + pathname );
-        //this.console.log( "this.POST, 1b = " + apiAnyCase );
-        //this.console.log( "this.POST, 1c = " + apiLower );
+        //console.log( "this.POST, 1a = " + pathname );
+        //console.log( "this.POST, 1b = " + apiAnyCase );
+        //console.log( "this.POST, 1c = " + apiLower );
         
 
         if ( this.noExtensionHandler === null  ||  this.anyUtils.isFunction( this.noExtensionHandler ) === false )
         {
-            //this.console.log( "this.POST, 5, ext = " + ext );
+            //console.log( "this.POST, 5, ext = " + ext );
             statusCode  = ServerUtils.httpStatus.BadRequest.code;
         }
         else
         {
-            //this.console.log( "this.POST, 6" );
+            //console.log( "this.POST, 6" );
 
             //  See nodeLive.js
             statusCode  = this.noExtensionHandler ( { "sendFile":AnyUtils.useThis ( this, "__localSendfile" ), "pathname":pathname, "session":session } );
@@ -579,17 +577,17 @@ HttpServerBase.prototype.POST 		= function ( session )	{
 
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
-		    //this.console.log( 'this.POST 7, statusCode = '    + statusCode    );
+		    //console.log( 'this.POST 7, statusCode = '    + statusCode    );
 		
 	    	this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'this.POST 8' );
+	    //console.log( 'this.POST 8' );
     }
 
     catch ( err )
     {
-	    this.console.log( 'this.POST, catch err = ' + err );
+	    console.log( 'this.POST, catch err = ' + err );
     }
 }
 
@@ -597,7 +595,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
 
     try
     {
-	    //this.console.log( ' ' ); 
+	    //console.log( ' ' ); 
 
         //  if This is an ajax request then the file name
         //  will be the ajax prefix "api" in 
@@ -610,9 +608,9 @@ HttpServerBase.prototype.GET     = function ( session )	{
         var apiLower    = apiAnyCase.toLowerCase	();
 
 
-        //this.console.log( "this.GET, 1a = " + pathname );
-        //this.console.log( "this.GET, 1b = " + apiAnyCase );
-        //this.console.log( "this.GET, 1c = " + apiLower );
+        //console.log( "this.GET, 1a = " + pathname );
+        //console.log( "this.GET, 1b = " + apiAnyCase );
+        //console.log( "this.GET, 1c = " + apiLower );
         
 
         //  This is not a rest api it must be
@@ -630,8 +628,8 @@ HttpServerBase.prototype.GET     = function ( session )	{
         if ( pathname.indexOf( "/" ) !== 0 )
 		    pathname = "/" + pathname;
 	
-        //this.console.log( "this.GET, 4, this.site = " + this.site );
-        //this.console.log( "this.GET, 4, pathname = " + pathname );
+        //console.log( "this.GET, 4, this.site = " + this.site );
+        //console.log( "this.GET, 4, pathname = " + pathname );
 
 	    //  If this implementation doesn't handle
         //  this type of file.
@@ -640,7 +638,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
         {
             if ( this.noExtensionHandler === null  ||  this.anyUtils.isFunction( this.noExtensionHandler ) === false )
             {
-                //this.console.log( "this.GET, 5, ext = " + ext );
+                //console.log( "this.GET, 5, ext = " + ext );
                 statusCode  = ServerUtils.httpStatus.BadRequest.code;
             }
             else
@@ -652,7 +650,7 @@ HttpServerBase.prototype.GET     = function ( session )	{
         }
         else
 	    {
-            //this.console.log( "this.GET, 6 = " + ext );
+            //console.log( "this.GET, 6 = " + ext );
 
             var params =
             {
@@ -669,20 +667,20 @@ HttpServerBase.prototype.GET     = function ( session )	{
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
-		    //this.console.log( 'this.GET 7, statusCode = '    + statusCode    );
+		    //console.log( 'this.GET 7, statusCode = '    + statusCode    );
 	    	this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'this.GET 9' );
+	    //console.log( 'this.GET 9' );
     }
 
     catch ( err )
     {
-	    this.console.log( 'HttpServerBase.GET, catch err = ' + err );
+	    console.log( 'HttpServerBase.GET, catch err = ' + err );
     }
 
-    //this.console.log( "this.GET, 10" );
-    //this.console.log( ' ' );
+    //console.log( "this.GET, 10" );
+    //console.log( ' ' );
 }
 
 HttpServerBase.prototype.   __localSendfile    = function ( params )	{
@@ -702,7 +700,7 @@ HttpServerBase.prototype.   __localSendfile    = function ( params )	{
             params.pathname = this.site + params.pathname;
         }
 
-        //this.console.log( "__localSendfile, 1, params.pathname = " + params.pathname );
+        //console.log( "__localSendfile, 1, params.pathname = " + params.pathname );
 
         //  sendFile() will process the file asynchronously so
         //  the result must be assumed to be true.
@@ -719,7 +717,7 @@ HttpServerBase.prototype.   __localSendfile    = function ( params )	{
 
     catch ( err )
     {
-        this.console.log( "__localSendfile, catch, err = " + err );
+        console.log( "__localSendfile, catch, err = " + err );
     }
 
     return statusCode;
@@ -727,22 +725,22 @@ HttpServerBase.prototype.   __localSendfile    = function ( params )	{
 
 HttpServerBase.prototype.end = function ( params )	{
 	
-	this.console.log( 'HttpServerBase, end, not implemented ' );
+	console.log( 'HttpServerBase, end, not implemented ' );
 };
 
 HttpServerBase.prototype.setHeader = function ( params )	{
 	
-	this.console.log( 'HttpServerBase, setHeader, not implemented ' );
+	console.log( 'HttpServerBase, setHeader, not implemented ' );
 };
 
 HttpServerBase.prototype.statusCode = function ( params )	{
 	
-	this.console.log( 'HttpServerBase, statusCode, not implemented ' );
+	console.log( 'HttpServerBase, statusCode, not implemented ' );
 };
 
 HttpServerBase.prototype.sendFile = function ( session, params, successCallback, errorCallback )	{
 	
-	this.console.log( 'HttpServerBase, sendfile, not implemented ' );
+	console.log( 'HttpServerBase, sendfile, not implemented ' );
 };
 
 HttpServerBase.prototype.getRequestMethod = function ( session )	{
@@ -810,14 +808,14 @@ module.exports = HttpServerBase;
 /*
 HttpServerBase.prototype.POST_orig 		= function ( session )	{ 
 
-    //this.console.log( ' ' ); 
-    //this.console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
+    //console.log( ' ' ); 
+    //console.log( "this.POST  method = "   + ServerUtils.methodType.POST ); 
     //this.writeHead ( session, ServerUtils.httpStatus.NotImplemented.code ); 
 
 
     try
     {
-	    //this.console.log( ' ' ); 
+	    //console.log( ' ' ); 
 
         //  if This is an ajax request then the file name
         //  will be the ajax prefix "api" in 
@@ -830,9 +828,9 @@ HttpServerBase.prototype.POST_orig 		= function ( session )	{
         var apiLower    = apiAnyCase.toLowerCase	();
 
 
-        //this.console.log( "this.POST, 1a = " + pathname );
-        //this.console.log( "this.POST, 1b = " + apiAnyCase );
-        //this.console.log( "this.POST, 1c = " + apiLower );
+        //console.log( "this.POST, 1a = " + pathname );
+        //console.log( "this.POST, 1b = " + apiAnyCase );
+        //console.log( "this.POST, 1c = " + apiLower );
         
 
         //  Look for "myApi"  or  "myapi"
@@ -847,7 +845,7 @@ HttpServerBase.prototype.POST_orig 		= function ( session )	{
             //  module.exports = function ()	{
             //      this.init = function ( params )	{
             //
-            //this.console.log( "this.POST, 2 = " + apiAnyCase );
+            //console.log( "this.POST, 2 = " + apiAnyCase );
             statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
             { 
                 "system":       this.system, 
@@ -863,17 +861,17 @@ HttpServerBase.prototype.POST_orig 		= function ( session )	{
 
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
-		    //this.console.log( 'this.POST 7, statusCode = '    + statusCode    );
+		    //console.log( 'this.POST 7, statusCode = '    + statusCode    );
 		
 	    	this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'this.POST 9' );
+	    //console.log( 'this.POST 9' );
     }
 
     catch ( err )
     {
-	    this.console.log( 'this.GET, catch err = ' + err );
+	    console.log( 'this.GET, catch err = ' + err );
     }
 
 }
@@ -885,7 +883,7 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
 
     try
     {
-	    //this.console.log( ' ' ); 
+	    //console.log( ' ' ); 
 
         //  if This is an ajax request then the file name
         //  will be the ajax prefix "api" in 
@@ -898,9 +896,9 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
         var apiLower    = apiAnyCase.toLowerCase	();
 
 
-        //this.console.log( "this.GET, 1a = " + pathname );
-        //this.console.log( "this.GET, 1b = " + apiAnyCase );
-        //this.console.log( "this.GET, 1c = " + apiLower );
+        //console.log( "this.GET, 1a = " + pathname );
+        //console.log( "this.GET, 1b = " + apiAnyCase );
+        //console.log( "this.GET, 1c = " + apiLower );
         
 
         //  If some rest api's have been defined.
@@ -916,7 +914,7 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
             //  module.exports = function ()	{
             //      this.init = function ( params )	{
             //
-            //this.console.log( "this.GET, 2 = " + apiAnyCase );
+            //console.log( "this.GET, 2 = " + apiAnyCase );
             statusCode = this.restHandlers[ apiAnyCase ].execute   ( 
             { 
                 "system":       this.system, 
@@ -929,7 +927,7 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
                 "defaultValue": ServerUtils.httpStatus.InternalServerError.code
             } ).statusCode;
 
-            //this.console.log( "this.GET, 3 = " + statusCode );
+            //console.log( "this.GET, 3 = " + statusCode );
         }
 
         else
@@ -949,8 +947,8 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
             if ( pathname.indexOf( "/" ) !== 0 )
 		        pathname = "/" + pathname;
 	
-            //this.console.log( "this.GET, 4, this.site = " + this.site );
-            //this.console.log( "this.GET, 4, pathname = " + pathname );
+            //console.log( "this.GET, 4, this.site = " + this.site );
+            //console.log( "this.GET, 4, pathname = " + pathname );
 
             //  localSendfile can be called from users of Exec
             //  when they want to allow users to make requests
@@ -974,7 +972,7 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
                     params.pathname = site + params.pathname;
                 }
 
-                //self.console.log( "localSendfile, 1, params.pathname = " + params.pathname );
+                //console.log( "localSendfile, 1, params.pathname = " + params.pathname );
 
                 //  sendFile() will process the file asynchronously so
                 //  the result must be assumed to be true.
@@ -992,14 +990,14 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
                 if ( this.noExtensionHandler === null  ||  
                      this.anyUtils.isFunction( this.noExtensionHandler ) === false )
                 {
-                    //this.console.log( "this.GET, 5, ext = " + ext );
+                    //console.log( "this.GET, 5, ext = " + ext );
                     statusCode  = ServerUtils.httpStatus.BadRequest.code;
                 }
                 else
                 {
-                    //this.console.log( "this.GET, 5, pathname = " + pathname );
-                    //this.console.log( "this.GET, 5, localSendfile = " + localSendfile );
-                    //this.console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
+                    //console.log( "this.GET, 5, pathname = " + pathname );
+                    //console.log( "this.GET, 5, localSendfile = " + localSendfile );
+                    //console.log( "this.GET, 5, this.noExtensionHandler = " + this.noExtensionHandler );
 
                     //  See kevinRichardPastorino_s.js
                     //statusCode  = this.noExtensionHandler ( { "sendFile":localSendfile, "pathname":pathname, "session":session } );
@@ -1008,7 +1006,7 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
             }
             else
 	        {
-                //this.console.log( "this.GET, 6 = " + ext );
+                //console.log( "this.GET, 6 = " + ext );
 
                 var params =
                 {
@@ -1030,19 +1028,19 @@ HttpServerBase.prototype.GET_orig     = function ( session )	{
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
-		    //this.console.log( 'this.GET 7, statusCode = '    + statusCode    );
+		    //console.log( 'this.GET 7, statusCode = '    + statusCode    );
 	    	this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'this.GET 9' );
+	    //console.log( 'this.GET 9' );
     }
 
     catch ( err )
     {
-	    this.console.log( 'HttpServerBase.GET, catch err = ' + err );
+	    console.log( 'HttpServerBase.GET, catch err = ' + err );
     }
 
-    //this.console.log( "this.GET, 10" );
-    //this.console.log( ' ' );
+    //console.log( "this.GET, 10" );
+    //console.log( ' ' );
 }
 */

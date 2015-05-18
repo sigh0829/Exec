@@ -35,7 +35,6 @@ var AnyUtils	= require( '../../../Libs/Any/execAnyUtils.js'			).AnyUtils;
 function SockJsServerBase ()
 {
     this.system     = null;
-	this.console	= null;
 	this.server		= null;
     this.httpImp    = null;
 	
@@ -44,7 +43,6 @@ function SockJsServerBase ()
 	//	https://www.polymer-project.org/
 	this.site	    = "Sites/TestForm";
 	
-	this.console	= null;
 	this.sock		= null;
 	
     this.anyUtils	= new AnyUtils	();
@@ -70,7 +68,7 @@ SockJsServerBase.prototype.execute = function ( params )	{
 
     try
     {
-        //this.console.log( "sockJsServerBase, execute, 1 = " );
+        //console.log( "sockJsServerBase, execute, 1 = " );
     	
         jsonResult  [ params.returnIn ] = params.defaultValue;
 
@@ -78,7 +76,7 @@ SockJsServerBase.prototype.execute = function ( params )	{
             jsonResult  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
-            //this.console.log( "sockJsServerBase, execute, 2 = " );
+            //console.log( "sockJsServerBase, execute, 2 = " );
 
 	        switch ( params.job )
 	        {
@@ -94,7 +92,7 @@ SockJsServerBase.prototype.execute = function ( params )	{
 		        default:
                 {
                     jsonResult  [ params.returnIn ] = params.defaultValue;
-                    //this.console.log ( "sockJsServerBase, execute, default = " + params.job );
+                    //console.log ( "sockJsServerBase, execute, default = " + params.job );
                     break;
                 }
 	        }
@@ -103,11 +101,11 @@ SockJsServerBase.prototype.execute = function ( params )	{
 
     catch ( err )
     {
-    	this.console.log( "sockJsServerBase, execute, catch err = " + err );
+    	console.log( "sockJsServerBase, execute, catch err = " + err );
         jsonResult  [ params.returnIn ] = params.defaultValue;
     }
 
-    //this.console.log( "sockJsServerBase, execute, 4 = " + jsonResult[ params.returnIn ] );
+    //console.log( "sockJsServerBase, execute, 4 = " + jsonResult[ params.returnIn ] );
     return jsonResult;
 };
 
@@ -125,7 +123,6 @@ SockJsServerBase.prototype.getSystemInfo = function ( params )
         {
     	    this.system     = params.system;
 
-            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
             this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
             this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
             this.httpImp    = this.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
@@ -135,16 +132,16 @@ SockJsServerBase.prototype.getSystemInfo = function ( params )
         //
         //  Vertx doesn't provide a built in console.
         //  So, it needs to be passed in from vertxConfig.js 
-        //if ( this.console === null )
-    	  //  this.console = params.console;
+        //if ( console === null )
+    	  //  console = params.console;
     	
         //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
+        //console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
+        //console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
 
         result = true;
 
-        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
+        //console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }
 
     catch ( err )
@@ -203,7 +200,7 @@ SockJsServerBase.prototype.init = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( "SockJsServerBase.prototype.init catch = " + err );
+		console.log( "SockJsServerBase.prototype.init catch = " + err );
 	}
 	
 	return	result;
@@ -225,9 +222,9 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 	var	mimeTypesFile	= "./" + this.site + "/exec.config/" + "mimeTypes.json";
 	var	exists 			= this.fileImp  .execute	( { "system":this.system, "job":"getInfo", "get":"exists", "pathname":mimeTypesFile, "returnIn": "exists", "defaultValue": "false" } ).exists;
 	
-	//this.console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
-	//this.console.log( "fileImpTests, testFileImp, exists = " + exists );
-	//this.console.log( "fileImpTests, testFileImp, site = " + this.site );
+	//console.log( "fileImpTests, testFileImp, mimeTypesFile = " + mimeTypesFile );
+	//console.log( "fileImpTests, testFileImp, exists = " + exists );
+	//console.log( "fileImpTests, testFileImp, site = " + this.site );
 	
 	if ( exists === true )
 	{
@@ -235,29 +232,29 @@ SockJsServerBase.prototype.readMimeTypes = function ( params )	{
 
 		if ( result.contents != "" )
 		{
-			//this.console.log( "fileImpTests, testFileImp, contents = " + result.contents );
+			//console.log( "fileImpTests, testFileImp, contents = " + result.contents );
 			
 			try
 			{
 				result = JSON.parse ( result.contents );
-				//this.console.log( "fileImpTests, testFileImp, contents = " + result );
-				//this.console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes );
-				//this.console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes.length );
+				//console.log( "fileImpTests, testFileImp, contents = " + result );
+				//console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes );
+				//console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes.length );
 				
 				for ( var i = 0; i < result.mimeTypes.length; i++ )
 				{
 			        if ( (result.mimeTypes[ i ].ext in this.mimeTypes.getMimeTypes()) === false )
 			        {
 			        	this.mimeTypes.addMimeType ( result.mimeTypes[ i ].ext, result.mimeTypes[ i ].contentType );
-						//this.console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes[ i ].contentType );
+						//console.log( "fileImpTests, testFileImp, contents = " + result.mimeTypes[ i ].contentType );
 			        }
 				}
 				
-				//this.console.log( " " );
+				//console.log( " " );
 			}
 			catch ( err )
 			{
-				this.console.log( "fileImpTests, testFileImp, catch = " + err );
+				console.log( "fileImpTests, testFileImp, catch = " + err );
 			}
 		}
 	}
@@ -267,8 +264,8 @@ SockJsServerBase.prototype.requestHandler = function ( sock, method, data )   {
 
     try
     {
-    	//this.console.log( ' ' );
-    	//this.console.log( 'SockJsServerBase.prototype.requestHandler 1' );
+    	//console.log( ' ' );
+    	//console.log( 'SockJsServerBase.prototype.requestHandler 1' );
     	
         var	session	            = {};
  		    session.sock		= sock;
@@ -289,17 +286,17 @@ SockJsServerBase.prototype.requestHandler = function ( sock, method, data )   {
 
     catch ( err )
     {
-    	this.console.log( 'sockJsServerBase, this.requestHandler, catch err = ' + err );
+    	console.log( 'sockJsServerBase, this.requestHandler, catch err = ' + err );
     }
 
-    //this.console.log( "this.requestHandler, 3" );
-    //this.console.log( ' ' );
+    //console.log( "this.requestHandler, 3" );
+    //console.log( ' ' );
 };
 
 SockJsServerBase.prototype.WriteToClient	= function ( session )	{
     	
-	//this.console.log( ' ' );
-	//this.console.log( "SockJsServerBase.prototype.WriteToClient" );
+	//console.log( ' ' );
+	//console.log( "SockJsServerBase.prototype.WriteToClient" );
     
     var statusCode = this.appHandler.execute   ( 
     { 
@@ -317,7 +314,7 @@ SockJsServerBase.prototype.WriteToClient	= function ( session )	{
 	
     if ( statusCode !== ServerUtils.httpStatus.OK.code )
     {
-	    //this.console.log( 'sockJsServerBase, this.ReadFromClient 7, statusCode = '    + statusCode    );
+	    //console.log( 'sockJsServerBase, this.ReadFromClient 7, statusCode = '    + statusCode    );
     	//this.writeHead   ( session, statusCode );
     }
 };
@@ -326,8 +323,8 @@ SockJsServerBase.prototype.ConnectionOpened     = function ( session )	{
 	
     try
     {
-    	//this.console.log( ' ' ); 
-    	//this.console.log( "SockJsServerBase.prototype.ConnectionOpened");
+    	//console.log( ' ' ); 
+    	//console.log( "SockJsServerBase.prototype.ConnectionOpened");
 
         var statusCode = this.appHandler.execute   ( 
         { 
@@ -345,33 +342,33 @@ SockJsServerBase.prototype.ConnectionOpened     = function ( session )	{
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
-		    //this.console.log( 'sockJsServerBase, this.ConnectionOpened 7, statusCode = '    + statusCode    );
+		    //console.log( 'sockJsServerBase, this.ConnectionOpened 7, statusCode = '    + statusCode    );
 	    	//this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'sockJsServerBase, this.ConnectionOpened 9' );
+	    //console.log( 'sockJsServerBase, this.ConnectionOpened 9' );
     }
 
     catch ( err )
     {
-    	this.console.log( 'sockJsServerBase, this.ConnectionOpened, catch err = ' + err );
+    	console.log( 'sockJsServerBase, this.ConnectionOpened, catch err = ' + err );
     }
 
-    //this.console.log( "sockJsServerBase, this.ConnectionOpened, 10" );
-    //this.console.log( ' ' );
+    //console.log( "sockJsServerBase, this.ConnectionOpened, 10" );
+    //console.log( ' ' );
 };
 
 SockJsServerBase.prototype.writeData = function ( session )	{
 	
-	this.console.log( 'SockJsServerBase.prototype.writeData, not implemented' );
+	console.log( 'SockJsServerBase.prototype.writeData, not implemented' );
 };
 
 SockJsServerBase.prototype.ReadFromClient     = function ( session )	{
 	
     try
     {
-    	//this.console.log( ' ' ); 
-    	//this.console.log( "SockJsServerBase.prototype.ReadFromClient");
+    	//console.log( ' ' ); 
+    	//console.log( "SockJsServerBase.prototype.ReadFromClient");
 
         var statusCode = this.appHandler.execute   ( 
         { 
@@ -389,20 +386,20 @@ SockJsServerBase.prototype.ReadFromClient     = function ( session )	{
 	
 	    if ( statusCode !== ServerUtils.httpStatus.OK.code )
 	    {
-		    //this.console.log( 'sockJsServerBase, this.ReadFromClient 7, statusCode = '    + statusCode    );
+		    //console.log( 'sockJsServerBase, this.ReadFromClient 7, statusCode = '    + statusCode    );
 	    	//this.writeHead   ( session, statusCode );
 	    }
 
-	    //this.console.log( 'sockJsServerBase, this.ReadFromClient 9' );
+	    //console.log( 'sockJsServerBase, this.ReadFromClient 9' );
     }
 
     catch ( err )
     {
-    	this.console.log( 'sockJsServerBase, this.ReadFromClient, catch err = ' + err );
+    	console.log( 'sockJsServerBase, this.ReadFromClient, catch err = ' + err );
     }
 
-    //this.console.log( "sockJsServerBase, this.ReadFromClient, 10" );
-    //this.console.log( ' ' );
+    //console.log( "sockJsServerBase, this.ReadFromClient, 10" );
+    //console.log( ' ' );
 };
 
 SockJsServerBase.prototype.getErrorMessage = function ( session )	{

@@ -51,20 +51,14 @@ NodeHttpServer.prototype.execute = function ( params )
 
     try
     {
-    	if ( this.console === null )
-    	{
-    		this.console = params.console;
-            this.console.log( "NodeServerBase, execute, 00 = " );
-    	}
-    	
         //  Vertx doesn't provide a built in console.
         //  So, it needs to be passed in from vertxConfig.js 
-        this.console	= params.console;
-        //this.console.log( "HttpServerBase, execute, 1 = " );
+        console	= params.console;
+        //console.log( "HttpServerBase, execute, 1 = " );
 
         jsonResult  [ params.returnIn ] = params.defaultValue;
 
-        //this.console.log( "NodeHttpServer, execute, 1 = " );
+        //console.log( "NodeHttpServer, execute, 1 = " );
 
         if ( Version.versionOK( params.v, 1, 0, 0 ) === false )
         {
@@ -73,7 +67,7 @@ NodeHttpServer.prototype.execute = function ( params )
         }
         else
         {
-            //this.console.log( "NodeHttpServer, execute, 2 = " );
+            //console.log( "NodeHttpServer, execute, 2 = " );
 
 	        //  These are the functions that vertxHttpServer provides to switch.js
 	        switch ( params.job )
@@ -91,11 +85,11 @@ NodeHttpServer.prototype.execute = function ( params )
 
     catch ( err )
     {
-        this.console.log( "NodeHttpServer, execute, 3 = " + err );
+        console.log( "NodeHttpServer, execute, 3 = " + err );
         jsonResult  [ params.returnIn ] = params.defaultValue;
     }
 
-    //this.console.log( "NodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
+    //console.log( "NodeHttpServer, execute, 4 = " + jsonResult[ params.returnIn ] );
     return jsonResult;
 };
 */
@@ -121,7 +115,7 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 	{
 		//	http://eloquentjavascript.net/20_node.html
 		
-		//this.console.log( 'NodeHttpServer.prototype.sendfile, 1 = ' );
+		//console.log( 'NodeHttpServer.prototype.sendfile, 1 = ' );
 
         //  See HttpServerBase.prototype.GET() where sendFile is called.
         if ( typeof params.message !== "undefined"  &&  params.message === true )
@@ -130,20 +124,20 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 			if ( typeof successCallback === "function" )
 				successCallback	();
 				
-		    //this.console.log( 'NodeHttpServer.prototype.sendfile, 2 = ' + params.content );
+		    //console.log( 'NodeHttpServer.prototype.sendfile, 2 = ' + params.content );
 
     	    this.execute( { "session": session, "job": "end", "data": { "message": params.content } } );
         }
 
         else
         {
-		    //this.console.log( 'NodeHttpServer.prototype.sendfile, 3 = ' + params.pathname );
+		    //console.log( 'NodeHttpServer.prototype.sendfile, 3 = ' + params.pathname );
 
 		    fs.stat( params.pathname, function( error, stats )
 		    {
 		        if ( error && error.code == "ENOENT" )
 		        {
-				    //this.console.log( 'NodeHttpServer.prototype.sendfile, 4 = ' + "File not found" );
+				    //console.log( 'NodeHttpServer.prototype.sendfile, 4 = ' + "File not found" );
 				
 				    if ( typeof errorCallback === "function" )
 					    errorCallback( 404, "File not found" );
@@ -151,7 +145,7 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 		    
 		        else if ( error )
 		        {
-				    //this.console.log( 'NodeHttpServer.prototype.sendfile, 5 = ' + error.toString() );
+				    //console.log( 'NodeHttpServer.prototype.sendfile, 5 = ' + error.toString() );
 				
 				    if ( typeof errorCallback === "function" )
 					    errorCallback( 500, error.toString() );
@@ -171,8 +165,8 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 		    
 		        else
 		        {
-		    	    //this.console.log( 'NodeHttpServer.prototype.sendfile, 6 = ' );
-		    	    //this.console.log( 'NodeHttpServer.prototype.sendfile, 4a = ' + stats.size );
+		    	    //console.log( 'NodeHttpServer.prototype.sendfile, 6 = ' );
+		    	    //console.log( 'NodeHttpServer.prototype.sendfile, 4a = ' + stats.size );
 		    	
 				    var body = fs.createReadStream( params.pathname );
 
@@ -182,12 +176,12 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 				
 				    if ( body && body.pipe )
 				    {
-					    //this.console.log( 'NodeHttpServer.prototype.sendfile, 7 = ' );
+					    //console.log( 'NodeHttpServer.prototype.sendfile, 7 = ' );
 				        body.pipe( session.response );
 				    }
 				    else
 				    {
-					    //this.console.log( 'NodeHttpServer.prototype.sendfile, 8 = ' );
+					    //console.log( 'NodeHttpServer.prototype.sendfile, 8 = ' );
 					    session.response.end( body );			
 				    }
 		        }
@@ -197,23 +191,23 @@ NodeHttpServer.prototype.sendFile = function ( session, params, successCallback,
 	
 	catch ( err )
 	{
-		this.console.log( 'NodeHttpServer.prototype.sendfile, catch err = ' + err + ', filename = ' + pathname );
+		console.log( 'NodeHttpServer.prototype.sendfile, catch err = ' + err + ', filename = ' + pathname );
 	}
 };
 
 NodeHttpServer.prototype.create = function ( params )	{
 	
-	//this.console.log( "NodeHttpServer.prototype.create 1" );
+	//console.log( "NodeHttpServer.prototype.create 1" );
 
 	var	self	= this;
 	
-	//this.console.log( "NodeHttpServer.prototype.create 2" );
+	//console.log( "NodeHttpServer.prototype.create 2" );
 
 	this.server	= http.createServer( function (request, res)	{
 		
 		try
 		{
-			//self.console.log( "NodeHttpServer.prototype.create 3" );
+			//console.log( "NodeHttpServer.prototype.create 3" );
 			
             //  When a request comes in create a json
             //  object to hold session info and pass
@@ -223,16 +217,16 @@ NodeHttpServer.prototype.create = function ( params )	{
 				session.request		= request;
 				session.response	= res;
 			
-			//this.console.log( "NodeHttpServer.prototype.create 7" );
+			//console.log( "NodeHttpServer.prototype.create 7" );
 
 			self.httpRequestHandler ( session );
 			
-			//this.console.log( "NodeHttpServer.prototype.create 8" );
+			//console.log( "NodeHttpServer.prototype.create 8" );
 		}
 		
 		catch ( err )
 		{
-			self.console.log( 'NodeHttpServer.prototype.create, catch err = ' + err );
+			console.log( 'NodeHttpServer.prototype.create, catch err = ' + err );
 			
 			var	session				= {};
 				session.boolResult	= false;
@@ -241,14 +235,14 @@ NodeHttpServer.prototype.create = function ( params )	{
 				session.url			= url;
 				session.message		= err;
 		
-			//this.console.log( "NodeHttpServer.prototype.create 10" );
+			//console.log( "NodeHttpServer.prototype.create 10" );
 			
 			self.httpRequestHandler ( session );
 			
-			//this.console.log( "NodeHttpServer.prototype.create 11" );
+			//console.log( "NodeHttpServer.prototype.create 11" );
 		}
 
-		//this.console.log( " " );
+		//console.log( " " );
 
 	//}).listen( 7777, '127.0.0.1' );
 	});//.listen( port, host );

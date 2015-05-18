@@ -35,7 +35,6 @@ module.exports = function ()	{
     	luo .sock	    = null;
     	luo .data	    = "";
     	luo .system     = null;
-        luo .console    = null;
         luo .fileImp    = null;
         luo .httpImp    = null;
         luo .Version    = null;
@@ -54,18 +53,17 @@ module.exports = function ()	{
             {
     	        luo.system     = params.system;
 
-                luo.console    = luo.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
                 luo.fileImp    = luo.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
                 luo.Version    = luo.system.execute ({ "get": "Version",  "returnIn": "Version",  "defaultValue": null }).Version;
                 luo.httpImp    = luo.system.execute ({ "get": "httpImp",  "returnIn": "httpImp",  "defaultValue": null }).httpImp;
             }
             jsonResult  [ params.returnIn ] = params.errorValue;
 
-            //luo.console .log( "sockJsEcho1, execute, 1 = " );
+            //console .log( "sockJsEcho1, execute, 1 = " );
 
             var	method  = params.method;
                 
-            //luo.console .log( "sockJsEcho1, execute, 3 = " + method );
+            //console .log( "sockJsEcho1, execute, 3 = " + method );
 
             if ( method === params.methodType.NAME )
             {
@@ -83,13 +81,13 @@ module.exports = function ()	{
                     
                 //jsonResult  [ params.returnIn ]	= params.successValue;
 
-                //luo.console .log( "sockJsEcho1, execute, 4 = " + luo.data );
+                //console .log( "sockJsEcho1, execute, 4 = " + luo.data );
                     
                 //	Since this is echo call write immediately.
                 params.method	= params.methodType.WriteToClient;
                 jsonResult [ params.returnIn ]	= this.execute ( params );
 
-                //luo.console .log( "sockJsEcho1, execute, 5 = " + luo.data );
+                //console .log( "sockJsEcho1, execute, 5 = " + luo.data );
             }
                     
             else if ( method === params.methodType.WriteToClient )
@@ -99,7 +97,7 @@ module.exports = function ()	{
                 //jsonResult  [ params.returnIn ] = luo.data; 
                 //jsonResult  [ params.returnIn ] = successValue;
 
-                //luo.console .log( "sockJsEcho1, execute, 6 = " + luo.data );
+                //console .log( "sockJsEcho1, execute, 6 = " + luo.data );
                     
                 var result	= params.socketJsImp.execute
                 ({ 
@@ -112,7 +110,7 @@ module.exports = function ()	{
                     "errorValue": 	params.errorValue
                 }).result;
                 	
-                //luo.console .log( "sockJsEcho1, execute, 7 = " + luo.data );
+                //console .log( "sockJsEcho1, execute, 7 = " + luo.data );
                     
                 jsonResult  [ params.returnIn ]	= result;
             }
@@ -120,11 +118,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            luo.console .log( "sockJsEcho1, execute, catch = " + err );
+            console .log( "sockJsEcho1, execute, catch = " + err );
             jsonResult  [ params.returnIn ] = params.errorValue;
         }
 
-        //luo.console .log( "sockJsEcho1, execute, 8 = " + jsonResult[ params.returnIn ] );
+        //console .log( "sockJsEcho1, execute, 8 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 };

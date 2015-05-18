@@ -75,7 +75,7 @@ IojsSockJsServer.prototype.writeData = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'IojsSockJsServer, writeData, catch err = ' + err );
+		console.log( 'IojsSockJsServer, writeData, catch err = ' + err );
 	}
 	
 	return	result;
@@ -87,12 +87,12 @@ IojsSockJsServer.prototype.create = function ( params )	{
 	
 	try
 	{
-		//this.console.log( "IojsSockJsServer.create 1 = " );
+		//console.log( "IojsSockJsServer.create 1 = " );
 		
 		this.httpServer	= this.httpImp .execute ( { "system":this.system, "job": "getServer",  
 														"returnIn": "server", "defaultValue": null } ).server;
 	
-		//this.console.log		( "IojsSockJsServer.create 2 = " + this.httpServer );
+		//console.log		( "IojsSockJsServer.create 2 = " + this.httpServer );
 	    this.sjsServer	= sockjs.createServer();
 
 		result	= ServerUtils.httpStatus.OK.code;
@@ -100,7 +100,7 @@ IojsSockJsServer.prototype.create = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'IojsSockJsServer, create, catch err = ' + err );
+		console.log( 'IojsSockJsServer, create, catch err = ' + err );
 	}
 	
 	return	result
@@ -114,13 +114,13 @@ IojsSockJsServer.prototype.install = function ( params )	{
 	{
 		var	self = this;
 			
-		//this.console.log( "IojsSockJsServer.install 1 = " + this.appName );
+		//console.log( "IojsSockJsServer.install 1 = " + this.appName );
 			
 		this.sjsServer.installHandlers( this.httpServer, { prefix: "/" + this.appName } );
 		this.sjsServer.on( 'connection', function( sock ) {
 			
-			//self.console.log( "IojsSockJsServer.install 1a = " + sock );
-			//self.console.log( "IojsSockJsServer.install 1a = " + sock.write );
+			//console.log( "IojsSockJsServer.install 1a = " + sock );
+			//console.log( "IojsSockJsServer.install 1a = " + sock.write );
 			
 	    	self.sock = sock;
             self.requestHandler ( self.sock, "ConnectionOpened", "" );
@@ -138,7 +138,7 @@ IojsSockJsServer.prototype.install = function ( params )	{
 	
 	catch ( err )
 	{
-		this.console.log( 'IojsSockJsServer, install, catch 2 err = ' + err );
+		console.log( 'IojsSockJsServer, install, catch 2 err = ' + err );
 	}
 	
 	return	result

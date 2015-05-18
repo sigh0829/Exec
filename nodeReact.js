@@ -98,7 +98,6 @@ function setupSystem    ( system )  {
                 {
                     default:            break;
 
-		            case "console":	    jsonResult  [ params.returnIn ] = console;      break;
 		            case "fileImp":	    jsonResult  [ params.returnIn ] = fileImp;      break;
 		            case "httpImp":	    jsonResult  [ params.returnIn ] = httpImp;      break;
 		            case "site":		jsonResult  [ params.returnIn ] = site;         break;

@@ -41,7 +41,6 @@
 function FileImpBase	()
 {
     this.system     = null;
-	this.console	= null;
 	this.server		= null;
 };
 
@@ -65,13 +64,13 @@ FileImpBase.prototype.execute = function ( params )	{
         result  [ params.returnIn ] = params.defaultValue;
 
         //  Must call getSystemInfo() first
-        //  this.console.log( "FileImpBase.prototype, execute, 1 = " );
+        //  console.log( "FileImpBase.prototype, execute, 1 = " );
 
         if ( this.getSystemInfo( params ) === false )
             result  [ params.returnIn ] = this.getVersionErrorMessage ( params );
         else
         {
-            //this.console.log( "FileImpBase.prototype, execute, 2 = " );
+            //console.log( "FileImpBase.prototype, execute, 2 = " );
 
 	        //  These are the functions that vertxHttpServer provides to switch.js
 	        switch ( params.job )
@@ -92,7 +91,7 @@ FileImpBase.prototype.execute = function ( params )	{
                 default:
                 {
                     result	[ params.returnIn ] = params.defaultValue;
-                    this.console .log ( "FileImpBase.prototype, execute, default = " + params.job );
+                    console .log ( "FileImpBase.prototype, execute, default = " + params.job );
                     break;
                 }
 	        }
@@ -101,11 +100,11 @@ FileImpBase.prototype.execute = function ( params )	{
 
     catch ( err )
     {
-        this.console.log( "FileImpBase.prototype, execute, 3 = " + err );
+        console.log( "FileImpBase.prototype, execute, 3 = " + err );
         result  [ params.returnIn ] = params.defaultValue;
     }
 
-    //this.console.log( "FileImpBase.prototype, execute, 4 = " + result[ params.returnIn ] );
+    //console.log( "FileImpBase.prototype, execute, 4 = " + result[ params.returnIn ] );
     return result;
 }
 
@@ -123,18 +122,17 @@ FileImpBase.prototype.getSystemInfo = function ( params )
         {
     	    this.system     = params.system;
 
-            this.console    = this.system.execute ({ "get": "console",  "returnIn": "console",  "defaultValue": null }).console;
             this.fileImp    = this.system.execute ({ "get": "fileImp",  "returnIn": "fileImp",  "defaultValue": null }).fileImp;
             this.site       = this.system.execute ({ "get": "site",     "returnIn": "site",     "defaultValue": null }).site;
         }
     	
         //  This must come after console is defined for vertx systems.
-        //this.console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
-        //this.console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
+        //console.log( "HttpServerBase, getSystemInfo, 1a = " + params.v );
+        //console.log( "HttpServerBase, getSystemInfo, 1b = " + (typeof params.v === "string") );
 
         result = true;
 
-        //this.console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
+        //console.log( "HttpServerBase, getSystemInfo, 2 = " + result );
     }
 
     catch ( err )
@@ -154,21 +152,21 @@ FileImpBase.prototype.getVersionErrorMessage = function ( params )	{
 
 FileImpBase.prototype.getInfo = function ( params )	{
 	
-	this.console.log( 'FileImpBase.prototype, getInfo, not implemented ' );
+	console.log( 'FileImpBase.prototype, getInfo, not implemented ' );
 	
 	return params.defaultValue;
 }
 
 FileImpBase.prototype.readFile = function ( params, options )	{
 	
-	this.console.log( 'FileImpBase.prototype, readFile, not implemented ' );
+	console.log( 'FileImpBase.prototype, readFile, not implemented ' );
 	
 	return params.defaultValue;
 }
 
 FileImpBase.prototype.writeFile = function ( params, options )	{
 	
-	this.console.log( 'FileImpBase.prototype, writeFile, not implemented ' );
+	console.log( 'FileImpBase.prototype, writeFile, not implemented ' );
 	
 	var	result		= {};
     	result.code = 400;
@@ -178,14 +176,14 @@ FileImpBase.prototype.writeFile = function ( params, options )	{
 
 FileImpBase.prototype.readFileList = function ( params )	{
 	
-	this.console.log( 'FileImpBase.prototype, readFileList, not implemented ' );
+	console.log( 'FileImpBase.prototype, readFileList, not implemented ' );
 	
 	return params.defaultValue;
 }
 
 FileImpBase.prototype.createFolder = function ( params )	{
 	
-	this.console.log( 'FileImpBase.prototype, createFolder, not implemented ' );
+	console.log( 'FileImpBase.prototype, createFolder, not implemented ' );
 	
 	var	result		= {};
         result.code = 400;
@@ -195,7 +193,7 @@ FileImpBase.prototype.createFolder = function ( params )	{
 
 FileImpBase.prototype.deleteFile = function ( params )	{
 	
-	this.console.log( 'FileImpBase.prototype, deleteFile, not implemented ' );
+	console.log( 'FileImpBase.prototype, deleteFile, not implemented ' );
 	
 	var	result		= {};
         result.code = 400;
@@ -205,7 +203,7 @@ FileImpBase.prototype.deleteFile = function ( params )	{
 
 FileImpBase.prototype.deleteFolder = function ( params )	{
 	
-	this.console.log( 'FileImpBase.prototype, deleteFolder, not implemented ' );
+	console.log( 'FileImpBase.prototype, deleteFolder, not implemented ' );
 	
 	var	result		= {};
 		result.code = 400;

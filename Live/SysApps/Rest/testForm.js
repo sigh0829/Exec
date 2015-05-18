@@ -36,7 +36,6 @@ module.exports = function ()	{
         luo .message        = "";
         luo .body           = "";
 
-        luo .console        = null;
         luo .fileImp        = null;
         luo .httpImp        = null;
     	luo .system         = null;
@@ -58,7 +57,6 @@ module.exports = function ()	{
             {
     	        luo.system      = params.system;
 
-                luo.console     = luo.system.execute ({ "get": "console",       "returnIn": "console",      "defaultValue": null }).console;
                 luo.fileImp     = luo.system.execute ({ "get": "fileImp",       "returnIn": "fileImp",      "defaultValue": null }).fileImp;
                 luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
 
@@ -77,11 +75,11 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //luo.console.log( "testForm, execute, 1 = " );
+            //console.log( "testForm, execute, 1 = " );
 
             //  execute() should handle all previous versions.
             //  Since this is version 1 there is only one version to handle.
-            //luo.console.log( "testForm, execute, 2 = " );
+            //console.log( "testForm, execute, 2 = " );
 
             //  For now only handling POST and  NAME.
             jsonResult[ params.returnIn ] = luo._execute ( params.session, params.method );
@@ -89,11 +87,11 @@ module.exports = function ()	{
 
         catch ( err )
         {
-            luo.console.log( "testForm, execute, 4 = " + err );
+            console.log( "testForm, execute, 4 = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console.log( "testForm, execute, 5 = " + jsonResult[ params.returnIn ] );
+        //console.log( "testForm, execute, 5 = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -103,16 +101,16 @@ module.exports = function ()	{
 
         method  = method.toString ();
             
-        //luo.console.log( "testForm, _execute, 1b = " + session );
-        //luo.console.log( "testForm, _execute, 1c = " + luo.ServerUtils.methodType );
-        //luo.console.log( "testForm, _execute, 1d = " + method );
-        //luo.console.log( "testForm, _execute, 1e = " + luo.ServerUtils.httpStatus );
-        //luo.console.log( "testForm, _execute, 1f = " + luo.console );
+        //console.log( "testForm, _execute, 1b = " + session );
+        //console.log( "testForm, _execute, 1c = " + luo.ServerUtils.methodType );
+        //console.log( "testForm, _execute, 1d = " + method );
+        //console.log( "testForm, _execute, 1e = " + luo.ServerUtils.httpStatus );
+        //console.log( "testForm, _execute, 1f = " + console );
 
         if ( method === luo.ServerUtils.methodType.NAME )
         {
             result = "testForm";
-            //luo.console.log( "testForm.POST, _execute, return = " + result );
+            //console.log( "testForm.POST, _execute, return = " + result );
         }
 
         else if ( method === luo.ServerUtils.methodType.DELETE )
@@ -124,15 +122,15 @@ module.exports = function ()	{
         {
             //  http://localhost:7777/testForm?name=fred&age=33
 
-			//luo.console.log( "testForm.GET " );
+			//console.log( "testForm.GET " );
 
             /*
 		    var parsedQuery	= httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
-			    luo.console.log( "testForm.GET, parsedQuery = "	+ parsedQuery );
-			    luo.console.log( "testForm.GET, query.name = "	    + parsedQuery.name );
-			    luo.console.log( "testForm.GET, query.age = " 	    + parsedQuery.age );
+			    console.log( "testForm.GET, parsedQuery = "	+ parsedQuery );
+			    console.log( "testForm.GET, query.name = "	    + parsedQuery.name );
+			    console.log( "testForm.GET, query.age = " 	    + parsedQuery.age );
 
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
@@ -147,17 +145,17 @@ module.exports = function ()	{
             
         else if ( method === luo.ServerUtils.methodType.POST )
         {
-            //luo.console.log( "testForm.POST, _execute, 1 = " );
+            //console.log( "testForm.POST, _execute, 1 = " );
 
             function startHandler ( data ) {
 
                 try
                 {
-                    //luo.console.log( "testForm.POST, _execute, 2 = " + data );
+                    //console.log( "testForm.POST, _execute, 2 = " + data );
 
                     luo.body += data;
                 
-                    //luo.console.log( "testForm.POST, _execute, 3 = " + luo.body );
+                    //console.log( "testForm.POST, _execute, 3 = " + luo.body );
 
                     // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
                     if ( luo.body.length > 1e6 )
@@ -166,12 +164,12 @@ module.exports = function ()	{
                         session.request.connection.destroy();
                     }
                 
-                    //luo.console.log( "testForm.POST, _execute, 4 = " + luo.body );
+                    //console.log( "testForm.POST, _execute, 4 = " + luo.body );
                 }
 
                 catch ( err )
                 {
-                    luo.console.log( "testForm, startHandler, catch, err = " + err );
+                    console.log( "testForm, startHandler, catch, err = " + err );
                 }
             };
 
@@ -183,11 +181,11 @@ module.exports = function ()	{
                     var name    = both[ 0 ] .split ( "=" );
                     var email   = both[ 1 ] .split ( "=" );
                 
-                    luo.console.log( "testForm.POST, _execute, body = "             + luo.body      );
-                    luo.console.log( "testForm.POST, _execute, name  property = "   + name[ 0 ]     );
-                    luo.console.log( "testForm.POST, _execute, name  value    = "   + name[ 1 ]     );
-                    luo.console.log( "testForm.POST, _execute, email property = "   + email[ 0 ]    );
-                    luo.console.log( "testForm.POST, _execute, email value    = "   + email[ 1 ]    );
+                    console.log( "testForm.POST, _execute, body = "             + luo.body      );
+                    console.log( "testForm.POST, _execute, name  property = "   + name[ 0 ]     );
+                    console.log( "testForm.POST, _execute, name  value    = "   + name[ 1 ]     );
+                    console.log( "testForm.POST, _execute, email property = "   + email[ 0 ]    );
+                    console.log( "testForm.POST, _execute, email value    = "   + email[ 1 ]    );
 
                     //  Don't allow it to accumulate any more.
                     luo.body    = "";
@@ -195,12 +193,12 @@ module.exports = function ()	{
                     //var POST = qs.parse( luo.body );
 
                     // use POST
-                    //luo.console.log( "testForm.POST, _execute, 6 = " + POST );
+                    //console.log( "testForm.POST, _execute, 6 = " + POST );
                 }
 
                 catch ( err )
                 {
-                    luo.console.log( "testForm, endHandler, catch, err = " + err );
+                    console.log( "testForm, endHandler, catch, err = " + err );
                 }
             };
 
@@ -223,10 +221,10 @@ module.exports = function ()	{
         else if ( method === luo.ServerUtils.methodType.PUT )
         {
             //  Update
-            //luo.console.log( "testForm.PUT, _execute, return = " + result );
+            //console.log( "testForm.PUT, _execute, return = " + result );
         }
 
-        //luo.console.log( "testForm.POST, _execute, return = " + result );
+        //console.log( "testForm.POST, _execute, return = " + result );
 
         return  result
     }

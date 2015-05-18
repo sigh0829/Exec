@@ -39,7 +39,6 @@ module.exports = function ()	{
     var luo 			    = {};	//	Local Use Only
         luo .message        = "";
 
-        luo .console        = null;
         luo .fileImp        = null;
         luo .httpImp        = null;
         luo .site           = null;
@@ -63,7 +62,6 @@ module.exports = function ()	{
             {
     	        luo.system  = params.system;
 
-                luo.console     = luo.system.execute ({ "get": "console",       "returnIn": "console",      "defaultValue": null }).console;
                 luo.fileImp     = luo.system.execute ({ "get": "fileImp",       "returnIn": "fileImp",      "defaultValue": null }).fileImp;
                 luo.httpImp     = luo.system.execute ({ "get": "httpImp",       "returnIn": "httpImp",      "defaultValue": null }).httpImp;
                 luo.site        = luo.system.execute ({ "get": "site",          "returnIn": "site",         "defaultValue": null }).site;
@@ -83,20 +81,20 @@ module.exports = function ()	{
             //  if ( pathname === "myERROR" ) {}
             jsonResult  [ params.returnIn ] = params.defaultValue;
 
-            //luo.console.log( "myApi_s, execute, 1 = " );
+            //console.log( "myApi_s, execute, 1 = " );
 
-            //luo.console.log( "myApi_s, execute, 3 = " );
+            //console.log( "myApi_s, execute, 3 = " );
             jsonResult  [ params.returnIn ] = params.defaultValue;
             luo .message                    = params.v + " is not handled by this implementation";
         }
 
         catch ( err )
         {
-            luo.console.log( "myApi_s, execute, catch err = " + err );
+            console.log( "myApi_s, execute, catch err = " + err );
             jsonResult  [ params.returnIn ] = params.defaultValue;
         }
 
-        //luo.console.log( "myApi_s, execute, result = " + jsonResult[ params.returnIn ] );
+        //console.log( "myApi_s, execute, result = " + jsonResult[ params.returnIn ] );
         return jsonResult;
     }
 
@@ -123,13 +121,13 @@ module.exports = function ()	{
 		    var parsedQuery	= luo.httpImp.execute( { "system":luo.system, "session": session, "job": "getRequestQuery", "returnIn": "parsedQuery", "defaultValue": "ERROR" } ).parsedQuery;
 		    if ( parsedQuery !== "ERROR" )
 		    {
-			    //luo.console.log( "myApi.GET, parsedQuery = "  + parsedQuery );
-			    //luo.console.log( "myApi.GET, query.name = "	+ parsedQuery.name );
-			    //luo.console.log( "myApi.GET, query.age = " 	+ parsedQuery.age );
+			    //console.log( "myApi.GET, parsedQuery = "  + parsedQuery );
+			    //console.log( "myApi.GET, query.name = "	+ parsedQuery.name );
+			    //console.log( "myApi.GET, query.age = " 	+ parsedQuery.age );
 
                 var message = "name is " + parsedQuery.name + ", age is " + parsedQuery.age;
 
-                //luo.console.log( "myApi_s, _execute, parsedQuery.returnType = " + parsedQuery.returnType );
+                //console.log( "myApi_s, _execute, parsedQuery.returnType = " + parsedQuery.returnType );
 
                 if ( parsedQuery.returnType === "json" )
                     message = JSON.stringify( { "name":parsedQuery.name, "age":parsedQuery.age  } );
@@ -145,7 +143,7 @@ module.exports = function ()	{
                                                 "async":false, "data":"krp", "returnIn": "result", 
                                                     "defaultValue": { "contents":"" }  } ).result.contents;
 
-                    //luo.console.log( "myApi_s, _execute, pathname = " + pathname );
+                    //console.log( "myApi_s, _execute, pathname = " + pathname );
                 }
 
                 else if ( parsedQuery.returnType === "arrayBuffer" )
@@ -199,9 +197,9 @@ module.exports = function ()	{
 
                     catch ( err )
                     {
-                        luo.console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", Vertx 2.0 does not define ArrayBuffer" );
-                        luo.console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", catch err = " + err );
-                        luo.console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", Vertx 2.0 does not define ArrayBuffer" );
+                        console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", Vertx 2.0 does not define ArrayBuffer" );
+                        console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", catch err = " + err );
+                        console.log( "myApi_s, _execute, parsedQuery.returnType === \"arrayBuffer\", Vertx 2.0 does not define ArrayBuffer" );
                     }
                 }
 
@@ -224,7 +222,7 @@ module.exports = function ()	{
         {
         }
 
-        //luo.console.log( "myApi_s, _execute, return = " + result );
+        //console.log( "myApi_s, _execute, return = " + result );
 
         return  result
     }
