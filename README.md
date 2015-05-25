@@ -1,5 +1,5 @@
-Exec
-====
+Exec --  Deprecated because it has moved into klib5
+===================================================
 
 <p>Use JavaScript as a desktop app, web server, or embedded with either <a href="http://www.nodejs.org">Node</a> and/or <a href="https://iojs.org/en/index.html">ioJS</a>.</p>
 
